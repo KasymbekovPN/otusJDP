@@ -46,7 +46,6 @@
     "type" : "AUTH_USER_RESPONSE",
     "data" : {
         "login" : "...",
-        "password" : "...",
         "status" : "...",
         "nodes" : {...}
     },
@@ -88,7 +87,6 @@
     "type" : "SETTING_RESPONSE",
     "data" : {
         "login" : "...",
-        "password" : "...",
         "status" : "...",
         "users" : [...],
         "groups" : [...]
@@ -146,6 +144,29 @@
     }
 }
 ```
+## 8.7 Запрос ПРОСМОТР УЗЛА
+```json
+{
+    "type" : "VIEW_NODE_REQUEST",
+    "data" : {
+        "login" : "...",
+        "node" : {
+            "id" : "..."
+        }
+    },
+    "from" : {
+        "host" : "...",
+        "port" : 0,
+        "entity" : "..."
+    },
+    "to" : {
+        "host" : "...",
+        "port" : 0,
+        "entity" : "..."
+    }
+}
+```
+## 8.8 Ответ ПРОСМОТР УЗЛА
 ## 8.7 Запрос УДАЛЕНИЕ УЗЛА
 ```json
 {
