@@ -28,7 +28,7 @@
 * 5.13. Добавить
 
 ## Информация об узле
-![](/pdescriptionlan/img/tree_node/info_node.svg)
+![](/description/img/tree_node/info_node.svg)
 * 5.14. Закрыть окно
 * 5.15. Поле, содержащее автора
 * 5.16. Поле, содержащее время создания
