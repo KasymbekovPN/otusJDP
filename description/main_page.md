@@ -6,19 +6,19 @@
 
 ---
 ## Главная страница до ввода логина и пароля.
-![](/plan/img/scr/main_page/before_login.svg)
+![](/description/img/scr/main_page/before_login.svg)
 * 2.1. Поле ввода логина
 * 2.2. Поле ввода пароля
 * 2.3. Кнопка ввода
 ---
 ## Главная страница после авторизации администратора.
-![](/plan/img/main_page/after_login_admin.svg)
+![](/description/img/main_page/after_login_admin.svg)
 * 2.4. Кнопка выхода
 * 2.5. Кнопка перехода к настройкам
 * 2.6. Контейнер, содержащий svg-дерево заметок.
 ---
 ## Главная страница после авторизации не администратора.
-![](/plan/img/main_page/after_login_not_admin.svg)
+![](/description/img/main_page/after_login_not_admin.svg)
 * 2.7. Кнопка выхода
 * 2.8. Контейнер, содержащий svg-дерево заметок.
 ---

@@ -1,3 +1,3 @@
 # otusJDP
 
-[Описание](/plan/index.md)
+[Описание](/description/index.md)

@@ -8,3 +8,4 @@
 6. [Database-клиент](database_client.md)
 7. [MessageSystem-клиент](message_system_client.md)
 8. [Типы сообщений](message_type.md)
+9. [Обмен сообщениями](messaging.md)
