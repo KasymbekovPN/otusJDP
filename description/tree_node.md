@@ -11,24 +11,24 @@
 * 5.5. Удалить узел
 
 ## Просмотр содержимого узла
-![](/description/img/tree_node/view_window.svg)
+![](/description/img/tree_node/view_node.svg)
 * 5.6. Закрыть окно
 * 5.7. Поле, содержащее заметку
 
 ## Редактировать содержимое узла
-![](/description/img/tree_node/edit_window.svg)
+![](/description/img/tree_node/edit_node.svg)
 * 5.8. Закрыть окно
 * 5.9. Поле для редактирования markdown
 * 5.10. Применить изменения
 
 ## Добавить новый узел
-![](/description/img/tree_node/add_window.svg)
+![](/description/img/tree_node/add_node.svg)
 * 5.11. Закрыть окно
 * 5.12. Поле ввода тэгов
 * 5.13. Добавить
 
 ## Информация об узле
-![](/pdescriptionlan/img/tree_node/info_window.svg)
+![](/pdescriptionlan/img/tree_node/info_node.svg)
 * 5.14. Закрыть окно
 * 5.15. Поле, содержащее автора
 * 5.16. Поле, содержащее время создания
