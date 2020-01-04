@@ -1,0 +1,128 @@
+{
+    "wrong" : {
+    },
+    "iAmRequest" : {
+        "type" : "String",
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "iAmResponse" : {
+        "type" : "String",
+        "data" : {
+            "url" : "String"
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "authUserRequest" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String",
+            "password" : "String"
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "authUserResponse" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String",
+            "password" : "String",
+            "status" : "String"
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "addUserRequest" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String",
+            "password" : "String"
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "addUserResponse" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String",
+            "password" : "String",
+            "status" : "String",
+            "users" : []
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "delUserRequest" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String"
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    },
+    "delUserResponse" : {
+        "type" : "String",
+        "data" : {
+            "login" : "String",
+            "status" : "String",
+            "users" : []
+        },
+        "from" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        },
+        "to" : {
+            "host" : "String",
+            "port" : "Integer",
+            "entity" : "String"
+        }
+    }
+}
