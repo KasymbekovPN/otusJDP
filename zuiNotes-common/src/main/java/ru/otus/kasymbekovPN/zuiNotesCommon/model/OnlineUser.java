@@ -24,10 +24,10 @@ public class OnlineUser {
     @Column(name = "password")
     private String password;
 
-//    @Column(name = "admin")
-//    private boolean admin;
+    @Column(name = "admin")
+    private boolean admin;
     //<
-    @Column(name = "group")
-    private String group;
+//    @Column(name = "group")
+//    private String group;
 }
 
