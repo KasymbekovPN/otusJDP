@@ -12,6 +12,7 @@
         <module>zuiNotes-common</module>
         <module>zuiNotes-messageSystem</module>
         <module>zuiNotes-database</module>
+        <module>zuiNotes-frontend</module>
     </modules>
 
 </project>
