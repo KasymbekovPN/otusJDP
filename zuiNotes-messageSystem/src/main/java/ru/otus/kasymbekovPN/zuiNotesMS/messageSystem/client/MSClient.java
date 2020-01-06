@@ -20,7 +20,7 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 //     */
 //<
 public interface MSClient {
-    void addHandler(MessageType type, MSMessageHandler handler);
+    void addHandler(String type, MSMessageHandler handler);
     boolean sendMessage(Message message);
     void handle(Message message);
     String getUrl();

@@ -15,6 +15,15 @@ public class JsonHelper {
         return url;
     }
 
+    public static JsonObject makeUrl(String host, int port, String entity){
+        JsonObject url = new JsonObject();
+        url.addProperty("host", host);
+        url.addProperty("port", port);
+        url.addProperty("entity", entity);
+
+        return url;
+    }
+
     public static String extractUrl(JsonObject jsonObject){
         String host = jsonObject.get("host").getAsString();
         String entity = jsonObject.get("entity").getAsString();

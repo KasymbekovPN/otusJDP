@@ -60,8 +60,8 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public void addHandler(MessageType type, MSMessageHandler handler) {
-        handlers.put(type.getValue(), handler);
+    public void addHandler(String type, MSMessageHandler handler) {
+        handlers.put(type, handler);
     }
 
     @Override

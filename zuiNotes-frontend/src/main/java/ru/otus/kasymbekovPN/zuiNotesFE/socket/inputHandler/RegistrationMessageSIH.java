@@ -1,4 +1,4 @@
-package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
+package ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler;
 
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
@@ -13,19 +13,19 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 // * уведомление системы сообщений о своем запуске.
 // */
 //<
-public class IAmResponseSIH implements SocketInputHandler {
+public class RegistrationMessageSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(IAmResponseSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationMessageSIH.class);
 
     private final Notifier notifier;
 
-    public IAmResponseSIH(Notifier notifier) {
+    public RegistrationMessageSIH(Notifier notifier) {
         this.notifier = notifier;
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("IAmResponseSIH : {}", jsonObject);
+        logger.info("RegistrationMessageSIH : {}", jsonObject);
         notifier.stop();
     }
 }

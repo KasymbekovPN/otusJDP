@@ -41,7 +41,7 @@ public class MsClientServiceImpl implements MsClientService {
     }
 
     @Override
-    public synchronized boolean createClient(String host, int port, Entity entity, MessageSystem messageSystem) {
+    public synchronized boolean createClient(String host, int port, String entity, MessageSystem messageSystem) {
         String url = JsonHelper.extractUrl(JsonHelper.makeUrl(host, port, entity));
         if (!clients.containsKey(url)){
             final MSClient client = msClientCreatorFactory.get(entity).create(url, socketHandler, messageSystem);

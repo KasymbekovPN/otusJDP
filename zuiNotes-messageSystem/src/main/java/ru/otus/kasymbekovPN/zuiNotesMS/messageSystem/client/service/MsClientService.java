@@ -21,7 +21,7 @@ import java.util.Optional;
 //     */
 //<
 public interface MsClientService {
-    boolean createClient(String host, int port, Entity entity, MessageSystem messageSystem);
+    boolean createClient(String host, int port, String entity, MessageSystem messageSystem);
     void deleteClient(String url);
     void setSocketHandler(SocketHandler socketHandler);
     Optional<MSClient> get(String url);

@@ -8,15 +8,15 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 ///**
 // * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType#WRONG_TYPE} <br><br>
 // */
-public class WrongTypeSIH implements SocketInputHandler {
+public class WrongSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(WrongTypeSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(WrongSIH.class);
 
-    public WrongTypeSIH() {
+    public WrongSIH() {
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.warn("WrongTypeSIH : {}", jsonObject);
+        logger.warn("WrongSIH : {}", jsonObject);
     }
 }

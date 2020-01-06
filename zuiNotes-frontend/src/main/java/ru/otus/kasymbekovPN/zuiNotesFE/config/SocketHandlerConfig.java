@@ -6,14 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserResponseSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserResponseSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongResponseSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
 
 @Configuration
@@ -47,10 +46,17 @@ public class SocketHandlerConfig {
                 new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort),
                 selfPort
         );
-        socketHandler.addHandler(MessageType.AUTH_USER_RESPONSE.getValue(), new AuthUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.ADD_USER_RESPONSE.getValue(), new AddUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.DEL_USER_RESPONSE.getValue(), new DelUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongResponseSIH());
+
+        socketHandler.addHandler("WRONG", new WrongSIH());
+        socketHandler.addHandler("AUTH_USER", new AuthUserResponseSIH(frontendMessageTransmitter));
+        socketHandler.addHandler("ADD_USER", new AddUserResponseSIH(frontendMessageTransmitter));
+        socketHandler.addHandler("DEL_USER", new DelUserResponseSIH(frontendMessageTransmitter));
+
+        //<
+//        socketHandler.addHandler(MessageType.AUTH_USER_RESPONSE.getValue(), new AuthUserResponseSIH(frontendMessageTransmitter));
+//        socketHandler.addHandler(MessageType.ADD_USER_RESPONSE.getValue(), new AddUserResponseSIH(frontendMessageTransmitter));
+//        socketHandler.addHandler(MessageType.DEL_USER_RESPONSE.getValue(), new DelUserResponseSIH(frontendMessageTransmitter));
+//        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongResponseSIH());
 
         return socketHandler;
     }
