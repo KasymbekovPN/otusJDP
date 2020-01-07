@@ -1,6 +1,5 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service;
 
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;

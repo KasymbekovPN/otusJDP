@@ -1,6 +1,5 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 
@@ -24,7 +23,5 @@ public interface MSClient {
     boolean sendMessage(Message message);
     void handle(Message message);
     String getUrl();
-//    <T> Message produceMessage(String toUrl, T data, MessageType type);
-    //<
     <T> Message produceMessage(String toUrl, T data, String type);
 }

@@ -40,8 +40,6 @@ public class FrontendMessageReceiver {
         logger.info("handleAuthUserRequest : {}", user);
 
         JsonObject jsonObject = new JsonObject();
-//        jsonObject.addProperty("type", MessageType.AUTH_USER_REQUEST.getValue());
-        //<
         jsonObject.addProperty("type", MessageType.AUTH_USER.getValue());
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", UUID.randomUUID().toString());
@@ -55,8 +53,6 @@ public class FrontendMessageReceiver {
         logger.info("handleAddUserRequest : {}", user);
 
         JsonObject jsonObject = new JsonObject();
-//        jsonObject.addProperty("type", MessageType.ADD_USER_REQUEST.getValue());
-        //<
         jsonObject.addProperty("type", MessageType.ADD_USER.getValue());
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", UUID.randomUUID().toString());
@@ -70,8 +66,6 @@ public class FrontendMessageReceiver {
         logger.info("handleDelUserRequest : {}", user);
 
         JsonObject jsonObject = new JsonObject();
-//        jsonObject.addProperty("type", MessageType.DEL_USER_REQUEST.getValue());
-        //<
         jsonObject.addProperty("type", MessageType.DEL_USER.getValue());
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", UUID.randomUUID().toString());

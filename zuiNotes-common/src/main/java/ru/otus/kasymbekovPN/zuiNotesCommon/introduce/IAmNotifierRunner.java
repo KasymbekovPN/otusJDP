@@ -1,7 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.introduce;
 
 import com.google.gson.JsonObject;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 
 import java.util.UUID;
@@ -18,12 +17,6 @@ public class IAmNotifierRunner implements NotifierRunner {
     public IAmNotifierRunner(SocketHandler socketHandler) {
         this.socketHandler = socketHandler;
         this.message = new JsonObject();
-
-//        this.message.addProperty("type", MessageType.I_AM_REQUEST.getValue());
-        //<
-        //<
-        // I_AM replace in config-file
-        //<
         this.message.addProperty("type", "I_AM");
         this.message.addProperty("request", true);
         this.message.addProperty("uuid", UUID.randomUUID().toString());

@@ -70,28 +70,13 @@ public class SocketHandlerConfig {
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(new JsonCheckerImpl(), new MSSocketSendingHandler(msPort), msPort);
 
         for (JsonElement registrationMessage : registrationMessages) {
-
-            //<
-            System.out.println(registrationMessage.getAsString());
-            //<
-
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
                     new RegistrationMessageSIH(socketHandler, messageSystem, msClientService)
             );
         }
 
-        System.out.println("-----------------");
-
         for (JsonElement commonMessage : commonMessages) {
-
-            System.out.println(commonMessage.getAsString());
-
-//            socketHandler.addHandler(
-//                    commonMessage.getAsString(),
-//                    new CommonUserResponseSIH(msClientService)
-//            );
-            //<
             socketHandler.addHandler(
                     commonMessage.getAsString(),
                     new CommonSIH(msClientService, socketHandler)
@@ -99,19 +84,6 @@ public class SocketHandlerConfig {
         }
 
         socketHandler.addHandler("WRONG", new WrongSIH(socketHandler));
-
-        //<
-//        socketHandler.addHandler(MessageType.I_AM_REQUEST.getValue(), new IAmRequestSIH(socketHandler, messageSystem, msClientService));
-//
-//        socketHandler.addHandler(MessageType.AUTH_USER_REQUEST.getValue(), new CommonUserRequestSIH(msClientService, socketHandler));
-//        socketHandler.addHandler(MessageType.ADD_USER_REQUEST.getValue(), new CommonUserRequestSIH(msClientService, socketHandler));
-//        socketHandler.addHandler(MessageType.DEL_USER_REQUEST.getValue(), new CommonUserRequestSIH(msClientService, socketHandler));
-//
-//        socketHandler.addHandler(MessageType.AUTH_USER_RESPONSE.getValue(), new CommonUserResponseSIH(msClientService));
-//        socketHandler.addHandler(MessageType.DEL_USER_RESPONSE.getValue(), new CommonUserResponseSIH(msClientService));
-//        socketHandler.addHandler(MessageType.ADD_USER_RESPONSE.getValue(), new CommonUserResponseSIH(msClientService));
-//
-//        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongTypeSIH());
 
         msClientService.setSocketHandler(socketHandler);
 

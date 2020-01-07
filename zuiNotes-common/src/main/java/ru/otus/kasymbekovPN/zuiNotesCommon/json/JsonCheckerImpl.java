@@ -4,10 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.MalformedJsonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 
 import java.io.File;
 import java.io.IOException;
@@ -153,50 +151,13 @@ public class JsonCheckerImpl implements JsonChecker {
         }
 
         if (errors.size() != 0) {
-//            jsonObject = new JsonObject();
-            //<
             jsonObject.addProperty("type", "WRONG");
             jsonObject.addProperty("request", false);
             jsonObject.addProperty("uuid", UUID.randomUUID().toString());
             jsonObject.add("original", original);
             jsonObject.add("errors", errors);
         }
-
-        //<
-//        StringBuilder nonexistent = new StringBuilder();
-//        String delimiter = "";
-//        for (String mandatoryField : MANDATORY_FIELDS) {
-//            if (!jsonObject.has(mandatoryField)){
-//                nonexistent.append(delimiter).append(mandatoryField);
-//                delimiter = ", ";
-//            }
-//        }
-//
-//        if (nonexistent.toString().isEmpty()){
-//            String type = jsonObject.get("type").getAsString();
-//            boolean request = jsonObject.get("request").getAsBoolean();
-//            if (validTypes.contains(type)){
-//                StringBuilder errorDescription = new StringBuilder();
-//                String path = "";
-//                traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
-//
-//                if (!errorDescription.toString().isEmpty()){
-//                    errorDescription.append(" Original Type : ").append(type).append(";");
-//                    changeByError(errorDescription.toString());
-//                }
-//            } else {
-//                changeByError("Invalid field 'type' : " + type);
-//            }
-//        } else {
-//            changeByError("Nonexistent fields : " + nonexistent);
-//        }
     }
-
-    //<
-//    private void changeByError(String errorDescription){
-//        jsonObject.addProperty("type", WRONG_TYPE);
-//        jsonObject.addProperty("errorDescription", errorDescription);
-//    }
 
     private static void traverse(JsonObject jsonObject, JsonObject std, JsonArray errors, String path){
         Set<String> keys = std.keySet();
@@ -266,56 +227,4 @@ public class JsonCheckerImpl implements JsonChecker {
             }
         }
     }
-    //<
-//    private static void traverse(JsonObject jsonObject, JsonObject std, StringBuilder errorDescription, String path){
-//        Set<String> keys = std.keySet();
-//        for (String key : keys) {
-//            String currentPath = path + ":" + key;
-//            JsonElement stdElement = std.get(key);
-//            JsonElement element = null;
-//            if (jsonObject.has(key)){
-//                element = jsonObject.get(key);
-//            } else {
-//                errorDescription.append(" Field '").append(currentPath).append("' doesn't exist;");
-//            }
-//
-//            if (stdElement.isJsonObject()){
-//                if (element != null){
-//                    if (element.isJsonObject()){
-//                        traverse(element.getAsJsonObject(), stdElement.getAsJsonObject(), errorDescription, currentPath);
-//                    } else {
-//                        errorDescription.append(" Field '").append(currentPath).append("' isn't object;");
-//                    }
-//                }
-//            } else if (stdElement.isJsonArray()){
-//                if (element != null){
-//                    if (!element.isJsonArray()){
-//                        errorDescription.append(" Field '").append(currentPath).append("' isn't array;");
-//                    }
-//                }
-//            } else if (stdElement.isJsonPrimitive()){
-//                if (element != null){
-//                    switch (stdElement.getAsString()){
-//                        case "String":
-//                            try{
-//                                element.getAsString();
-//                            } catch (NumberFormatException ex){
-//                                errorDescription.append(" Field '").append(currentPath).append("' isn't String;");
-//                            }
-//                            break;
-//                        case "Integer":
-//                            try {
-//                                element.getAsInt();
-//                            } catch (NumberFormatException ex){
-//                                errorDescription.append(" Field '").append(currentPath).append("' isn't Integer;");
-//                            }
-//                            break;
-//                        default:
-//                            errorDescription.append(" Field '").append(currentPath).append("' has unknown type;");
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

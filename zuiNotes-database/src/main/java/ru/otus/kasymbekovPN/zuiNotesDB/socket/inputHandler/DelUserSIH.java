@@ -11,7 +11,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
 
 import java.util.List;
 
@@ -60,8 +59,6 @@ public class DelUserSIH implements SocketInputHandler {
 
         JsonArray jsonUsers = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
         JsonObject responseJsonData = new JsonObject();
-//        responseJsonData.addProperty("type", MessageType.DEL_USER_RESPONSE.getValue());
-        //<
         responseJsonData.addProperty("type", type);
         responseJsonData.addProperty("request", false);
         responseJsonData.addProperty("uuid", uuid);

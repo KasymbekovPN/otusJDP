@@ -52,16 +52,6 @@ public class SocketHandlerConfig {
         socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler));
         socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
         socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
-        //<
-//        socketHandler.addHandler("WRONG", new WrongSIH());
-//        socketHandler.addHandler("AUTH_USER", new AuthUserRequestSIH(dbService, socketHandler));
-//        socketHandler.addHandler("ADD_USER", new AddUserSIH(dbService, socketHandler));
-//        socketHandler.addHandler("DEL_USER", new DelUserRequestSIH(dbService, socketHandler));
-        //<
-//        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongTypeSIH());
-//        socketHandler.addHandler(MessageType.AUTH_USER_REQUEST.getValue(), new AuthUserRequestSIH(dbService, socketHandler));
-//        socketHandler.addHandler(MessageType.ADD_USER_REQUEST.getValue(), new AddUserRequestSIH(dbService, socketHandler));
-//        socketHandler.addHandler(MessageType.DEL_USER_REQUEST.getValue(), new DelUserRequestSIH(dbService, socketHandler));
 
         return socketHandler;
     }

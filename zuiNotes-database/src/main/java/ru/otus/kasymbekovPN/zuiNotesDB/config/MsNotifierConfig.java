@@ -21,10 +21,6 @@ public class MsNotifierConfig {
     public Notifier msNotifier(){
         NotifierRunner notifierRunner = new IAmNotifierRunner(socketHandler);
         Notifier notifier = new NotifierImpl(notifierRunner);
-//        socketHandler.addHandler(MessageType.I_AM_RESPONSE.getValue(), new IAmResponseSIH(notifier));
-        //<
-//        socketHandler.addHandler("I_AM", new RegistrationMessageSIH(notifier));
-        //<
         socketHandler.addHandler(MessageType.I_AM.getValue(), new RegistrationMessageSIH(notifier));
 
         return notifier;

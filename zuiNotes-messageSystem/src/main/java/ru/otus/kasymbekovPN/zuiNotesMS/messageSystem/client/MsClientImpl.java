@@ -3,7 +3,6 @@ package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.Serializers;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
@@ -29,23 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 //<
 public class MsClientImpl implements MSClient {
 
-//    package ru.otus.kasymbekovPN.HW16M.messageSystem.client;
-//
-//import common.Serializers;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import message.MessageType;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.handler.MSMessageHandler;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.Message;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem;
-//
-//import java.util.Map;
-//import java.util.Objects;
-//import java.util.concurrent.ConcurrentHashMap;
-//
-
-//    public class MsClientImpl implements MsClient {
-//
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
     private final String url;
@@ -77,14 +59,6 @@ public class MsClientImpl implements MSClient {
     public void handle(Message message) {
         logger.info("New message : {}", message);
         try{
-
-            //<
-            System.out.println("handlers : " + handlers);
-            System.out.println("message : " + message.getType());
-            System.out.println("1 : " + handlers.get("AUTH_USER"));
-            System.out.println("2 : " + handlers.get("\"AUTH_USER\""));
-            //<
-
             MSMessageHandler handler = handlers.get(message.getType());
             if (handler != null){
                 handler.handle(message);
@@ -105,11 +79,6 @@ public class MsClientImpl implements MSClient {
     public <T> Message produceMessage(String toUrl, T data, String type) {
         return new Message(url, toUrl, type, Serializers.serialize(data));
     }
-    //<
-//    @Override
-//    public <T> Message produceMessage(String toUrl, T data, MessageType type) {
-//        return new Message(url, toUrl, type.getValue(), Serializers.serialize(data));
-//    }
 
     @Override
     public boolean equals(Object o) {

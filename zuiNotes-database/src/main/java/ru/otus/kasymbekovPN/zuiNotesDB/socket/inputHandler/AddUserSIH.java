@@ -8,7 +8,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
 
 import java.util.List;
 
@@ -59,8 +58,6 @@ public class AddUserSIH implements SocketInputHandler {
 
         JsonArray jsonUsers = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
         JsonObject responseJsonObject = new JsonObject();
-//        responseJsonObject.addProperty("type", MessageType.ADD_USER_RESPONSE.getValue());
-        //<
         responseJsonObject.addProperty("type", type);
         responseJsonObject.addProperty("request", false);
         responseJsonObject.addProperty("uuid", uuid);
