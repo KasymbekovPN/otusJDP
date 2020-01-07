@@ -15,9 +15,8 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonSIH;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonUserResponseSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.RegistrationMessageSIH;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongTypeSIH;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
 
 import java.io.File;
@@ -99,7 +98,7 @@ public class SocketHandlerConfig {
             );
         }
 
-        socketHandler.addHandler("WRONG", new WrongTypeSIH());
+        socketHandler.addHandler("WRONG", new WrongSIH(socketHandler));
 
         //<
 //        socketHandler.addHandler(MessageType.I_AM_REQUEST.getValue(), new IAmRequestSIH(socketHandler, messageSystem, msClientService));

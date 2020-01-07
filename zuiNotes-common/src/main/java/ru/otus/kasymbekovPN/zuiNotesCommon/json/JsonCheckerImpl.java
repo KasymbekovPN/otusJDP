@@ -1,5 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.json;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,10 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 ///**
 // * Класс, реализующий провеку валидности json-объекта. <br><br>
@@ -65,8 +63,6 @@ public class JsonCheckerImpl implements JsonChecker {
         add("uuid");
     }};
 
-//    private Map<String, JsonObject> standardJsonObjects = new HashMap<>();
-    //<
     private Map<String, Map<Boolean, JsonObject>> standardJsonObjects = new HashMap<>();
 
     private JsonObject jsonObject;
@@ -94,109 +90,32 @@ public class JsonCheckerImpl implements JsonChecker {
         }
 
         init(content);
-
-        //<
-//        String content = "";
-//        String fileName = getClass().getClassLoader().getResource(FILE_NAME).getFile();
-//
-//        if (fileName != null){
-//            File file = new File(fileName);
-//            if (file.exists()){
-//                try {
-//                    content = new String(Files.readAllBytes(file.toPath()));
-//                } catch (IOException ex) {
-//                    logger.warn("JsonCheckerImpl : Failed convert file to string.");
-//                }
-//            }
-//        } else {
-//            logger.warn("JsonCheckerImpl : File doesn't exist.");
-//        }
-
-        //<
-//        if (content.isEmpty()){
-//            defaultInit();
-//        } else {
-//            init(content);
-//        }
     }
 
     //< need checking
     private void init(String content) throws Exception {
         JsonObject loadedJsonObject = (JsonObject) new JsonParser().parse(content);
 
-//        JsonObject common = loadedJsonObject.get("common").getAsJsonObject();
-//        JsonObject specific = loadedJsonObject.get("specific").getAsJsonObject();
-
         for (String messageType : loadedJsonObject.keySet()) {
             JsonObject specificItem = loadedJsonObject.get(messageType).getAsJsonObject();
-            //<
-//            JsonObject requestMessagesContent = specificItem.get("requestMessageContent").getAsJsonObject();
-//            JsonObject responseMessageContent = specificItem.get("responseMessageContent").getAsJsonObject();
 
             Map<Boolean, JsonObject> mapItem = new HashMap<>();
             mapItem.put(false, specificItem.get("responseMessageContent").getAsJsonObject());
             mapItem.put(true, specificItem.get("requestMessageContent").getAsJsonObject());
-            //<
-//            mapItem.put(true, common.deepCopy());
-//            for (String item : requestMessagesContent.keySet()) {
-//                mapItem.get(true).add(item, requestMessagesContent.get(item));
-//            }
-            //<
-//            mapItem.put(false, common.deepCopy());
-//            for (String item : responseMessageContent.keySet()) {
-//                mapItem.get(false).add(item, responseMessageContent.get(item));
-//            }
 
             standardJsonObjects.put(messageType, mapItem);
         }
-
-        //<
-        System.out.println(standardJsonObjects);
     }
-
-    //<
-//    private void init(String content){
-//        JsonObject parsedContent = (JsonObject) new JsonParser().parse(content);
-//        for (MessageType item : MessageType.values()) {
-//            String sItem = item.getValue();
-//            if (parsedContent.has(sItem)){
-//                standardJsonObjects.put(sItem, parsedContent.get(sItem).getAsJsonObject());
-//            } else {
-//                standardJsonObjects.put(sItem, new JsonObject());
-//            }
-//        }
-//    }
-//
-//    private void defaultInit(){
-//        for (MessageType item : MessageType.values()) {
-//            standardJsonObjects.put(item.getValue(), new JsonObject());
-//        }
-//    }
 
     @Override
     public String getType() {
-        return jsonObject.has("type")
-                ? jsonObject.get("type").getAsString()
-                : WRONG_TYPE;
-        //<
-//        return jsonObject.has("type")
-//                ? jsonObject.get("type").getAsString()
-//                : MessageType.WRONG_TYPE.getValue();
+        return jsonObject.get("type").getAsString();
     }
 
     @Override
     public void setJsonObject(JsonObject jsonObject, Set<String> validTypes) {
-
-        //<
-        System.out.println(jsonObject);
-        //<
-
         this.jsonObject = jsonObject;
         parse(validTypes);
-
-        //<
-        System.out.println(this.jsonObject);
-        //<
     }
 
     @Override
@@ -206,65 +125,80 @@ public class JsonCheckerImpl implements JsonChecker {
 
     private void parse(Set<String> validTypes){
 
-        StringBuilder nonexistent = new StringBuilder();
-        String delimiter = "";
+        JsonObject original = new JsonObject();
+        JsonArray errors = new JsonArray();
         for (String mandatoryField : MANDATORY_FIELDS) {
             if (!jsonObject.has(mandatoryField)){
-                nonexistent.append(delimiter).append(mandatoryField);
-                delimiter = ", ";
+                JsonObject err = new JsonObject();
+                err.addProperty("code", 3);
+                err.addProperty("field", mandatoryField);
+                errors.add(err);
+            } else {
+                original.add(mandatoryField, jsonObject.get(mandatoryField));
             }
         }
 
-        if (nonexistent.toString().isEmpty()){
+        if (errors.size() == 0){
             String type = jsonObject.get("type").getAsString();
             boolean request = jsonObject.get("request").getAsBoolean();
             if (validTypes.contains(type)){
-                StringBuilder errorDescription = new StringBuilder();
                 String path = "";
-                traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
-
-                if (!errorDescription.toString().isEmpty()){
-                    errorDescription.append(" Original Type : ").append(type).append(";");
-                    changeByError(errorDescription.toString());
-                }
+                traverse(jsonObject, standardJsonObjects.get(type).get(request), errors, path);
             } else {
-                changeByError("Invalid field 'type' : " + type);
+                JsonObject err = new JsonObject();
+                err.addProperty("code", 4);
+                err.addProperty("type", type);
+                errors.add(err);
             }
-        } else {
-            changeByError("Nonexistent fields : " + nonexistent);
+        }
+
+        if (errors.size() != 0) {
+//            jsonObject = new JsonObject();
+            //<
+            jsonObject.addProperty("type", "WRONG");
+            jsonObject.addProperty("request", false);
+            jsonObject.addProperty("uuid", UUID.randomUUID().toString());
+            jsonObject.add("original", original);
+            jsonObject.add("errors", errors);
         }
 
         //<
-//        if (jsonObject.has("type")){
-//            if (jsonObject.has("request")){
-//                String type = jsonObject.get("type").getAsString();
-//                boolean request = jsonObject.get("request").getAsBoolean();
-//                if (validTypes.contains(type)){
-//                    StringBuilder errorDescription = new StringBuilder();
-//                    String path = "";
-//                    traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
+//        StringBuilder nonexistent = new StringBuilder();
+//        String delimiter = "";
+//        for (String mandatoryField : MANDATORY_FIELDS) {
+//            if (!jsonObject.has(mandatoryField)){
+//                nonexistent.append(delimiter).append(mandatoryField);
+//                delimiter = ", ";
+//            }
+//        }
 //
-//                    if (!errorDescription.toString().isEmpty()){
-//                        errorDescription.append(" Original Type : ").append(type).append(";");
-//                        changeByError(errorDescription.toString());
-//                    }
-//                } else {
-//                    changeByError("Invalid field 'type' : " + type);
+//        if (nonexistent.toString().isEmpty()){
+//            String type = jsonObject.get("type").getAsString();
+//            boolean request = jsonObject.get("request").getAsBoolean();
+//            if (validTypes.contains(type)){
+//                StringBuilder errorDescription = new StringBuilder();
+//                String path = "";
+//                traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
+//
+//                if (!errorDescription.toString().isEmpty()){
+//                    errorDescription.append(" Original Type : ").append(type).append(";");
+//                    changeByError(errorDescription.toString());
 //                }
 //            } else {
-//                changeByError("Field 'request' doesn't exist");
+//                changeByError("Invalid field 'type' : " + type);
 //            }
 //        } else {
-//            changeByError("Field 'type' doesn't exist");
+//            changeByError("Nonexistent fields : " + nonexistent);
 //        }
     }
 
-    private void changeByError(String errorDescription){
-        jsonObject.addProperty("type", WRONG_TYPE);
-        jsonObject.addProperty("errorDescription", errorDescription);
-    }
+    //<
+//    private void changeByError(String errorDescription){
+//        jsonObject.addProperty("type", WRONG_TYPE);
+//        jsonObject.addProperty("errorDescription", errorDescription);
+//    }
 
-    private static void traverse(JsonObject jsonObject, JsonObject std, StringBuilder errorDescription, String path){
+    private static void traverse(JsonObject jsonObject, JsonObject std, JsonArray errors, String path){
         Set<String> keys = std.keySet();
         for (String key : keys) {
             String currentPath = path + ":" + key;
@@ -273,21 +207,30 @@ public class JsonCheckerImpl implements JsonChecker {
             if (jsonObject.has(key)){
                 element = jsonObject.get(key);
             } else {
-                errorDescription.append(" Field '").append(currentPath).append("' doesn't exist;");
+                JsonObject err = new JsonObject();
+                err.addProperty("code", 3);
+                err.addProperty("field", currentPath);
+                errors.add(err);
             }
 
             if (stdElement.isJsonObject()){
                 if (element != null){
                     if (element.isJsonObject()){
-                        traverse(element.getAsJsonObject(), stdElement.getAsJsonObject(), errorDescription, currentPath);
+                        traverse(element.getAsJsonObject(), stdElement.getAsJsonObject(), errors, currentPath);
                     } else {
-                        errorDescription.append(" Field '").append(currentPath).append("' isn't object;");
+                        JsonObject err = new JsonObject();
+                        err.addProperty("code", 5);
+                        err.addProperty("type", "Object");
+                        errors.add(err);
                     }
                 }
             } else if (stdElement.isJsonArray()){
                 if (element != null){
                     if (!element.isJsonArray()){
-                        errorDescription.append(" Field '").append(currentPath).append("' isn't array;");
+                        JsonObject err = new JsonObject();
+                        err.addProperty("code", 5);
+                        err.addProperty("type", "Array");
+                        errors.add(err);
                     }
                 }
             } else if (stdElement.isJsonPrimitive()){
@@ -297,53 +240,33 @@ public class JsonCheckerImpl implements JsonChecker {
                             try{
                                 element.getAsString();
                             } catch (NumberFormatException ex){
-                                errorDescription.append(" Field '").append(currentPath).append("' isn't String;");
+                                JsonObject err = new JsonObject();
+                                err.addProperty("code", 5);
+                                err.addProperty("type", "String");
+                                errors.add(err);
                             }
                             break;
                         case "Integer":
                             try {
                                 element.getAsInt();
                             } catch (NumberFormatException ex){
-                                errorDescription.append(" Field '").append(currentPath).append("' isn't Integer;");
+                                JsonObject err = new JsonObject();
+                                err.addProperty("code", 5);
+                                err.addProperty("type", "Integer");
+                                errors.add(err);
                             }
                             break;
                         default:
-                            errorDescription.append(" Field '").append(currentPath).append("' has unknown type;");
+                            JsonObject err = new JsonObject();
+                            err.addProperty("code", 6);
+                            errors.add(err);
                             break;
                     }
                 }
             }
         }
     }
-
-
     //<
-//    private void parse(Set<String> validTypes){
-//        if (jsonObject.has("type")){
-//            String type = jsonObject.get("type").getAsString();
-//            if (validTypes.contains(type)){
-//                StringBuilder errorDescription = new StringBuilder();
-//                String path = "";
-//                traverse(jsonObject, standardJsonObjects.get(type), errorDescription, path);
-//
-//                if (!errorDescription.toString().isEmpty()){
-//                    errorDescription.append(" Original Type : ").append(type).append(";");
-//                    changeByError(errorDescription.toString());
-//                }
-//
-//            } else {
-//                changeByError("Invalid field 'type' : " + type);
-//            }
-//        } else {
-//            changeByError("Field 'type' doesn't exist");
-//        }
-//    }
-//
-//    private void changeByError(String errorDescription){
-//        jsonObject.addProperty("type", MessageType.WRONG_TYPE.getValue());
-//        jsonObject.addProperty("errorDescription", errorDescription);
-//    }
-//
 //    private static void traverse(JsonObject jsonObject, JsonObject std, StringBuilder errorDescription, String path){
 //        Set<String> keys = std.keySet();
 //        for (String key : keys) {

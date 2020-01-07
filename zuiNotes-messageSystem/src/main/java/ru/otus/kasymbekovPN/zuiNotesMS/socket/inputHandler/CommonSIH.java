@@ -73,26 +73,6 @@ public class CommonSIH implements SocketInputHandler {
             responseJsonObject.add("errors", errors);
 
             socketHandler.send(responseJsonObject);
-
-            //<
-//            String status = "";
-//            if (!optFromMsClient.isPresent()){
-//                status += "Client '" + fromUrl + "' doesn't exist; ";
-//            }
-//            if (!optToMsClient.isPresent()){
-//                status += "Client '" + toUrl + "' doesn't exist; ";
-//            }
-//
-//            JsonObject data = jsonObject.get("data").getAsJsonObject();
-//            data.addProperty("status", status);
-//            data.add("users", new JsonArray());
-//
-//            JsonObject responseJsonObject = new JsonObject();
-//            responseJsonObject.addProperty("type", MessageType.getOpposite(MessageType.valueOf(type)).getValue());
-//            responseJsonObject.add("data", data);
-//            responseJsonObject.add("to", jsonObject.get("from").getAsJsonObject());
-//
-//            socketHandler.send(responseJsonObject);
         }
     }
 }
