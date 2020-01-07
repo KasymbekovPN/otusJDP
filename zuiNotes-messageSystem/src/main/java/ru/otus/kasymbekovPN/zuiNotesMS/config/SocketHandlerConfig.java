@@ -14,6 +14,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonUserResponseSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.RegistrationMessageSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongTypeSIH;
@@ -70,16 +71,31 @@ public class SocketHandlerConfig {
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(new JsonCheckerImpl(), new MSSocketSendingHandler(msPort), msPort);
 
         for (JsonElement registrationMessage : registrationMessages) {
+
+            //<
+            System.out.println(registrationMessage.getAsString());
+            //<
+
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
                     new RegistrationMessageSIH(socketHandler, messageSystem, msClientService)
             );
         }
 
+        System.out.println("-----------------");
+
         for (JsonElement commonMessage : commonMessages) {
+
+            System.out.println(commonMessage.getAsString());
+
+//            socketHandler.addHandler(
+//                    commonMessage.getAsString(),
+//                    new CommonUserResponseSIH(msClientService)
+//            );
+            //<
             socketHandler.addHandler(
                     commonMessage.getAsString(),
-                    new CommonUserResponseSIH(msClientService)
+                    new CommonSIH(msClientService, socketHandler)
             );
         }
 

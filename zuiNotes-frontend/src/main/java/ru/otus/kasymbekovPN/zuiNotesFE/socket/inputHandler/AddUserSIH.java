@@ -21,19 +21,19 @@ import java.util.List;
 // * соответствующий обработчик {@link #frontendMessageTransmitter}
 // */
 //<
-public class AddUserResponseSIH implements SocketInputHandler {
+public class AddUserSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AddUserResponseSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(AddUserSIH.class);
 
     private FrontendMessageTransmitter frontendMessageTransmitter;
 
-    public AddUserResponseSIH(FrontendMessageTransmitter frontendMessageTransmitter) {
+    public AddUserSIH(FrontendMessageTransmitter frontendMessageTransmitter) {
         this.frontendMessageTransmitter = frontendMessageTransmitter;
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("AddUserResponseSIH : {}", jsonObject);
+        logger.info("AddUserSIH : {}", jsonObject);
 
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String status = data.get("status").getAsString();

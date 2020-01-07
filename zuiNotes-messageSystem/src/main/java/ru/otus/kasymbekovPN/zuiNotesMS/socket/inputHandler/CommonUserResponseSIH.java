@@ -44,8 +44,8 @@ public class CommonUserResponseSIH implements SocketInputHandler {
         if (optFromMSClient.isPresent() && optToMsClient.isPresent()){
             String str = jsonObject.toString();
             MSClient fromMsClient = optFromMSClient.get();
-            Message message = fromMsClient.produceMessage(toUrl, str, MessageType.valueOf(type));
-            fromMsClient.sendMessage(message);
+//            Message message = fromMsClient.produceMessage(toUrl, str, MessageType.valueOf(type));
+//            fromMsClient.sendMessage(message);
         } else {
             logger.error("DelUserResponseSIH : client not found.");
         }

@@ -50,8 +50,8 @@ public class CommonUserRequestSIH implements SocketInputHandler {
         if (optFromMsClient.isPresent() && optToMsClient.isPresent()){
             String str = jsonObject.toString();
             MSClient fromMsClient = optFromMsClient.get();
-            Message message = fromMsClient.produceMessage(toUrl, str, MessageType.valueOf(type));
-            fromMsClient.sendMessage(message);
+//            Message message = fromMsClient.produceMessage(toUrl, str, MessageType.valueOf(type));
+//            fromMsClient.sendMessage(message);
         } else {
             String status = "";
             if (!optFromMsClient.isPresent()){

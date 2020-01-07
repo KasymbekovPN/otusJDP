@@ -94,7 +94,7 @@ public class MsClientCreatorFactoryImpl implements MsClientCreatorFactory {
         if (config.has(entity)){
             Set<String> messages = new HashSet<>();
             for (JsonElement element : config.get(entity).getAsJsonObject().get("messages").getAsJsonArray()) {
-                messages.add(element.toString());
+                messages.add(element.getAsString());
             }
             return new CmnMsClientCreator(messages);
         } else {

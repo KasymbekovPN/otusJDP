@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,6 +59,11 @@ public class JsonCheckerImpl implements JsonChecker {
     private static final Logger logger = LoggerFactory.getLogger(JsonCheckerImpl.class);
     private static final String WRONG_TYPE = "WRONG";
     private static final String FILE_NAME = "standardMessages.json";
+    private static final Set<String> MANDATORY_FIELDS = new HashSet<String>(){{
+        add("type");
+        add("request");
+        add("uuid");
+    }};
 
 //    private Map<String, JsonObject> standardJsonObjects = new HashMap<>();
     //<
@@ -199,28 +205,58 @@ public class JsonCheckerImpl implements JsonChecker {
     }
 
     private void parse(Set<String> validTypes){
-        if (jsonObject.has("type")){
-            if (jsonObject.has("request")){
-                String type = jsonObject.get("type").getAsString();
-                boolean request = jsonObject.get("request").getAsBoolean();
-                if (validTypes.contains(type)){
-                    StringBuilder errorDescription = new StringBuilder();
-                    String path = "";
-                    traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
 
-                    if (!errorDescription.toString().isEmpty()){
-                        errorDescription.append(" Original Type : ").append(type).append(";");
-                        changeByError(errorDescription.toString());
-                    }
-                } else {
-                    changeByError("Invalid field 'type' : " + type);
+        StringBuilder nonexistent = new StringBuilder();
+        String delimiter = "";
+        for (String mandatoryField : MANDATORY_FIELDS) {
+            if (!jsonObject.has(mandatoryField)){
+                nonexistent.append(delimiter).append(mandatoryField);
+                delimiter = ", ";
+            }
+        }
+
+        if (nonexistent.toString().isEmpty()){
+            String type = jsonObject.get("type").getAsString();
+            boolean request = jsonObject.get("request").getAsBoolean();
+            if (validTypes.contains(type)){
+                StringBuilder errorDescription = new StringBuilder();
+                String path = "";
+                traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
+
+                if (!errorDescription.toString().isEmpty()){
+                    errorDescription.append(" Original Type : ").append(type).append(";");
+                    changeByError(errorDescription.toString());
                 }
             } else {
-                changeByError("Field 'request' doesn't exist");
+                changeByError("Invalid field 'type' : " + type);
             }
         } else {
-            changeByError("Field 'type' doesn't exist");
+            changeByError("Nonexistent fields : " + nonexistent);
         }
+
+        //<
+//        if (jsonObject.has("type")){
+//            if (jsonObject.has("request")){
+//                String type = jsonObject.get("type").getAsString();
+//                boolean request = jsonObject.get("request").getAsBoolean();
+//                if (validTypes.contains(type)){
+//                    StringBuilder errorDescription = new StringBuilder();
+//                    String path = "";
+//                    traverse(jsonObject, standardJsonObjects.get(type).get(request), errorDescription, path);
+//
+//                    if (!errorDescription.toString().isEmpty()){
+//                        errorDescription.append(" Original Type : ").append(type).append(";");
+//                        changeByError(errorDescription.toString());
+//                    }
+//                } else {
+//                    changeByError("Invalid field 'type' : " + type);
+//                }
+//            } else {
+//                changeByError("Field 'request' doesn't exist");
+//            }
+//        } else {
+//            changeByError("Field 'type' doesn't exist");
+//        }
     }
 
     private void changeByError(String errorDescription){

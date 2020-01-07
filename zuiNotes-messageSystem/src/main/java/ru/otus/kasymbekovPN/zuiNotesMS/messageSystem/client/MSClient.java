@@ -24,5 +24,7 @@ public interface MSClient {
     boolean sendMessage(Message message);
     void handle(Message message);
     String getUrl();
-    <T> Message produceMessage(String toUrl, T data, MessageType type);
+//    <T> Message produceMessage(String toUrl, T data, MessageType type);
+    //<
+    <T> Message produceMessage(String toUrl, T data, String type);
 }

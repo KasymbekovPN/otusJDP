@@ -42,6 +42,7 @@ public class RegistrationMessageSIH implements SocketInputHandler {
         logger.info("RegistrationMessageSIH : {}", jsonObject);
 
         String type = jsonObject.get("type").getAsString();
+        String uuid = jsonObject.get("uuid").getAsString();
         boolean request = jsonObject.get("request").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         String url = JsonHelper.extractUrl(from);
@@ -74,6 +75,7 @@ public class RegistrationMessageSIH implements SocketInputHandler {
         //<
         respJsonObject.addProperty("type", type);
         respJsonObject.addProperty("request", false);
+        respJsonObject.addProperty("uuid", uuid);
         respJsonObject.add("data", data);
         respJsonObject.add("to", from);
 

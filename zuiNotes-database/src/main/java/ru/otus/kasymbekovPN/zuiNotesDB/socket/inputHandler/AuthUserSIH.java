@@ -7,11 +7,11 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
+import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
 
 import java.util.List;
 
@@ -22,21 +22,24 @@ import java.util.List;
 // * содержащее данные пользователей; при неуспещеой проверке сообщение содержит описание ошибки.
 // */
 //<
-public class AuthUserRequestSIH implements SocketInputHandler {
+public class AuthUserSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthUserRequestSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthUserSIH.class);
 
     private final DBServiceOnlineUser dbService;
     private final SocketHandler socketHandler;
 
-    public AuthUserRequestSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler) {
+    public AuthUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler) {
         this.dbService = dbService;
         this.socketHandler = socketHandler;
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("AuthUserRequestSIH : {}", jsonObject);
+        logger.info("AuthUserSIH : {}", jsonObject);
+
+        String uuid = jsonObject.get("uuid").getAsString();
+        String type = jsonObject.get("type").getAsString();
 
         JsonArray jsonUsers = new JsonArray();
         JsonObject data = jsonObject.get("data").getAsJsonObject();
@@ -67,10 +70,14 @@ public class AuthUserRequestSIH implements SocketInputHandler {
         } else {
             status = "Login or/and password is empty.";
         }
-        logger.info("AuthUserRequestSIH : {}", status);
+        logger.info("AuthUserSIH : {}", status);
 
         JsonObject responseJsonObject = new JsonObject();
-        responseJsonObject.addProperty("type", MessageType.AUTH_USER_RESPONSE.getValue());
+//        responseJsonObject.addProperty("type", MessageType.AUTH_USER_RESPONSE.getValue());
+        //<
+        responseJsonObject.addProperty("type", type);
+        responseJsonObject.addProperty("request", false);
+        responseJsonObject.addProperty("uuid", uuid);
         responseJsonObject.add("data", JsonHelper.makeData(login, password, status, jsonUsers));
 
         socketHandler.send(responseJsonObject);

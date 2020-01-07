@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 
+import java.util.UUID;
+
 /**
  * Класс, реализующий уведомление системы сообщений о сущности клиента, который отправляет данного уведомление, а
  * также о его хосте и порте.
@@ -24,6 +26,7 @@ public class IAmNotifierRunner implements NotifierRunner {
         //<
         this.message.addProperty("type", "I_AM");
         this.message.addProperty("request", true);
+        this.message.addProperty("uuid", UUID.randomUUID().toString());
     }
 
     @Override

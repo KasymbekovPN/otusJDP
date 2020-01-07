@@ -7,11 +7,11 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
+import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
 
 import java.util.List;
 
@@ -22,21 +22,24 @@ import java.util.List;
 // * сообщение содержащее данные пользователей.
 // */
 //<
-public class DelUserRequestSIH implements SocketInputHandler {
+public class DelUserSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(DelUserRequestSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(DelUserSIH.class);
 
     private final DBServiceOnlineUser dbService;
     private final SocketHandler socketHandler;
 
-    public DelUserRequestSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler) {
+    public DelUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler) {
         this.dbService = dbService;
         this.socketHandler = socketHandler;
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("DelUserRequestSIH : {}", jsonObject);
+        logger.info("DelUserSIH : {}", jsonObject);
+
+        String uuid = jsonObject.get("uuid").getAsString();
+        String type = jsonObject.get("type").getAsString();
 
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String login = data.get("login").getAsString().trim();
@@ -53,11 +56,15 @@ public class DelUserRequestSIH implements SocketInputHandler {
         } else {
             status = "Login is empty.";
         }
-        logger.info("DelUserRequestSIH : {}", status);
+        logger.info("DelUserSIH : {}", status);
 
         JsonArray jsonUsers = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
         JsonObject responseJsonData = new JsonObject();
-        responseJsonData.addProperty("type", MessageType.DEL_USER_RESPONSE.getValue());
+//        responseJsonData.addProperty("type", MessageType.DEL_USER_RESPONSE.getValue());
+        //<
+        responseJsonData.addProperty("type", type);
+        responseJsonData.addProperty("request", false);
+        responseJsonData.addProperty("uuid", uuid);
         responseJsonData.add("data", JsonHelper.makeData(login, status, jsonUsers));
 
         socketHandler.send(responseJsonData);

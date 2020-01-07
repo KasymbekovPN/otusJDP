@@ -9,9 +9,10 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserResponseSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
 
@@ -47,10 +48,15 @@ public class SocketHandlerConfig {
                 selfPort
         );
 
-        socketHandler.addHandler("WRONG", new WrongSIH());
-        socketHandler.addHandler("AUTH_USER", new AuthUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler("ADD_USER", new AddUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler("DEL_USER", new DelUserResponseSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
+        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(frontendMessageTransmitter));
+        //<
+//        socketHandler.addHandler("WRONG", new WrongSIH());
+//        socketHandler.addHandler("AUTH_USER", new AuthUserResponseSIH(frontendMessageTransmitter));
+//        socketHandler.addHandler("ADD_USER", new AddUserResponseSIH(frontendMessageTransmitter));
+//        socketHandler.addHandler("DEL_USER", new DelUserResponseSIH(frontendMessageTransmitter));
 
         //<
 //        socketHandler.addHandler(MessageType.AUTH_USER_RESPONSE.getValue(), new AuthUserResponseSIH(frontendMessageTransmitter));

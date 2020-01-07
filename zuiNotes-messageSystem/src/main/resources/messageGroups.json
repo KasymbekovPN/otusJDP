@@ -3,6 +3,8 @@
         "I_AM"
     ],
     "commonMessages" : [
-        
+        "AUTH_USER",
+        "ADD_USER",
+        "DEL_USER"
     ]
 }

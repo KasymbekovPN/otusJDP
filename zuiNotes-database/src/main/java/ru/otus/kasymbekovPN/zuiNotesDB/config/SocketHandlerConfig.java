@@ -9,9 +9,10 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AddUserRequestSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AuthUserRequestSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.DelUserRequestSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AddUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AuthUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.DelUserSIH;
 import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler.DBSocketSendingHandler;
 
@@ -47,10 +48,15 @@ public class SocketHandlerConfig {
                 selfPort
         );
 
-        socketHandler.addHandler("WRONG", new WrongSIH());
-        socketHandler.addHandler("AUTH_USER", new AuthUserRequestSIH(dbService, socketHandler));
-        socketHandler.addHandler("ADD_USER", new AddUserRequestSIH(dbService, socketHandler));
-        socketHandler.addHandler("DEL_USER", new DelUserRequestSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
+        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
+        //<
+//        socketHandler.addHandler("WRONG", new WrongSIH());
+//        socketHandler.addHandler("AUTH_USER", new AuthUserRequestSIH(dbService, socketHandler));
+//        socketHandler.addHandler("ADD_USER", new AddUserSIH(dbService, socketHandler));
+//        socketHandler.addHandler("DEL_USER", new DelUserRequestSIH(dbService, socketHandler));
         //<
 //        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongTypeSIH());
 //        socketHandler.addHandler(MessageType.AUTH_USER_REQUEST.getValue(), new AuthUserRequestSIH(dbService, socketHandler));

@@ -77,6 +77,14 @@ public class MsClientImpl implements MSClient {
     public void handle(Message message) {
         logger.info("New message : {}", message);
         try{
+
+            //<
+            System.out.println("handlers : " + handlers);
+            System.out.println("message : " + message.getType());
+            System.out.println("1 : " + handlers.get("AUTH_USER"));
+            System.out.println("2 : " + handlers.get("\"AUTH_USER\""));
+            //<
+
             MSMessageHandler handler = handlers.get(message.getType());
             if (handler != null){
                 handler.handle(message);
@@ -94,9 +102,14 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public <T> Message produceMessage(String toUrl, T data, MessageType type) {
-        return new Message(url, toUrl, type.getValue(), Serializers.serialize(data));
+    public <T> Message produceMessage(String toUrl, T data, String type) {
+        return new Message(url, toUrl, type, Serializers.serialize(data));
     }
+    //<
+//    @Override
+//    public <T> Message produceMessage(String toUrl, T data, MessageType type) {
+//        return new Message(url, toUrl, type.getValue(), Serializers.serialize(data));
+//    }
 
     @Override
     public boolean equals(Object o) {
