@@ -3,7 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesDB.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.IAmNotifierRunner;
+import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.RegistrationMessageNR;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.Notifier;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.NotifierImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.NotifierRunner;
@@ -19,9 +19,10 @@ public class MsNotifierConfig {
 
     @Bean
     public Notifier msNotifier(){
-        NotifierRunner notifierRunner = new IAmNotifierRunner(socketHandler);
+        String registrationMessageType = MessageType.I_AM.getValue();
+        NotifierRunner notifierRunner = new RegistrationMessageNR(socketHandler, registrationMessageType);
         Notifier notifier = new NotifierImpl(notifierRunner);
-        socketHandler.addHandler(MessageType.I_AM.getValue(), new RegistrationMessageSIH(notifier));
+        socketHandler.addHandler(registrationMessageType, new RegistrationMessageSIH(notifier));
 
         return notifier;
     }

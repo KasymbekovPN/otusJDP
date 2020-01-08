@@ -1,10 +1,13 @@
 {
-    "registrationMessages" : [
-        "I_AM"
-    ],
-    "commonMessages" : [
+    "common" : [
         "AUTH_USER",
         "ADD_USER",
         "DEL_USER"
+    ],
+    "registration" : [
+        "I_AM"
+    ],
+    "echo" : [
+        "ECHO"
     ]
 }

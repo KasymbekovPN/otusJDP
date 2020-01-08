@@ -21,15 +21,15 @@ import java.util.Optional;
 //<
 
 //< rename
-public class RegistrationMessageSIH implements SocketInputHandler {
+public class RegistrationSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistrationMessageSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
 
     private final SocketHandler socketHandler;
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
 
-    public RegistrationMessageSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService) {
+    public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService) {
         this.socketHandler = socketHandler;
         this.messageSystem = messageSystem;
         this.msClientService = msClientService;
@@ -37,7 +37,7 @@ public class RegistrationMessageSIH implements SocketInputHandler {
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("RegistrationMessageSIH : {}", jsonObject);
+        logger.info("RegistrationSIH : {}", jsonObject);
 
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
@@ -64,7 +64,7 @@ public class RegistrationMessageSIH implements SocketInputHandler {
             status = "Field 'request' has invalid value (false)";
         }
 
-        logger.info("RegistrationMessageSIH : {}", status);
+        logger.info("RegistrationSIH : {}", status);
 
         JsonObject data = new JsonObject();
         data.addProperty("url", url);

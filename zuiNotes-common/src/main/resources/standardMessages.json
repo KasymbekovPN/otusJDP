@@ -126,5 +126,41 @@
                 "entity" : "String"
             }
         }
+    },
+    "ECHO" : {
+        "requestMessageContent" : {
+            "data" : {
+                "subscribe" : "Boolean",
+                "message" : "String",
+                "request" : "Boolean"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "message" : "String",
+                "request" : "Boolean",
+                "data" : {}
+             },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
     }
 }

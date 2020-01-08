@@ -182,6 +182,7 @@ public class JsonCheckerImpl implements JsonChecker {
                         JsonObject err = new JsonObject();
                         err.addProperty("code", 5);
                         err.addProperty("type", "Object");
+                        err.addProperty("field", currentPath);
                         errors.add(err);
                     }
                 }
@@ -191,6 +192,7 @@ public class JsonCheckerImpl implements JsonChecker {
                         JsonObject err = new JsonObject();
                         err.addProperty("code", 5);
                         err.addProperty("type", "Array");
+                        err.addProperty("field", currentPath);
                         errors.add(err);
                     }
                 }
@@ -204,6 +206,7 @@ public class JsonCheckerImpl implements JsonChecker {
                                 JsonObject err = new JsonObject();
                                 err.addProperty("code", 5);
                                 err.addProperty("type", "String");
+                                err.addProperty("field", currentPath);
                                 errors.add(err);
                             }
                             break;
@@ -214,12 +217,25 @@ public class JsonCheckerImpl implements JsonChecker {
                                 JsonObject err = new JsonObject();
                                 err.addProperty("code", 5);
                                 err.addProperty("type", "Integer");
+                                err.addProperty("field", currentPath);
+                                errors.add(err);
+                            }
+                            break;
+                        case "Boolean":
+                            try{
+                                element.getAsBoolean();
+                            } catch (NumberFormatException ex){
+                                JsonObject err = new JsonObject();
+                                err.addProperty("code", 5);
+                                err.addProperty("type", "Boolean");
+                                err.addProperty("field", currentPath);
                                 errors.add(err);
                             }
                             break;
                         default:
                             JsonObject err = new JsonObject();
                             err.addProperty("code", 6);
+                            err.addProperty("field", currentPath);
                             errors.add(err);
                             break;
                     }

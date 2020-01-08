@@ -15,7 +15,8 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonSIH;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.RegistrationMessageSIH;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.EchoSIH;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.RegistrationSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
 
@@ -61,18 +62,35 @@ public class SocketHandlerConfig {
             throw new Exception(status);
         }
 
-        JsonObject loadedJsonObject = (JsonObject) new JsonParser().parse(content);
-        JsonArray registrationMessages = loadedJsonObject.get("registrationMessages").getAsJsonArray();
-        JsonArray commonMessages = loadedJsonObject.get("commonMessages").getAsJsonArray();
         //<
+//        {
+//            "common" : [
+//            "AUTH_USER",
+//                    "ADD_USER",
+//                    "DEL_USER"
+//    ],
+//            "registration" : [
+//            "I_AM"
+//    ],
+//            "echo" : [
+//            "ECHO"
+//    ]
 
+        JsonObject loadedJsonObject = (JsonObject) new JsonParser().parse(content);
+//        JsonArray registrationMessages = loadedJsonObject.get("registrationMessages").getAsJsonArray();
+//        JsonArray commonMessages = loadedJsonObject.get("commonMessages").getAsJsonArray();
+        //<
+        JsonArray commonMessages = loadedJsonObject.get("common").getAsJsonArray();
+        JsonArray registrationMessages = loadedJsonObject.get("registration").getAsJsonArray();
+        JsonArray echoMessages = loadedJsonObject.get("echo").getAsJsonArray();
+        //<
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(new JsonCheckerImpl(), new MSSocketSendingHandler(msPort), msPort);
 
         for (JsonElement registrationMessage : registrationMessages) {
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
-                    new RegistrationMessageSIH(socketHandler, messageSystem, msClientService)
+                    new RegistrationSIH(socketHandler, messageSystem, msClientService)
             );
         }
 
@@ -80,6 +98,13 @@ public class SocketHandlerConfig {
             socketHandler.addHandler(
                     commonMessage.getAsString(),
                     new CommonSIH(msClientService, socketHandler)
+            );
+        }
+
+        for (JsonElement echoMessage : echoMessages) {
+            socketHandler.addHandler(
+                    echoMessage.getAsString(),
+                    new EchoSIH(socketHandler)
             );
         }
 
