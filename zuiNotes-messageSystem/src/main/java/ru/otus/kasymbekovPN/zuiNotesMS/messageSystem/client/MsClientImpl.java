@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-//<
 //    /**
 //     * Клиент системы сообщений {@link ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem} <br><br>
 //     *
@@ -25,15 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
 //     *
 //     * {@link #produceMessage(String, Object, MessageType)} - создание сообщения <br><br>
 //     */
-//<
 public class MsClientImpl implements MSClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
     private final String url;
     private final MessageSystem messageSystem;
-
-    //< may be via synchronised
     private final Map<String, MSMessageHandler> handlers = new ConcurrentHashMap<>();
 
     public MsClientImpl(String url, MessageSystem messageSystem) {

@@ -26,7 +26,6 @@ import java.util.UUID;
 // * {@link FrontendMessageReceiver#handleDelUserRequest(OnlineUser)} - обработчик запроса на удаления
 // * пользователя от GUI. В систему сообщений отправляется сообщение типа - {@link MessageType#DEL_USER_REQUEST}<br><br>
 // */
-//<
 @Controller
 @RequiredArgsConstructor
 public class FrontendMessageReceiver {

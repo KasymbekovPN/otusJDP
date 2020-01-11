@@ -20,7 +20,6 @@ import java.util.List;
 // * {@link #handle(JsonObject)} - проверяет, переданные логин, в случае успешной проверки удаляет пользователя; отправляет
 // * сообщение содержащее данные пользователей.
 // */
-//<
 public class DelUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(DelUserSIH.class);

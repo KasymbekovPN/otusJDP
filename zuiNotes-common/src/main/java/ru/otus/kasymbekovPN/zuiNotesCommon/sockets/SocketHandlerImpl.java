@@ -39,10 +39,7 @@ public class SocketHandlerImpl implements SocketHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(SocketHandlerImpl.class);
 
-    //<
     private final Map<String, Map<Boolean, Set<ClientUrl>>> echoTargets = new HashMap<>();
-    //<
-
     private final Map<String, SocketInputHandler> handlers = new ConcurrentHashMap<>();
     private final JsonChecker jsonChecker;
     private final SocketSendingHandler socketSendingHandler;
@@ -136,10 +133,6 @@ public class SocketHandlerImpl implements SocketHandler {
             echoTargets.get(message).put(request, new HashSet<>());
         }
         echoTargets.get(message).get(request).add(echoTarget);
-
-        //<
-        logger.info("sub : {}", echoTargets);
-        //<
     }
 
     @Override
@@ -158,9 +151,5 @@ public class SocketHandlerImpl implements SocketHandler {
                 }
             }
         }
-
-        //<
-        logger.info("unsub : {}", echoTargets);
-        //<
     }
 }

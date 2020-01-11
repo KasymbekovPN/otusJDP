@@ -1,9 +1,11 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
@@ -11,16 +13,13 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 
 import java.util.Optional;
+import java.util.UUID;
 
-//<
 //    /**
 //     * Обработчик сообщений, регистрирующих программы-клиенты. <br><br>
 //     *
 //     * {@link #handle(JsonObject)} - в обработчике создаются клиенты {@link MsClient} системы обмена сообщениями. <br><br>
 //     */
-//<
-
-//< rename
 public class RegistrationSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
@@ -29,51 +28,66 @@ public class RegistrationSIH implements SocketInputHandler {
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
 
-    public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService) {
+    private final JsonErrorObjectGenerator jeoGenerator;
+
+    public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService, JsonErrorObjectGenerator jeoGenerator) {
         this.socketHandler = socketHandler;
         this.messageSystem = messageSystem;
         this.msClientService = msClientService;
+        this.jeoGenerator = jeoGenerator;
     }
 
     @Override
-    public void handle(JsonObject jsonObject) {
+    public void handle(JsonObject jsonObject) throws Exception {
         logger.info("RegistrationSIH : {}", jsonObject);
 
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
         boolean request = jsonObject.get("request").getAsBoolean();
+        boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         String url = JsonHelper.extractUrl(from);
         String host = from.get("host").getAsString();
         String entity = from.get("entity").getAsString();
         int port = from.get("port").getAsInt();
 
-        String status = "";
+        JsonObject error = new JsonObject();
         if (request){
             Optional<MSClient> optMsClient = msClientService.get(url);
-            if (optMsClient.isPresent()){
-                status = "The client '" + url + "' already exists";
+            if (registration){
+                error = optMsClient.isPresent()
+                        ? jeoGenerator.generate(7, url)
+                        : msClientService.createClient(host, port, entity, messageSystem);
             } else {
-                if (msClientService.createClient(host, port, entity, messageSystem)) {
-                    status = "Client '" + url + "' was add.";
-                } else {
-                    status = "Client '" + url + "' wasn't add.";
-                }
+                error = optMsClient.isPresent()
+                        ? msClientService.deleteClient(url)
+                        : jeoGenerator.generate(9, url);
             }
         } else {
-            status = "Field 'request' has invalid value (false)";
+            error = jeoGenerator.generate(8);
         }
 
-        logger.info("RegistrationSIH : {}", status);
-
-        JsonObject data = new JsonObject();
-        data.addProperty("url", url);
         JsonObject respJsonObject = new JsonObject();
-        respJsonObject.addProperty("type", type);
-        respJsonObject.addProperty("request", false);
-        respJsonObject.addProperty("uuid", uuid);
-        respJsonObject.add("data", data);
-        respJsonObject.add("to", from);
+        if (error.size() == 0){
+            JsonObject data = new JsonObject();
+            data.addProperty("url", url);
+            data.addProperty("registration", registration);
+            respJsonObject.addProperty("type", type);
+            respJsonObject.addProperty("request", false);
+            respJsonObject.addProperty("uuid", uuid);
+            respJsonObject.add("data", data);
+            respJsonObject.add("to", from);
+        } else {
+            JsonArray errors = new JsonArray();
+            errors.add(error);
+
+            respJsonObject.addProperty("type", "WRONG");
+            respJsonObject.addProperty("request", false);
+            respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
+            respJsonObject.add("original", jsonObject);
+            respJsonObject.add("errors", errors);
+            respJsonObject.add("to", from);
+        }
 
         socketHandler.send(respJsonObject);
     }

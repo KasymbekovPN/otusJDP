@@ -17,11 +17,13 @@ public class RegistrationMessageNR implements NotifierRunner {
     public RegistrationMessageNR(SocketHandler socketHandler, String type) {
         this.socketHandler = socketHandler;
         this.message = new JsonObject();
-//        this.message.addProperty("type", "I_AM");
-        //<
         this.message.addProperty("type", type);
         this.message.addProperty("request", true);
         this.message.addProperty("uuid", UUID.randomUUID().toString());
+
+        JsonObject data = new JsonObject();
+        data.addProperty("registration", true);
+        this.message.add("data", data);
     }
 
     @Override

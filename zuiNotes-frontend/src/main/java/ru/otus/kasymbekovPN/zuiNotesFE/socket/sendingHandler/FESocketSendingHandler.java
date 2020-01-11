@@ -18,7 +18,6 @@ import java.net.UnknownHostException;
 // * {@link #msHost}:{@link #msPort}; в сообщение добавляются поля "from", содержащие данные об источнике сообщении и
 // * "to", содержащее данные о приемнике. <br>
 // */
-//<
 public class FESocketSendingHandler implements SocketSendingHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(FESocketSendingHandler.class);

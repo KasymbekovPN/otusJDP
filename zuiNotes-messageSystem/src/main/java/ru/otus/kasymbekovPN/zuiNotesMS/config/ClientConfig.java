@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactoryImpl;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.SolusImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import java.net.URL;
 import java.nio.file.Files;
 
 @Configuration
-public class MsClientCreatorFactoryConfig {
+public class ClientConfig {
 
     private static final String CLIENT_CONFIG = "clientConfig.json";
     private static final String SOLUS_FIELD = "solus";
@@ -26,9 +28,14 @@ public class MsClientCreatorFactoryConfig {
         JsonObject config = loadAndCheckConfig();
         return new MsClientCreatorFactoryImpl(
                 config,
-                SOLUS_FIELD,
                 MESSAGES_FIELD
         );
+    }
+
+    @Bean
+    public Solus solus() throws Exception{
+        JsonObject config = loadAndCheckConfig();
+        return new SolusImpl(config, SOLUS_FIELD);
     }
 
     private JsonObject loadAndCheckConfig() throws Exception{

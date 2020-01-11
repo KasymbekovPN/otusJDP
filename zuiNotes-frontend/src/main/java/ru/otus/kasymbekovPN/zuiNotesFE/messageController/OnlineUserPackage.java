@@ -24,7 +24,6 @@ import java.util.List;
 // * users {@link #users} содержит информацию о пользователях, содержащихся в БД.<br><br>
 // *
 //*/
-//<
 public class OnlineUserPackage {
 
     private List<OnlineUser> users;

@@ -1,36 +1,36 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.CmnMsClientCreator;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.MsClientCreator;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.WrongMsClientCreator;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class MsClientCreatorFactoryImpl implements MsClientCreatorFactory {
 
-    private final JsonObject config;
-    private final String solusField;
-    private final String messagesField;
+    private final Map<String, Set<String>> config = new HashMap<>();
 
-    public MsClientCreatorFactoryImpl(JsonObject config, String solusField, String messagesField) {
-        this.config = config;
-        this.solusField = solusField;
-        this.messagesField = messagesField;
+    public MsClientCreatorFactoryImpl(JsonObject jsonConfig, String messagesField) {
+        for (String entity : jsonConfig.keySet()) {
+            JsonArray entityMessages = jsonConfig.get(entity).getAsJsonObject().get(messagesField).getAsJsonArray();
+            Set<String> set = new HashSet<>();
+            for (JsonElement entityMessage : entityMessages) {
+                set.add(entityMessage.getAsString());
+            }
+            this.config.put(entity, set);
+        }
     }
 
     @Override
     public MsClientCreator get(String entity) {
-        if (config.has(entity)){
-            Set<String> messages = new HashSet<>();
-            for (JsonElement element : config.get(entity).getAsJsonObject().get(messagesField).getAsJsonArray()) {
-                messages.add(element.getAsString());
-            }
-            return new CmnMsClientCreator(messages);
-        } else {
-            return new WrongMsClientCreator();
-        }
+        return config.containsKey(entity)
+                ? new CmnMsClientCreator(config.get(entity))
+                : new WrongMsClientCreator();
     }
 }

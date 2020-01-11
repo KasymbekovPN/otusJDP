@@ -9,7 +9,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.NotifierImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.NotifierRunner;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.RegistrationMessageSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.RegistrationSIH;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class MsNotifierConfig {
         final String registrationMessageType = MessageType.I_AM.getValue();
         NotifierRunner notifierRunner = new RegistrationMessageNR(socketHandler, registrationMessageType);
         NotifierImpl registrar = new NotifierImpl(notifierRunner);
-        socketHandler.addHandler(registrationMessageType, new RegistrationMessageSIH(registrar));
+        socketHandler.addHandler(registrationMessageType, new RegistrationSIH(registrar));
 
         return registrar;
     }

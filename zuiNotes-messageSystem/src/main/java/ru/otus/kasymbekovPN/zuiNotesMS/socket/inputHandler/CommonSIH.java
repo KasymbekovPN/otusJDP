@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
@@ -21,13 +22,16 @@ public class CommonSIH implements SocketInputHandler {
     private final MsClientService msClientService;
     private final SocketHandler socketHandler;
 
-    public CommonSIH(MsClientService msClientService, SocketHandler socketHandler) {
+    private final JsonErrorObjectGenerator jeoGenerator;
+
+    public CommonSIH(MsClientService msClientService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
         this.msClientService = msClientService;
         this.socketHandler = socketHandler;
+        this.jeoGenerator = jeoGenerator;
     }
 
     @Override
-    public void handle(JsonObject jsonObject) {
+    public void handle(JsonObject jsonObject) throws Exception {
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
         boolean request = jsonObject.get("request").getAsBoolean();
@@ -53,16 +57,14 @@ public class CommonSIH implements SocketInputHandler {
 
             JsonArray errors = new JsonArray();
             if (!optFromMsClient.isPresent()){
-                JsonObject err = new JsonObject();
-                err.addProperty("code", 1);
-                err.addProperty("client", fromUrl);
-                errors.add(err);
+                errors.add(
+                        jeoGenerator.generate(1, fromUrl)
+                );
             }
             if (!optToMsClient.isPresent()){
-                JsonObject err = new JsonObject();
-                err.addProperty("code", 2);
-                err.addProperty("client", toUrl);
-                errors.add(err);
+                errors.add(
+                        jeoGenerator.generate(2, toUrl)
+                );
             }
 
             JsonObject responseJsonObject = new JsonObject();

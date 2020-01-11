@@ -5,11 +5,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
@@ -45,6 +48,10 @@ public class SocketHandlerConfig {
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
 
+    @Autowired
+    @Qualifier("common")
+    private JsonErrorObjectGenerator jeoGenerator;
+
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
 
@@ -60,19 +67,23 @@ public class SocketHandlerConfig {
         JsonArray registrationMessages = config.get(REGISTRATION_FIELD).getAsJsonArray();
         JsonArray echoMessages = config.get(ECHO_FIELD).getAsJsonArray();
 
-        SocketHandlerImpl socketHandler = new SocketHandlerImpl(new JsonCheckerImpl(), new MSSocketSendingHandler(msPort), msPort);
+        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+                new JsonCheckerImpl(jeoGenerator),
+                new MSSocketSendingHandler(msPort),
+                msPort
+        );
 
         for (JsonElement registrationMessage : registrationMessages) {
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
-                    new RegistrationSIH(socketHandler, messageSystem, msClientService)
+                    new RegistrationSIH(socketHandler, messageSystem, msClientService, jeoGenerator)
             );
         }
 
         for (JsonElement commonMessage : commonMessages) {
             socketHandler.addHandler(
                     commonMessage.getAsString(),
-                    new CommonSIH(msClientService, socketHandler)
+                    new CommonSIH(msClientService, socketHandler, jeoGenerator)
             );
         }
 

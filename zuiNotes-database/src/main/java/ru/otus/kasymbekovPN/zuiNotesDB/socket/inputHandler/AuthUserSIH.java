@@ -20,7 +20,6 @@ import java.util.List;
 // * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки отправляет сообщение
 // * содержащее данные пользователей; при неуспещеой проверке сообщение содержит описание ошибки.
 // */
-//<
 public class AuthUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthUserSIH.class);

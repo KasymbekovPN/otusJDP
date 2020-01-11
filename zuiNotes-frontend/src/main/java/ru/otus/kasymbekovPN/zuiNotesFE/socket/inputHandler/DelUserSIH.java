@@ -20,7 +20,6 @@ import java.util.List;
 // * {@link #handle(JsonObject)} - преобразует ответ в инстанс {@link OnlineUserPackage}, передает полученный инстанс в
 // * соответствующий обработчик {@link #frontendMessageTransmitter}
 // */
-//<
 public class DelUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(DelUserSIH.class);

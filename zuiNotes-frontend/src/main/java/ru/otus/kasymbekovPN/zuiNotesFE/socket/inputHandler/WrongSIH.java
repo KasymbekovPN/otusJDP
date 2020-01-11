@@ -8,7 +8,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 ///**
 // * Обработчик входящего сообщения типа {@link MessageType#WRONG_TYPE} <br><br>
 // */
-//<
 public class WrongSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WrongSIH.class);

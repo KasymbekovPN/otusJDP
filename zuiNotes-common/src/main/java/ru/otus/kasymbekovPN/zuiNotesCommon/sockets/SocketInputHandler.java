@@ -8,5 +8,5 @@ import com.google.gson.JsonObject;
  * {@link #handle(JsonObject)} - метод, обрабатывающий входящие сообщения <br>
  */
 public interface SocketInputHandler {
-    void handle(JsonObject jsonObject);
+    void handle(JsonObject jsonObject) throws Exception;
 }

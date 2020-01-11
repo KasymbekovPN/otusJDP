@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,6 @@ import java.util.*;
 // * {@link JsonCheckerImpl#traverse(JsonObject, JsonObject, StringBuilder, String)} - осуществляет поуровневый обход,
 // * проверяемого сообщения. <br>
 // */
-//<
 public class JsonCheckerImpl implements JsonChecker {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonCheckerImpl.class);
@@ -61,12 +61,13 @@ public class JsonCheckerImpl implements JsonChecker {
         add("uuid");
     }};
 
-    private Map<String, Map<Boolean, JsonObject>> standardJsonObjects = new HashMap<>();
+    private final JsonErrorObjectGenerator jeoGenerator;
 
+    private Map<String, Map<Boolean, JsonObject>> standardJsonObjects = new HashMap<>();
     private JsonObject jsonObject;
 
-    public JsonCheckerImpl() throws Exception {
-
+    public JsonCheckerImpl(JsonErrorObjectGenerator jeoGenerator) throws Exception {
+        this.jeoGenerator = jeoGenerator;
         this.jsonObject = new JsonObject();
 
         String status = "";
@@ -90,7 +91,6 @@ public class JsonCheckerImpl implements JsonChecker {
         init(content);
     }
 
-    //< need checking
     private void init(String content) throws Exception {
         JsonObject loadedJsonObject = (JsonObject) new JsonParser().parse(content);
 
@@ -111,7 +111,7 @@ public class JsonCheckerImpl implements JsonChecker {
     }
 
     @Override
-    public void setJsonObject(JsonObject jsonObject, Set<String> validTypes) {
+    public void setJsonObject(JsonObject jsonObject, Set<String> validTypes) throws Exception {
         this.jsonObject = jsonObject;
         parse(validTypes);
     }
@@ -121,16 +121,19 @@ public class JsonCheckerImpl implements JsonChecker {
         return jsonObject;
     }
 
-    private void parse(Set<String> validTypes){
+    private void parse(Set<String> validTypes) throws Exception {
 
         JsonObject original = new JsonObject();
         JsonArray errors = new JsonArray();
         for (String mandatoryField : MANDATORY_FIELDS) {
             if (!jsonObject.has(mandatoryField)){
-                JsonObject err = new JsonObject();
-                err.addProperty("code", 3);
-                err.addProperty("field", mandatoryField);
-                errors.add(err);
+                errors.add(
+                        jeoGenerator.generate(1, mandatoryField)
+                );
+//                JsonObject err = new JsonObject();
+//                err.addProperty("code", 3);
+//                err.addProperty("field", mandatoryField);
+//                errors.add(err);
             } else {
                 original.add(mandatoryField, jsonObject.get(mandatoryField));
             }
@@ -143,10 +146,9 @@ public class JsonCheckerImpl implements JsonChecker {
                 String path = "";
                 traverse(jsonObject, standardJsonObjects.get(type).get(request), errors, path);
             } else {
-                JsonObject err = new JsonObject();
-                err.addProperty("code", 4);
-                err.addProperty("type", type);
-                errors.add(err);
+                errors.add(
+                        jeoGenerator.generate(2, type)
+                );
             }
         }
 
@@ -159,7 +161,7 @@ public class JsonCheckerImpl implements JsonChecker {
         }
     }
 
-    private static void traverse(JsonObject jsonObject, JsonObject std, JsonArray errors, String path){
+    private void traverse(JsonObject jsonObject, JsonObject std, JsonArray errors, String path) throws Exception {
         Set<String> keys = std.keySet();
         for (String key : keys) {
             String currentPath = path + ":" + key;
@@ -168,10 +170,9 @@ public class JsonCheckerImpl implements JsonChecker {
             if (jsonObject.has(key)){
                 element = jsonObject.get(key);
             } else {
-                JsonObject err = new JsonObject();
-                err.addProperty("code", 3);
-                err.addProperty("field", currentPath);
-                errors.add(err);
+                errors.add(
+                        jeoGenerator.generate(1, currentPath)
+                );
             }
 
             if (stdElement.isJsonObject()){
@@ -179,21 +180,17 @@ public class JsonCheckerImpl implements JsonChecker {
                     if (element.isJsonObject()){
                         traverse(element.getAsJsonObject(), stdElement.getAsJsonObject(), errors, currentPath);
                     } else {
-                        JsonObject err = new JsonObject();
-                        err.addProperty("code", 5);
-                        err.addProperty("type", "Object");
-                        err.addProperty("field", currentPath);
-                        errors.add(err);
+                        errors.add(
+                                jeoGenerator.generate(3, "Object", currentPath)
+                        );
                     }
                 }
             } else if (stdElement.isJsonArray()){
                 if (element != null){
                     if (!element.isJsonArray()){
-                        JsonObject err = new JsonObject();
-                        err.addProperty("code", 5);
-                        err.addProperty("type", "Array");
-                        err.addProperty("field", currentPath);
-                        errors.add(err);
+                        errors.add(
+                                jeoGenerator.generate(3, "Array", currentPath)
+                        );
                     }
                 }
             } else if (stdElement.isJsonPrimitive()){
@@ -203,40 +200,33 @@ public class JsonCheckerImpl implements JsonChecker {
                             try{
                                 element.getAsString();
                             } catch (NumberFormatException ex){
-                                JsonObject err = new JsonObject();
-                                err.addProperty("code", 5);
-                                err.addProperty("type", "String");
-                                err.addProperty("field", currentPath);
-                                errors.add(err);
+                                errors.add(
+                                        jeoGenerator.generate(3, "String", currentPath)
+                                );
                             }
                             break;
                         case "Integer":
                             try {
                                 element.getAsInt();
                             } catch (NumberFormatException ex){
-                                JsonObject err = new JsonObject();
-                                err.addProperty("code", 5);
-                                err.addProperty("type", "Integer");
-                                err.addProperty("field", currentPath);
-                                errors.add(err);
+                                errors.add(
+                                        jeoGenerator.generate(3, "Integer", currentPath)
+                                );
                             }
                             break;
                         case "Boolean":
                             try{
                                 element.getAsBoolean();
                             } catch (NumberFormatException ex){
-                                JsonObject err = new JsonObject();
-                                err.addProperty("code", 5);
-                                err.addProperty("type", "Boolean");
-                                err.addProperty("field", currentPath);
-                                errors.add(err);
+                                errors.add(
+                                        jeoGenerator.generate(3, "Boolean", currentPath)
+                                );
                             }
                             break;
                         default:
-                            JsonObject err = new JsonObject();
-                            err.addProperty("code", 6);
-                            err.addProperty("field", currentPath);
-                            errors.add(err);
+                            errors.add(
+                                    jeoGenerator.generate(4, currentPath)
+                            );
                             break;
                     }
                 }

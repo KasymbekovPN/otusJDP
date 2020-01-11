@@ -6,16 +6,9 @@ import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
 
-//<
-// !!! Как он должен реазировать ?
-// !!! Должен ли он отсылать ответ и есл да, то какой?
-//<
-
-//<
 //    /**
 //     * Обработчик невалидный сообщений.
 //     */
-//<
 public class WrongSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WrongSIH.class);

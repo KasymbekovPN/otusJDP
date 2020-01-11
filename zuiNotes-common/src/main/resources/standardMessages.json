@@ -5,6 +5,9 @@
     },
     "I_AM" : {
         "requestMessageContent" : {
+            "data" : {
+                "registration" : "Boolean"
+            },
             "from" : {
                 "host" : "String",
                 "port" : "Integer",
@@ -13,6 +16,7 @@
         },
         "responseMessageContent" : {
             "data" : {
+                "registration" : "Boolean",
                 "url" : "String"
             },
             "from" : {
