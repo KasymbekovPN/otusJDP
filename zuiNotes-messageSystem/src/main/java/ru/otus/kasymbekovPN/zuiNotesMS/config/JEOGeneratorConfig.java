@@ -1,8 +1,10 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator1;
@@ -12,18 +14,22 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator4;
 import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.*;
 
 @Configuration
+@RequiredArgsConstructor
 public class JEOGeneratorConfig {
 
-    private static final String ENTITY = "MESSAGE_SYSTEM";
+    private final Client client;
 
     @Qualifier("common")
     @Bean
     JsonErrorObjectGenerator common(){
-        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl(ENTITY, true);
+        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl(client.getEntity(), true);
         jeoGenerator.addDataGenerator(1, new CommonJEDGenerator1());
         jeoGenerator.addDataGenerator(2, new CommonJEDGenerator2());
         jeoGenerator.addDataGenerator(3, new CommonJEDGenerator3());
         jeoGenerator.addDataGenerator(4, new CommonJEDGenerator4());
+
+        //<
+        System.out.println("common : " + jeoGenerator);
 
         return jeoGenerator;
     }
@@ -31,7 +37,7 @@ public class JEOGeneratorConfig {
     @Qualifier("ms")
     @Bean
     JsonErrorObjectGenerator ms(){
-        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl(ENTITY, false);
+        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl(client.getEntity(), false);
         jeoGenerator.addDataGenerator(1, new MSJEDGenerator1());
         jeoGenerator.addDataGenerator(2, new MSJEDGenerator2());
         jeoGenerator.addDataGenerator(3, new MSJEDGenerator3());
@@ -41,6 +47,9 @@ public class JEOGeneratorConfig {
         jeoGenerator.addDataGenerator(7, new MSJEDGenerator7());
         jeoGenerator.addDataGenerator(8, new MSJEDGenerator8());
         jeoGenerator.addDataGenerator(9, new MSJEDGenerator9());
+
+        //<
+        System.out.println("ms : " + jeoGenerator);
 
         return jeoGenerator;
     }

@@ -1,4 +1,4 @@
-package ru.otus.kasymbekovPN.zuiNotesMS.config;
+package ru.otus.kasymbekovPN.zuiNotesFE.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,6 @@ public class ClientConfig {
 
     @Bean
     Client client(){
-        return new ClientImpl("MESSAGE_SYSTEM");
+        return new ClientImpl("FRONTEND");
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
@@ -47,10 +48,15 @@ public class SocketHandlerConfig {
 
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
+    private final Client client;
 
     @Autowired
     @Qualifier("common")
-    private JsonErrorObjectGenerator jeoGenerator;
+    private JsonErrorObjectGenerator commonJeoGenerator;
+
+    @Autowired
+    @Qualifier("ms")
+    private JsonErrorObjectGenerator msJeoGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -68,22 +74,22 @@ public class SocketHandlerConfig {
         JsonArray echoMessages = config.get(ECHO_FIELD).getAsJsonArray();
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(jeoGenerator),
-                new MSSocketSendingHandler(msPort),
+                new JsonCheckerImpl(commonJeoGenerator),
+                new MSSocketSendingHandler(msPort, client),
                 msPort
         );
 
         for (JsonElement registrationMessage : registrationMessages) {
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
-                    new RegistrationSIH(socketHandler, messageSystem, msClientService, jeoGenerator)
+                    new RegistrationSIH(socketHandler, messageSystem, msClientService, msJeoGenerator)
             );
         }
 
         for (JsonElement commonMessage : commonMessages) {
             socketHandler.addHandler(
                     commonMessage.getAsString(),
-                    new CommonSIH(msClientService, socketHandler, jeoGenerator)
+                    new CommonSIH(msClientService, socketHandler, msJeoGenerator)
             );
         }
 

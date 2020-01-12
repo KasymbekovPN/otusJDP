@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
@@ -31,6 +32,8 @@ public class SocketHandlerConfig {
     private static final String TARGET_HOST = "target.host";
     private static final String TARGET_PORT = "target.port";
 
+    private final Client client;
+
     @Autowired
     @Qualifier("common")
     private JsonErrorObjectGenerator jeoGenerator;
@@ -51,7 +54,7 @@ public class SocketHandlerConfig {
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
                 new JsonCheckerImpl(jeoGenerator),
-                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort),
+                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 

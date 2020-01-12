@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
@@ -22,10 +23,12 @@ public class MSSocketSendingHandler implements SocketSendingHandler {
 
     private final String selfHost;
     private final int selfPort;
+    private final Client client;
 
-    public MSSocketSendingHandler(int selfPort) throws UnknownHostException {
+    public MSSocketSendingHandler(int selfPort, Client client) throws UnknownHostException {
         this.selfHost = InetAddress.getLocalHost().getHostAddress();
         this.selfPort = selfPort;
+        this.client = client;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class MSSocketSendingHandler implements SocketSendingHandler {
         int toPort = to.get("port").getAsInt();
 
         if (!jsonObject.has("from")){
-            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, "MESSAGE_SYSTEM"));
+            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, client.getEntity()));
         }
 
         try(Socket clientSocket = new Socket(toHost, toPort)){

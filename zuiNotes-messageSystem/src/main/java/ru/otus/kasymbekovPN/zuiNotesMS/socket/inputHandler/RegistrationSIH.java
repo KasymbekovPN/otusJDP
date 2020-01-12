@@ -55,7 +55,7 @@ public class RegistrationSIH implements SocketInputHandler {
         if (request){
             Optional<MSClient> optMsClient = msClientService.get(url);
             if (registration){
-                error = optMsClient.isPresent()
+                error = true/*optMsClient.isPresent()*/
                         ? jeoGenerator.generate(7, url)
                         : msClientService.createClient(host, port, entity, messageSystem);
             } else {
