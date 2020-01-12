@@ -3,7 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
 ///**
 // * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType#WRONG_TYPE} <br><br>

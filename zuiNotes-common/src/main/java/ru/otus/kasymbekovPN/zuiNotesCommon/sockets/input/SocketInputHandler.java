@@ -1,4 +1,4 @@
-package ru.otus.kasymbekovPN.zuiNotesCommon.sockets;
+package ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input;
 
 import com.google.gson.JsonObject;
 

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
 //    /**
 //     * Обработчик невалидный сообщений.

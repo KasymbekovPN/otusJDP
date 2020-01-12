@@ -22,7 +22,7 @@ public class MsNotifierConfig {
         String registrationMessageType = MessageType.I_AM.getValue();
         NotifierRunner notifierRunner = new RegistrationMessageNR(socketHandler, registrationMessageType);
         Notifier notifier = new NotifierImpl(notifierRunner);
-        socketHandler.addHandler(registrationMessageType, new RegistrationSIH(notifier, socketHandler));
+        socketHandler.addHandler(registrationMessageType, new RegistrationSIH(notifier));
 
         return notifier;
     }

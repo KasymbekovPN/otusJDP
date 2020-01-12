@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.OnlineUserPackage;
 

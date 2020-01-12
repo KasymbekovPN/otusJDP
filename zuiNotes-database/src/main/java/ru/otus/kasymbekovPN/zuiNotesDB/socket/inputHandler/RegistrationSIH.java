@@ -4,10 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.Notifier;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketInputHandler;
-
-import java.util.UUID;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
 ///**
 // * Обработчик входящего сообщения типа {@link MessageType#I_AM_RESPONSE} <br><br>
@@ -20,11 +17,9 @@ public class RegistrationSIH implements SocketInputHandler {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
 
     private final Notifier notifier;
-    private final SocketHandler socketHandler;
 
-    public RegistrationSIH(Notifier notifier, SocketHandler socketHandler) {
+    public RegistrationSIH(Notifier notifier) {
         this.notifier = notifier;
-        this.socketHandler = socketHandler;
     }
 
     @Override

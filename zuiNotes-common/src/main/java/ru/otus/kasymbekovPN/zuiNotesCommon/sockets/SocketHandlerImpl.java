@@ -4,8 +4,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.client.ClientUrl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,7 +41,7 @@ public class SocketHandlerImpl implements SocketHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(SocketHandlerImpl.class);
 
-    private final Map<String, Map<Boolean, Set<ClientUrl>>> echoTargets = new HashMap<>();
+    private final Map<String, Map<Boolean, Set<EchoClient>>> echoTargets = new HashMap<>();
     private final Map<String, SocketInputHandler> handlers = new ConcurrentHashMap<>();
     private final JsonChecker jsonChecker;
     private final SocketSendingHandler socketSendingHandler;
@@ -103,10 +105,10 @@ public class SocketHandlerImpl implements SocketHandler {
                 echoJsonObject.addProperty("uuid", UUID.randomUUID().toString());
                 echoJsonObject.add("data", data);
 
-                final Set<ClientUrl> clientUrls = echoTargets.get(type).get(request);
-                for (ClientUrl clientUrl : clientUrls) {
-                    echoJsonObject.addProperty("type", clientUrl.getMessage());
-                    echoJsonObject.add("to", clientUrl.getJsonUrl());
+                final Set<EchoClient> echoClients = echoTargets.get(type).get(request);
+                for (EchoClient echoClient : echoClients) {
+                    echoJsonObject.addProperty("type", echoClient.getEchoMessageType());
+                    echoJsonObject.add("to", echoClient.getUrl());
 
                     send(echoJsonObject.deepCopy());
                 }
@@ -125,28 +127,28 @@ public class SocketHandlerImpl implements SocketHandler {
     }
 
     @Override
-    public synchronized void subscribeEcho(String message, boolean request, ClientUrl echoTarget) {
-        if (!echoTargets.containsKey(message)){
-            echoTargets.put(message, new HashMap<>());
+    public synchronized void subscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+        if (!echoTargets.containsKey(observedMessageType)){
+            echoTargets.put(observedMessageType, new HashMap<>());
         }
-        if (!echoTargets.get(message).containsKey(request)){
-            echoTargets.get(message).put(request, new HashSet<>());
+        if (!echoTargets.get(observedMessageType).containsKey(request)){
+            echoTargets.get(observedMessageType).put(request, new HashSet<>());
         }
-        echoTargets.get(message).get(request).add(echoTarget);
+        echoTargets.get(observedMessageType).get(request).add(echoClient);
     }
 
     @Override
-    public synchronized void unsubscribeEcho(String message, boolean request, ClientUrl echoTarget) {
-        if (echoTargets.containsKey(message)){
-            Map<Boolean, Set<ClientUrl>> booleanSetMap = echoTargets.get(message);
+    public synchronized void unsubscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+        if (echoTargets.containsKey(observedMessageType)){
+            Map<Boolean, Set<EchoClient>> booleanSetMap = echoTargets.get(observedMessageType);
             if (booleanSetMap.containsKey(request)){
-                Set<ClientUrl> clientUrls = booleanSetMap.get(request);
-                clientUrls.remove(echoTarget);
+                Set<EchoClient> echoClients = booleanSetMap.get(request);
+                echoClients.remove(echoClient);
 
-                if (clientUrls.size() == 0){
+                if (echoClients.size() == 0){
                     booleanSetMap.remove(request);
                     if (booleanSetMap.size() == 0){
-                        echoTargets.remove(message);
+                        echoTargets.remove(observedMessageType);
                     }
                 }
             }
