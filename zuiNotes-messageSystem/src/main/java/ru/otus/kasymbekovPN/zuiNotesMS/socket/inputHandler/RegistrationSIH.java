@@ -11,7 +11,9 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,14 +30,19 @@ public class RegistrationSIH implements SocketInputHandler {
     private final SocketHandler socketHandler;
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
-
     private final JsonErrorObjectGenerator jeoGenerator;
+    private final MsClientCreatorFactory msClientCreatorFactory;
+    private final Solus solus;
 
-    public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService, JsonErrorObjectGenerator jeoGenerator) {
+    public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService,
+                           JsonErrorObjectGenerator jeoGenerator, MsClientCreatorFactory msClientCreatorFactory,
+                           Solus solus) {
         this.socketHandler = socketHandler;
         this.messageSystem = messageSystem;
         this.msClientService = msClientService;
         this.jeoGenerator = jeoGenerator;
+        this.msClientCreatorFactory = msClientCreatorFactory;
+        this.solus = solus;
     }
 
     @Override
@@ -53,9 +60,17 @@ public class RegistrationSIH implements SocketInputHandler {
         if (request){
             Optional<MSClient> optMsClient = msClientService.get(url);
             if (registration){
-                error = optMsClient.isPresent()
-                        ? jeoGenerator.generate(7, url.getUrl())
-                        : msClientService.createClient(url, messageSystem);
+                boolean notReg = solus.register(url.getEntity());
+                if (notReg){
+                    MSClient msClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
+                    if (msClient != null){
+                        error = msClientService.addClient(url, msClient);
+                    } else {
+                        error = jeoGenerator.generate(4, url.getEntity());;
+                    }
+                } else {
+                    error = jeoGenerator.generate(5, url.getEntity());
+                }
             } else {
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)

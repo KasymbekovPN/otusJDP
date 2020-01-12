@@ -22,9 +22,8 @@ import java.util.Set;
 //     * {@link #get(String)} - геттер клиента <br>
 //     */
 public interface MsClientService {
-    JsonObject createClient(MsClientUrl url, MessageSystem messageSystem) throws Exception;
+    JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception;
     JsonObject deleteClient(MsClientUrl url) throws Exception;
-    void setSocketHandler(SocketHandler socketHandler);
     Optional<MSClient> get(MsClientUrl url);
     Map<String, Set<MsClientUrl>> search(Set<String> entities);
 }

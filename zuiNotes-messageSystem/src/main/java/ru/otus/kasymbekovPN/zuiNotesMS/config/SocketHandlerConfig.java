@@ -17,7 +17,9 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
 
@@ -48,6 +50,8 @@ public class SocketHandlerConfig {
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
     private final Client client;
+    private final MsClientCreatorFactory msClientCreatorFactory;
+    private final Solus solus;
 
     @Autowired
     @Qualifier("common")
@@ -89,7 +93,8 @@ public class SocketHandlerConfig {
         for (JsonElement registrationMessage : registrationMessages) {
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
-                    new RegistrationSIH(socketHandler, messageSystem, msClientService, msJeoGenerator)
+                    new RegistrationSIH(socketHandler, messageSystem, msClientService,
+                                        msJeoGenerator, msClientCreatorFactory, solus)
             );
         }
 
@@ -108,8 +113,6 @@ public class SocketHandlerConfig {
         }
 
         socketHandler.addHandler("WRONG", new WrongSIH(socketHandler));
-
-        msClientService.setSocketHandler(socketHandler);
 
         return socketHandler;
     }

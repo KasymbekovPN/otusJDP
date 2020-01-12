@@ -37,34 +37,15 @@ public class MsClientServiceImpl implements MsClientService {
     @Autowired
     private JsonErrorObjectGenerator jeoGenerator;
 
-    private final Solus solus;
-    private final MsClientCreatorFactory msClientCreatorFactory;
     private final Map<MsClientUrl, MSClient> clients = new HashMap<>();
 
-    private SocketHandler socketHandler;
-
-    public MsClientServiceImpl(MsClientCreatorFactory msClientCreatorFactory, Solus solus) {
-        this.msClientCreatorFactory = msClientCreatorFactory;
-        this.solus = solus;
-    }
-
     @Override
-    public synchronized JsonObject createClient(MsClientUrl url, MessageSystem messageSystem) throws Exception {
+    public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
         if (clients.containsKey(url)){
             return jeoGenerator.generate(3, url);
         } else {
-            final boolean notReg = solus.register(url.getEntity());
-            if (notReg){
-                MSClient msClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
-                if (msClient != null){
-                    clients.put(url, msClient);
-                    return new JsonObject();
-                } else {
-                    return jeoGenerator.generate(4, url.getEntity());
-                }
-            } else {
-                return jeoGenerator.generate(5, url.getEntity());
-            }
+            clients.put(url, msClient);
+            return new JsonObject();
         }
     }
 
@@ -74,11 +55,6 @@ public class MsClientServiceImpl implements MsClientService {
         return removedClient == null
                 ? jeoGenerator.generate(6, url.getUrl())
                 : new JsonObject();
-    }
-
-    @Override
-    public synchronized void setSocketHandler(SocketHandler socketHandler) {
-        this.socketHandler = socketHandler;
     }
 
     @Override
