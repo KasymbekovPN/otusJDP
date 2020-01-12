@@ -130,10 +130,6 @@ public class JsonCheckerImpl implements JsonChecker {
                 errors.add(
                         jeoGenerator.generate(1, mandatoryField)
                 );
-//                JsonObject err = new JsonObject();
-//                err.addProperty("code", 3);
-//                err.addProperty("field", mandatoryField);
-//                errors.add(err);
             } else {
                 original.add(mandatoryField, jsonObject.get(mandatoryField));
             }

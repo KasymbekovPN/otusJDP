@@ -8,7 +8,6 @@ public class EchoClientImpl implements EchoClient {
 
     private final String host;
     private final String entity;
-    //< rename
     private final String echoMessageType;
     private final int port;
 

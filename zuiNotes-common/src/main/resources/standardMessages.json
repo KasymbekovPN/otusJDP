@@ -166,5 +166,36 @@
                 "entity" : "String"
             }
         }
+    },
+    "CLIENTS" : {
+        "requestMessageContent" : {
+            "data" : {
+                "entities" : []
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
     }
 }

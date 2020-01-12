@@ -28,9 +28,6 @@ public class JEOGeneratorConfig {
         jeoGenerator.addDataGenerator(3, new CommonJEDGenerator3());
         jeoGenerator.addDataGenerator(4, new CommonJEDGenerator4());
 
-        //<
-        System.out.println("common : " + jeoGenerator);
-
         return jeoGenerator;
     }
 
@@ -47,9 +44,6 @@ public class JEOGeneratorConfig {
         jeoGenerator.addDataGenerator(7, new MSJEDGenerator7());
         jeoGenerator.addDataGenerator(8, new MSJEDGenerator8());
         jeoGenerator.addDataGenerator(9, new MSJEDGenerator9());
-
-        //<
-        System.out.println("ms : " + jeoGenerator);
 
         return jeoGenerator;
     }

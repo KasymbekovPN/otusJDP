@@ -4,8 +4,11 @@ import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 //    /**
 //     * Интерфейс, служащйи для создания сервиса клиентов {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
@@ -19,8 +22,9 @@ import java.util.Optional;
 //     * {@link #get(String)} - геттер клиента <br>
 //     */
 public interface MsClientService {
-    JsonObject createClient(String host, int port, String entity, MessageSystem messageSystem) throws Exception;
-    JsonObject deleteClient(String url) throws Exception;
+    JsonObject createClient(MsClientUrl url, MessageSystem messageSystem) throws Exception;
+    JsonObject deleteClient(MsClientUrl url) throws Exception;
     void setSocketHandler(SocketHandler socketHandler);
-    Optional<MSClient> get(String url);
+    Optional<MSClient> get(MsClientUrl url);
+    Map<String, Set<MsClientUrl>> search(Set<String> entities);
 }

@@ -11,12 +11,11 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 //    /**
 //     * Сервис клиентов {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
@@ -40,7 +39,7 @@ public class MsClientServiceImpl implements MsClientService {
 
     private final Solus solus;
     private final MsClientCreatorFactory msClientCreatorFactory;
-    private final Map<String, MSClient> clients = new HashMap<>();
+    private final Map<MsClientUrl, MSClient> clients = new HashMap<>();
 
     private SocketHandler socketHandler;
 
@@ -50,32 +49,30 @@ public class MsClientServiceImpl implements MsClientService {
     }
 
     @Override
-    public synchronized JsonObject createClient(String host, int port, String entity, MessageSystem messageSystem) throws Exception {
-
-        String url = JsonHelper.extractUrl(JsonHelper.makeUrl(host, port, entity));
+    public synchronized JsonObject createClient(MsClientUrl url, MessageSystem messageSystem) throws Exception {
         if (clients.containsKey(url)){
             return jeoGenerator.generate(3, url);
         } else {
-            final boolean notReg = solus.register(entity);
+            final boolean notReg = solus.register(url.getEntity());
             if (notReg){
-                MSClient msClient = msClientCreatorFactory.get(entity).create(url, socketHandler, messageSystem);
+                MSClient msClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
                 if (msClient != null){
                     clients.put(url, msClient);
                     return new JsonObject();
                 } else {
-                    return jeoGenerator.generate(4, entity);
+                    return jeoGenerator.generate(4, url.getEntity());
                 }
             } else {
-                return jeoGenerator.generate(5, entity);
+                return jeoGenerator.generate(5, url.getEntity());
             }
         }
     }
 
     @Override
-    public synchronized JsonObject deleteClient(String url) throws Exception {
+    public synchronized JsonObject deleteClient(MsClientUrl url) throws Exception {
         MSClient removedClient = clients.remove(url);
         return removedClient == null
-                ? jeoGenerator.generate(6, url)
+                ? jeoGenerator.generate(6, url.getUrl())
                 : new JsonObject();
     }
 
@@ -85,7 +82,25 @@ public class MsClientServiceImpl implements MsClientService {
     }
 
     @Override
-    public synchronized Optional<MSClient> get(String url) {
+    public synchronized Optional<MSClient> get(MsClientUrl url) {
         return Optional.ofNullable(clients.getOrDefault(url, null));
+    }
+
+    @Override
+    public Map<String, Set<MsClientUrl>> search(Set<String> entities) {
+
+        Map<String, Set<MsClientUrl>> result = new HashMap<>();
+        for (String entity : entities) {
+            result.put(entity, new HashSet<>());
+        }
+
+        for (MsClientUrl msClientUrl : clients.keySet()) {
+            String entity = msClientUrl.getEntity();
+            if (entities.contains(entity)){
+                result.get(entity).add(msClientUrl);
+            }
+        }
+
+        return result;
     }
 }

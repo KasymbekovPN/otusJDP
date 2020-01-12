@@ -10,6 +10,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 
 import java.util.Optional;
@@ -46,22 +47,19 @@ public class RegistrationSIH implements SocketInputHandler {
         boolean request = jsonObject.get("request").getAsBoolean();
         boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
-        String url = JsonHelper.extractUrl(from);
-        String host = from.get("host").getAsString();
-        String entity = from.get("entity").getAsString();
-        int port = from.get("port").getAsInt();
+        MsClientUrl url = new MsClientUrl(from.get("host").getAsString(), from.get("port").getAsInt(), from.get("entity").getAsString());
 
         JsonObject error = new JsonObject();
         if (request){
             Optional<MSClient> optMsClient = msClientService.get(url);
             if (registration){
-                error = true/*optMsClient.isPresent()*/
-                        ? jeoGenerator.generate(7, url)
-                        : msClientService.createClient(host, port, entity, messageSystem);
+                error = optMsClient.isPresent()
+                        ? jeoGenerator.generate(7, url.getUrl())
+                        : msClientService.createClient(url, messageSystem);
             } else {
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)
-                        : jeoGenerator.generate(9, url);
+                        : jeoGenerator.generate(9, url.getUrl());
             }
         } else {
             error = jeoGenerator.generate(8);
@@ -70,7 +68,7 @@ public class RegistrationSIH implements SocketInputHandler {
         JsonObject respJsonObject = new JsonObject();
         if (error.size() == 0){
             JsonObject data = new JsonObject();
-            data.addProperty("url", url);
+            data.addProperty("url", url.getUrl());
             data.addProperty("registration", registration);
             respJsonObject.addProperty("type", type);
             respJsonObject.addProperty("request", false);

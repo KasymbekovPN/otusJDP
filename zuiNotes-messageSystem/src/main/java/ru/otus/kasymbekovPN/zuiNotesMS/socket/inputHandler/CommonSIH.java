@@ -10,6 +10,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 
 import java.util.Optional;
@@ -37,8 +38,10 @@ public class CommonSIH implements SocketInputHandler {
         boolean request = jsonObject.get("request").getAsBoolean();
         logger.info("CommonSIH type : {}, request : {}, uuid : {}, data : {}", type, request, uuid, jsonObject);
 
-        String fromUrl = JsonHelper.extractUrl(jsonObject.get("from").getAsJsonObject());
-        String toUrl = JsonHelper.extractUrl(jsonObject.get("to").getAsJsonObject());
+        JsonObject from = jsonObject.get("from").getAsJsonObject();
+        JsonObject to = jsonObject.get("to").getAsJsonObject();
+        MsClientUrl fromUrl = new MsClientUrl(from.get("host").getAsString(), from.get("port").getAsInt(), from.get("entity").getAsString());
+        MsClientUrl toUrl = new MsClientUrl(to.get("host").getAsString(), to.get("port").getAsInt(), to.get("entity").getAsString());
 
         Optional<MSClient> optFromMsClient = msClientService.get(fromUrl);
         Optional<MSClient> optToMsClient = msClientService.get(toUrl);
@@ -58,12 +61,12 @@ public class CommonSIH implements SocketInputHandler {
             JsonArray errors = new JsonArray();
             if (!optFromMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(1, fromUrl)
+                        jeoGenerator.generate(1, fromUrl.getUrl())
                 );
             }
             if (!optToMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(2, toUrl)
+                        jeoGenerator.generate(2, toUrl.getUrl())
                 );
             }
 

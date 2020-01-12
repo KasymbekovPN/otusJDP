@@ -9,5 +9,8 @@
     ],
     "echo" : [
         "ECHO"
+    ],
+    "clients" : [
+        "CLIENTS"
     ]
 }

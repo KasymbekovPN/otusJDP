@@ -20,6 +20,6 @@ public interface MSClient {
     void addHandler(String type, MSMessageHandler handler);
     boolean sendMessage(Message message);
     void handle(Message message);
-    String getUrl();
-    <T> Message produceMessage(String toUrl, T data, String type);
+    MsClientUrl getUrl();
+    <T> Message produceMessage(MsClientUrl toUrl, T data, String type);
 }

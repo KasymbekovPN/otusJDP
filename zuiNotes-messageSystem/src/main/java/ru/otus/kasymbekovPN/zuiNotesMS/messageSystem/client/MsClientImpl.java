@@ -28,11 +28,11 @@ public class MsClientImpl implements MSClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
-    private final String url;
+    private final MsClientUrl url;
     private final MessageSystem messageSystem;
     private final Map<String, MSMessageHandler> handlers = new ConcurrentHashMap<>();
 
-    public MsClientImpl(String url, MessageSystem messageSystem) {
+    public MsClientImpl(MsClientUrl url, MessageSystem messageSystem) {
         this.url = url;
         this.messageSystem = messageSystem;
     }
@@ -67,12 +67,12 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public String getUrl() {
+    public MsClientUrl getUrl() {
         return url;
     }
 
     @Override
-    public <T> Message produceMessage(String toUrl, T data, String type) {
+    public <T> Message produceMessage(MsClientUrl toUrl, T data, String type) {
         return new Message(url, toUrl, type, Serializers.serialize(data));
     }
 
