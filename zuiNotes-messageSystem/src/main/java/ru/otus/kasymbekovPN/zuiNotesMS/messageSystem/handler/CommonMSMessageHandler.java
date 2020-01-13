@@ -30,4 +30,9 @@ public class CommonMSMessageHandler implements MSMessageHandler {
         );
         socketHandler.send(jsonObject);
     }
+
+    @Override
+    public MSMessageHandler deepCopy() {
+        return new CommonMSMessageHandler(socketHandler);
+    }
 }

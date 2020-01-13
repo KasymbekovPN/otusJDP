@@ -18,4 +18,9 @@ public class WrongMSMessageHandler implements MSMessageHandler {
     public void handle(Message message) {
         logger.warn("WrongMSMessageHandler : {}", message);
     }
+
+    @Override
+    public MSMessageHandler deepCopy() {
+        return new WrongMSMessageHandler();
+    }
 }
