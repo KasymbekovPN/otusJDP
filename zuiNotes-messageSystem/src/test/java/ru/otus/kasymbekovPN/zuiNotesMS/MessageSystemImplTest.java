@@ -1,19 +1,44 @@
 package ru.otus.kasymbekovPN.zuiNotesMS;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.ClientImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator1;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator2;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator3;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator4;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.*;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystemImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.CmnMsClientCreator;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.WrongMsClientCreator;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactoryImpl;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientServiceImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.SolusImpl;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.WrongMSMessageHandler;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonSIH;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongSIH;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.assertj.core.api.Assertions.*;
 
 public class MessageSystemImplTest {
 
@@ -25,124 +50,151 @@ public class MessageSystemImplTest {
     private static final String FRONTEND = "FRONTEND";
 
     private static JsonObject clientConfig = new JsonObject();
+    private static JsonObject testMessage = new JsonObject();
     static {
         JsonObject tmp = new JsonObject();
 
         JsonObject db = new JsonObject();
         JsonArray dbMsgs = new JsonArray();
-        dbMsgs.add("AUTH_USER");
-        dbMsgs.add("ADD_USER");
-        dbMsgs.add("DEL_USER");
+        dbMsgs.add("TEST_MESSAGE");
         db.addProperty(SOLUS_FIELD, false);
         db.add(MESSAGES_FIELD, dbMsgs);
         tmp.add(DATABASE, db);
 
         JsonObject fe = new JsonObject();
         JsonArray feMsgs = new JsonArray();
-        feMsgs.add("AUTH_USER");
-        feMsgs.add("ADD_USER");
-        feMsgs.add("DEL_USER");
+        feMsgs.add("TEST_MESSAGE");
         fe.addProperty(SOLUS_FIELD, false);
         fe.add(MESSAGES_FIELD, feMsgs);
         tmp.add(FRONTEND, fe);
 
         clientConfig = tmp;
+
+        tmp = new JsonObject();
+        tmp.addProperty("type", "TEST_MESSAGE");
+        tmp.addProperty("request", true);
+        tmp.addProperty("uuid", UUID.randomUUID().toString());
+
+        testMessage = tmp;
     }
 
-//    private static final Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
-//
-//    private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
-//    private static final String DATABASE_SERVICE_CLIENT_NAME = "databaseService";
-//    private static final String HANDLER_MAPPING_USER_DATA = "userData";
-//
-//
-//    private MessageSystem messageSystem;
-//    private FrontendService frontendService;
-//    private MsClient databaseMsClient;
-//    private MsClient frontendMsClient;
-//
-//<
+    private MessageSystem messageSystem = null;
+    private MsClientServiceImpl msClientService;
+    private SocketHandler socketHandler;
+    private MsClientCreatorFactoryImpl msClientCreatorFactory;
+    private MsClientUrl dbMsClientUrl;
+    private MsClientUrl feMsClientUrl;
 
-    private MessageSystem messageSystem;
+    private Map<Integer, JsonObject> buffer;
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws Exception {
 
-//        MsClientCreatorFactory msClientCreatorFactory = new MsClientCreatorFactoryImpl(clientConfig, MESSAGES_FIELD);
-//        Solus solus = new SolusImpl(clientConfig, SOLUS_FIELD);
-//        MsClientServiceImpl msClientService = new MsClientServiceImpl(msClientCreatorFactory, solus);
-//
-//        messageSystem = new MessageSystemImpl(msClientService);
-//
-//        msClientService.createClient()
+        buffer = new ConcurrentHashMap<>();
+
+        msClientCreatorFactory = new MsClientCreatorFactoryImpl(
+                new CmnMsClientCreator(new TestCommonMSMessageHandler(buffer), new WrongMSMessageHandler()),
+                new WrongMsClientCreator(),
+                clientConfig,
+                MESSAGES_FIELD
+        );
+
+        msClientService = new MsClientServiceImpl();
+        socketHandler = createSocketHandler(msClientService);
+        messageSystem = new MessageSystemImpl(msClientService);
+
+        dbMsClientUrl = new MsClientUrl("localhost", 1000, DATABASE);
+        feMsClientUrl = new MsClientUrl("localhost", 1001, FRONTEND);
+
+        msClientService.addClient(
+                dbMsClientUrl,
+                msClientCreatorFactory.get(dbMsClientUrl.getEntity()).create(dbMsClientUrl, socketHandler, messageSystem)
+        );
+        msClientService.addClient(
+                feMsClientUrl,
+                msClientCreatorFactory.get(feMsClientUrl.getEntity()).create(feMsClientUrl, socketHandler, messageSystem)
+        );
     }
 
-//    @BeforeEach
-//    public void setup() {
-//        logger.info("setup");
-//        messageSystem = new MessageSystemImpl();
-//
-//        databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem));
-//        DBService dbService = mock(DBService.class);
-//        when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long)invocation.getArgument(0)));
-//        databaseMsClient.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
-//        messageSystem.addClient(databaseMsClient);
-//
-//        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem));
-//        frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
-//        frontendMsClient.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(frontendService));
-//        messageSystem.addClient(frontendMsClient);
-//
-//        logger.info("setup done");
-//    }
+    private SocketHandler createSocketHandler(MsClientService msClientService) throws Exception {
+        int msPort = 1003;
+        Client client = new ClientImpl("MESSAGE_SYSTEM");
+        SocketHandler socketHandler = new SocketHandlerImpl(
+                new JsonCheckerImpl(createCommonJeoGenerator()),
+                new MSSocketSendingHandler(msPort, client),
+                msPort
+        );
+
+        final JsonArray commonMessages = new JsonArray();
+
+        for (JsonElement commonMessage : commonMessages) {
+            socketHandler.addHandler(
+                    commonMessage.getAsString(),
+                    new CommonSIH(msClientService, socketHandler, createMsJeoGenerator())
+            );
+        }
+
+        socketHandler.addHandler("WRONG", new WrongSIH(socketHandler));
+
+        return socketHandler;
+    }
+
+    private JsonErrorObjectGenerator createCommonJeoGenerator(){
+        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", true);
+        jeoGenerator.addDataGenerator(1, new CommonJEDGenerator1());
+        jeoGenerator.addDataGenerator(2, new CommonJEDGenerator2());
+        jeoGenerator.addDataGenerator(3, new CommonJEDGenerator3());
+        jeoGenerator.addDataGenerator(4, new CommonJEDGenerator4());
+
+        return jeoGenerator;
+    }
+
+    private JsonErrorObjectGenerator createMsJeoGenerator(){
+        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", false);
+        jeoGenerator.addDataGenerator(1, new MSJEDGenerator1());
+        jeoGenerator.addDataGenerator(2, new MSJEDGenerator2());
+        jeoGenerator.addDataGenerator(3, new MSJEDGenerator3());
+        jeoGenerator.addDataGenerator(4, new MSJEDGenerator4());
+        jeoGenerator.addDataGenerator(5, new MSJEDGenerator5());
+        jeoGenerator.addDataGenerator(6, new MSJEDGenerator6());
+        jeoGenerator.addDataGenerator(7, new MSJEDGenerator7());
+        jeoGenerator.addDataGenerator(8, new MSJEDGenerator8());
+        jeoGenerator.addDataGenerator(9, new MSJEDGenerator9());
+
+        return jeoGenerator;
+    }
 
     @Test
-    public void test(){
-        System.out.println(clientConfig);
+    void testMS() throws InterruptedException {
+
+        int number = 1_000;
+
+        for(int i = 0 ;i < number; i++){
+            Optional<MSClient> maybeFEClient = msClientService.get(feMsClientUrl);
+            if (maybeFEClient.isPresent()){
+                MSClient msClient = maybeFEClient.get();
+                JsonObject jsonObject = testMessage.deepCopy();
+                jsonObject.addProperty("value", i);
+                Message message = msClient.produceMessage(dbMsClientUrl, jsonObject.toString(), "TEST_MESSAGE");
+                msClient.sendMessage(message);
+            }
+        }
+
+        Thread.sleep(2 * number);
+
+        int counter = 0;
+        for (int i = 0; i < number; i++) {
+            JsonObject jsonObject = buffer.get(i);
+            if (jsonObject.get("type").getAsString().equals(testMessage.get("type").getAsString()) &&
+                jsonObject.get("request").getAsString().equals(testMessage.get("request").getAsString()) &&
+                jsonObject.get("uuid").getAsString().equals(testMessage.get("uuid").getAsString()) &&
+                jsonObject.get("value").getAsInt() == i){
+                counter++;
+            }
+        }
+
+        assertThat(number).isEqualTo(counter);
+
+        messageSystem.dispose();
     }
-
-
-//    @DisplayName("Базовый сценарий получения данных")
-//    @RepeatedTest(1000)
-//    public void getDataById() throws Exception {
-//        int counter = 3;
-//        CountDownLatch waitLatch = new CountDownLatch(counter);
-//
-//        IntStream.range(0, counter).forEach(id ->
-//                frontendService.getUserData(id, data -> {
-//                    assertThat(data).isEqualTo(String.valueOf(id));
-//                    waitLatch.countDown();
-//                }));
-//
-//        waitLatch.await();
-//        messageSystem.dispose();
-//        logger.info("done");
-//    }
-//
-//    @DisplayName("Выполнение запроса после остановки сервиса")
-//    @RepeatedTest(1000)
-//    public void getDataAfterShutdown() throws Exception {
-//        messageSystem.dispose();
-//
-//        CountDownLatch waitLatchShutdown = new CountDownLatch(1);
-//
-//        Mockito.reset(frontendMsClient);
-//        when(frontendMsClient.sendMessage(any(Message.class))).
-//                thenAnswer(invocation -> {
-//                    waitLatchShutdown.countDown();
-//                    return null;
-//                });
-//
-//        frontendService.getUserData(5, data -> logger.info("data:{}", data));
-//        waitLatchShutdown.await();
-//        boolean result = verify(frontendMsClient).sendMessage(any(Message.class));
-//        assertThat(result).isFalse();
-//
-//        logger.info("done");
-//    }
-
-
-
-//    }
-
 }
