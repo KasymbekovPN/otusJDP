@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFieldRequestIsWrong;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 
@@ -64,7 +65,7 @@ public class ClientsSIH implements SocketInputHandler {
                 data.add(entity, jsonEntityUrls);
             }
         } else {
-            error = jeoGenerator.generate(8);
+            error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
         }
 
         JsonObject responseJsonObject = new JsonObject();

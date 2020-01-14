@@ -5,5 +5,6 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 public interface JsonErrorDataGenerator {
-    JsonObject generate(List<Object> objects);
+    int getCode();
+    JsonObject getData();
 }

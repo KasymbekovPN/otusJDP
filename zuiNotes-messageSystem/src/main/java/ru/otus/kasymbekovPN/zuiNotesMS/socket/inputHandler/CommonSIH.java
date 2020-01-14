@@ -4,10 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFromMsClientDoesntExist;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGToMsClientDoesntExist;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
@@ -61,12 +62,12 @@ public class CommonSIH implements SocketInputHandler {
             JsonArray errors = new JsonArray();
             if (!optFromMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(1, fromUrl.getUrl())
+                        jeoGenerator.generate(new MSJEDGFromMsClientDoesntExist(fromUrl.getUrl()))
                 );
             }
             if (!optToMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(2, toUrl.getUrl())
+                        jeoGenerator.generate(new MSJEDGToMsClientDoesntExist(toUrl.getUrl()))
                 );
             }
 

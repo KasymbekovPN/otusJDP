@@ -11,13 +11,8 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.client.ClientImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator1;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator2;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator3;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGenerator4;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystemImpl;
@@ -140,28 +135,11 @@ public class MessageSystemImplTest {
     }
 
     private JsonErrorObjectGenerator createCommonJeoGenerator(){
-        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", true);
-        jeoGenerator.addDataGenerator(1, new CommonJEDGenerator1());
-        jeoGenerator.addDataGenerator(2, new CommonJEDGenerator2());
-        jeoGenerator.addDataGenerator(3, new CommonJEDGenerator3());
-        jeoGenerator.addDataGenerator(4, new CommonJEDGenerator4());
-
-        return jeoGenerator;
+        return new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", true);
     }
 
     private JsonErrorObjectGenerator createMsJeoGenerator(){
-        JsonErrorObjectGeneratorImpl jeoGenerator = new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", false);
-        jeoGenerator.addDataGenerator(1, new MSJEDGenerator1());
-        jeoGenerator.addDataGenerator(2, new MSJEDGenerator2());
-        jeoGenerator.addDataGenerator(3, new MSJEDGenerator3());
-        jeoGenerator.addDataGenerator(4, new MSJEDGenerator4());
-        jeoGenerator.addDataGenerator(5, new MSJEDGenerator5());
-        jeoGenerator.addDataGenerator(6, new MSJEDGenerator6());
-        jeoGenerator.addDataGenerator(7, new MSJEDGenerator7());
-        jeoGenerator.addDataGenerator(8, new MSJEDGenerator8());
-        jeoGenerator.addDataGenerator(9, new MSJEDGenerator9());
-
-        return jeoGenerator;
+        return new JsonErrorObjectGeneratorImpl("MESSAGE_SYSTEM", false);
     }
 
     @Test

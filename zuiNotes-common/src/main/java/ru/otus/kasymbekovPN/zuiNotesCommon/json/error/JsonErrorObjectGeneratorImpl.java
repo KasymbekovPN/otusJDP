@@ -18,29 +18,17 @@ public class JsonErrorObjectGeneratorImpl implements JsonErrorObjectGenerator {
     }
 
     @Override
-    public JsonObject generate(Integer code, Object... objects) throws Exception {
-        List<Object> lObjects = new ArrayList<>(Arrays.asList(objects));
-        JsonErrorDataGenerator dataGenerator = dataGenerators.getOrDefault(code, null);
+    public JsonObject generate(JsonErrorDataGenerator dataGenerator) throws Exception {
         if (dataGenerator != null){
-            JsonObject data = dataGenerator.generate(lObjects);
-            return generate(code, data);
+            JsonObject jsonError = new JsonObject();
+            jsonError.addProperty("code", dataGenerator.getCode());
+            jsonError.addProperty("common", common);
+            jsonError.addProperty("entity", entity);
+            jsonError.add("data", dataGenerator.getData());
+
+            return jsonError;
         } else {
-            throw new Exception("Invalid args : code : " + code.toString());
+            throw new Exception("DataGenerator-argument is null");
         }
-    }
-
-    @Override
-    public void addDataGenerator(Integer code, JsonErrorDataGenerator dataGenerator) {
-        dataGenerators.put(code, dataGenerator);
-    }
-
-    private JsonObject generate(Integer code, JsonObject data){
-        JsonObject error = new JsonObject();
-        error.addProperty("code", code);
-        error.addProperty("common", common);
-        error.addProperty("entity", entity);
-        error.add("data", data);
-
-        return error;
     }
 }

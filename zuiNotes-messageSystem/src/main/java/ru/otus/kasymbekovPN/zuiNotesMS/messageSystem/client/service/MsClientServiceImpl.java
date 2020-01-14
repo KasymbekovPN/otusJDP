@@ -6,14 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientAlreadyExist;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 
 import java.util.*;
 
@@ -42,7 +38,7 @@ public class MsClientServiceImpl implements MsClientService {
     @Override
     public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
         if (clients.containsKey(url)){
-            return jeoGenerator.generate(3, url);
+            return jeoGenerator.generate(new MSJEDGMsClientAlreadyExist(url.getUrl()));
         } else {
             clients.put(url, msClient);
             return new JsonObject();
@@ -51,10 +47,8 @@ public class MsClientServiceImpl implements MsClientService {
 
     @Override
     public synchronized JsonObject deleteClient(MsClientUrl url) throws Exception {
-        MSClient removedClient = clients.remove(url);
-        return removedClient == null
-                ? jeoGenerator.generate(6, url.getUrl())
-                : new JsonObject();
+        clients.remove(url);
+        return new JsonObject();
     }
 
     @Override

@@ -4,10 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientHasWrongEntity;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGSolusReg;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFieldRequestIsWrong;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientAlreadyDel;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
@@ -66,18 +69,18 @@ public class RegistrationSIH implements SocketInputHandler {
                     if (msClient != null){
                         error = msClientService.addClient(url, msClient);
                     } else {
-                        error = jeoGenerator.generate(4, url.getEntity());;
+                        error = jeoGenerator.generate(new MSJEDGMsClientHasWrongEntity(url.getEntity()));
                     }
                 } else {
-                    error = jeoGenerator.generate(5, url.getEntity());
+                    error = jeoGenerator.generate(new MSJEDGSolusReg(url.getEntity()));
                 }
             } else {
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)
-                        : jeoGenerator.generate(9, url.getUrl());
+                        : jeoGenerator.generate(new MSJEDGMsClientAlreadyDel(url.getUrl()));
             }
         } else {
-            error = jeoGenerator.generate(8);
+            error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
         }
 
         JsonObject respJsonObject = new JsonObject();
