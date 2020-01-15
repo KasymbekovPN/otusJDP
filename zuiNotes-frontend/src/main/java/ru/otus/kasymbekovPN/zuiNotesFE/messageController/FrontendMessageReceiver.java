@@ -42,7 +42,13 @@ public class FrontendMessageReceiver {
         jsonObject.addProperty("type", MessageType.AUTH_USER.getValue());
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", UUID.randomUUID().toString());
-        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
+//        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
+        //<
+        JsonObject data = new JsonObject();
+        data.addProperty("login", user.getLogin());
+        data.addProperty("password", user.getPassword());
+        data.addProperty("uiId", user.getUiId());
+        jsonObject.add("data", data);
 
         socketHandler.send(jsonObject);
     }

@@ -45,7 +45,7 @@ public class AddUserSIH implements SocketInputHandler {
             List<OnlineUser> onlineUsers = dbService.loadRecord(login);
             if (onlineUsers.size() == 0){
                 dbService.createRecord(
-                        new OnlineUser(0, login, password, false)
+                        new OnlineUser(0, login, password, false, "")
                 );
                 status = "User '" + login + "' was create.";
             } else {

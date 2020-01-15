@@ -37,6 +37,7 @@ public class AuthUserSIH implements SocketInputHandler {
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String status = data.get("status").getAsString();
         JsonArray jsonUsers = data.get("users").getAsJsonArray();
+        String uiId = data.get("uiId").getAsString();
 
         List<OnlineUser> users = new ArrayList<>();
         Gson gson = new Gson();
@@ -50,6 +51,6 @@ public class AuthUserSIH implements SocketInputHandler {
         onlineUserPackage.setStatus(status);
         onlineUserPackage.setUsers(users);
 
-        frontendMessageTransmitter.handleAuthUserResponse(onlineUserPackage);
+        frontendMessageTransmitter.handleAuthUserResponse(onlineUserPackage, uiId);
     }
 }

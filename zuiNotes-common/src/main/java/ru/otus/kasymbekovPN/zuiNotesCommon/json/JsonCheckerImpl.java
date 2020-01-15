@@ -12,8 +12,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGInvalidMess
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGInvalidFieldType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGUnknownFieldType;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
@@ -58,7 +57,7 @@ public class JsonCheckerImpl implements JsonChecker {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonCheckerImpl.class);
     private static final String WRONG_TYPE = "WRONG";
-    private static final String FILE_NAME = "standardMessages.json";
+    private static final String FILE_NAME = "/standardMessages.json";
     private static final Set<String> MANDATORY_FIELDS = new HashSet<String>(){{
         add("type");
         add("request");
@@ -74,25 +73,19 @@ public class JsonCheckerImpl implements JsonChecker {
         this.jeoGenerator = jeoGenerator;
         this.jsonObject = new JsonObject();
 
-        String status = "";
-        String content = "";
-        URL resource = getClass().getClassLoader().getResource(FILE_NAME);
-        if (resource != null){
-            File file = new File(resource.getFile());
-            try{
-                content = new String(Files.readAllBytes(file.toPath()));
-            } catch (IOException ex){
-                status = "JsonCheckerImpl : Failed convert file ("+ FILE_NAME +") to string";
-                logger.error(status);
-                throw new IOException(status);
+        StringBuilder content = new StringBuilder();
+        InputStream in = getClass().getResourceAsStream(FILE_NAME);
+        if (in != null){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = bufferedReader.readLine()) != null){
+                content.append(line);
             }
         } else {
-            status = "JsonCheckerImpl : File "+ FILE_NAME + " doesn't exist";
-            logger.error(status);
-            throw new Exception(status);
+            throw new Exception("JsonCheckerImpl : File "+ FILE_NAME + " doesn't exist");
         }
 
-        init(content);
+        init(String.valueOf(content));
     }
 
     private void init(String content) throws Exception {

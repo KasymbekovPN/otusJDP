@@ -27,7 +27,7 @@ public class DBInitialization {
     public void init(){
         List<OnlineUser> onlineUsers = dbService.loadRecord(LOGIN);
         if (onlineUsers.size() == 0) {
-            dbService.createRecord(new OnlineUser(0, LOGIN, PASSWORD, IS_ADMIN));
+            dbService.createRecord(new OnlineUser(0, LOGIN, PASSWORD, IS_ADMIN, ""));
         }
     }
 }

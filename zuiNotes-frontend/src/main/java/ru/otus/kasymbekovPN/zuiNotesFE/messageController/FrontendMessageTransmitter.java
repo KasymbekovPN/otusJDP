@@ -25,9 +25,14 @@ public class FrontendMessageTransmitter {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void handleAuthUserResponse(OnlineUserPackage data){
+    public void handleAuthUserResponse(OnlineUserPackage data, String uiId){
+
+        //<
+        System.out.println(" ------ authUserResponse");
+        //<
+
         simpMessagingTemplate.convertAndSend(
-                "/topic/authResponse",
+                "/topic/authResponse/" + uiId,
                 data
         );
     }

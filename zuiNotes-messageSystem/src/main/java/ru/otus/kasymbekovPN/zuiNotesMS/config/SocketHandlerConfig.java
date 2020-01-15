@@ -29,8 +29,7 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.WrongMSMessageHandl
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashSet;
@@ -40,10 +39,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SocketHandlerConfig {
 
-    private static final String CLIENT_CONFIG = "clientConfig.json";
+    private static final String CLIENT_CONFIG = "/clientConfig.json";
     private static final String SOLUS_FIELD = "solus";
     private static final String MESSAGES_FIELD = "messages";
-    private static final String MESSAGE_GROUPS = "messageGroups.json";
+    private static final String MESSAGE_GROUPS = "/messageGroups.json";
     private static final String MS_PORT_ARG_NAME = "ms.port";
     private static final String COMMON_FIELD = "common";
     private static final String REGISTRATION_FIELD = "registration";
@@ -236,17 +235,16 @@ public class SocketHandlerConfig {
     private JsonObject loadConfig(String fileName) throws Exception{
         JsonObject jsonConfig = new JsonObject();
 
-        URL resource = getClass().getClassLoader().getResource(fileName);
-        if (resource != null)
-        {
-            File file = new File(resource.getFile());
-            try{
-                jsonConfig = (JsonObject) new JsonParser().parse(
-                        new String(Files.readAllBytes(file.toPath()))
-                );
-            } catch (IOException ex){
-                throw new IOException("Failed convert file '"+fileName+"' to string.");
+        InputStream in = getClass().getResourceAsStream(fileName);
+        if (in != null){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null){
+                content.append(line);
             }
+
+            jsonConfig = (JsonObject) new JsonParser().parse(String.valueOf(content));
         } else {
             throw new Exception("File '"+fileName+"' doesn't exist");
         }
