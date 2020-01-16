@@ -46,10 +46,13 @@ public class DelUserSIH implements SocketInputHandler {
             );
         }
 
+        String type = jsonObject.get("type").getAsString();
+        String uuid = jsonObject.get("uuid").getAsString();
+
         OnlineUserPackage onlineUserPackage = new OnlineUserPackage();
         onlineUserPackage.setStatus(status);
         onlineUserPackage.setUsers(users);
 
-        frontendMessageTransmitter.handleDelUserResponse(onlineUserPackage);
+        frontendMessageTransmitter.handle(onlineUserPackage, uuid, type);
     }
 }

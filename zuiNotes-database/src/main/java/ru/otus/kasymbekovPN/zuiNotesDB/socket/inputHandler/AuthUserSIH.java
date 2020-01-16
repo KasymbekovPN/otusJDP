@@ -43,7 +43,6 @@ public class AuthUserSIH implements SocketInputHandler {
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String login = data.get("login").getAsString().trim();
         String password = data.get("password") .getAsString().trim();
-        String uiId = data.get("uiId").getAsString();
         String status = "";
 
         if (!login.isEmpty() && !password.isEmpty()){
@@ -75,11 +74,7 @@ public class AuthUserSIH implements SocketInputHandler {
         responseJsonObject.addProperty("type", type);
         responseJsonObject.addProperty("request", false);
         responseJsonObject.addProperty("uuid", uuid);
-//        responseJsonObject.add("data", JsonHelper.makeData(login, password, status, jsonUsers));
-        JsonObject responseData = JsonHelper.makeData(login, password, status, jsonUsers);
-        responseData.addProperty("uiId", uiId);
-        responseJsonObject.add("data", responseData);
-
+        responseJsonObject.add("data", JsonHelper.makeData(login, password, status, jsonUsers));
 
         socketHandler.send(responseJsonObject);
     }

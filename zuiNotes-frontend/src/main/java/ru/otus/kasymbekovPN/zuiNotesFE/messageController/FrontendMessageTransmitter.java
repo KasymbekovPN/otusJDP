@@ -1,6 +1,8 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.messageController;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,31 +25,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FrontendMessageTransmitter {
 
+    private static final Logger logger = LoggerFactory.getLogger(FrontendMessageTransmitter.class);
+
+    private final RequestRegistrar requestRegistrar;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void handleAuthUserResponse(OnlineUserPackage data, String uiId){
+    public void handle(OnlineUserPackage data, String uuid, String messageType){
+        logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
 
-        //<
-        System.out.println(" ------ authUserResponse");
-        //<
-
-        simpMessagingTemplate.convertAndSend(
-                "/topic/authResponse/" + uiId,
-                data
-        );
-    }
-
-    public void handleAddUserResponse(OnlineUserPackage data){
-        simpMessagingTemplate.convertAndSend(
-                "/topic/addUserResponse",
-                data
-        );
-    }
-
-    public void handleDelUserResponse(OnlineUserPackage data){
-        simpMessagingTemplate.convertAndSend(
-                "/topic/delUserResponse",
-                data
-        );
+        String uiId = requestRegistrar.get(uuid);
+        String destination = "/topic/" + messageType + "/" + uiId;
+        simpMessagingTemplate.convertAndSend(destination, data);
     }
 }

@@ -32,48 +32,52 @@ public class FrontendMessageReceiver {
 
     private static final Logger logger = LoggerFactory.getLogger(FrontendMessageReceiver.class);
 
+    private final RequestRegistrar requestRegistrar;
     private final SocketHandler socketHandler;
 
-    @MessageMapping("/authUserRequest")
-    public void handleAuthUserRequest(OnlineUser user){
-        logger.info("handleAuthUserRequest : {}", user);
+    @MessageMapping("/AUTH_USER")
+    public void handleAuthUser(OnlineUser user){
+        logger.info("handleAuthUser : {}", user);
+
+        String uuid = UUID.randomUUID().toString();
+        requestRegistrar.set(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", MessageType.AUTH_USER.getValue());
         jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", UUID.randomUUID().toString());
-//        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
-        //<
-        JsonObject data = new JsonObject();
-        data.addProperty("login", user.getLogin());
-        data.addProperty("password", user.getPassword());
-        data.addProperty("uiId", user.getUiId());
-        jsonObject.add("data", data);
-
-        socketHandler.send(jsonObject);
-    }
-
-    @MessageMapping("/addUserRequest")
-    public void handleAddUserRequest(OnlineUser user){
-        logger.info("handleAddUserRequest : {}", user);
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.ADD_USER.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", UUID.randomUUID().toString());
+        jsonObject.addProperty("uuid", uuid);
         jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
 
         socketHandler.send(jsonObject);
     }
 
-    @MessageMapping("/delUserRequest")
-    public void handleDelUserRequest(OnlineUser user){
-        logger.info("handleDelUserRequest : {}", user);
+    @MessageMapping("/ADD_USER")
+    public void handleAddUser(OnlineUser user){
+        logger.info("handleAddUser : {}", user);
+
+        String uuid = UUID.randomUUID().toString();
+        requestRegistrar.set(uuid, user.getUiId());
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", MessageType.ADD_USER.getValue());
+        jsonObject.addProperty("request", true);
+        jsonObject.addProperty("uuid", uuid);
+        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
+
+        socketHandler.send(jsonObject);
+    }
+
+    @MessageMapping("/DEL_USER")
+    public void handleDelUser(OnlineUser user){
+        logger.info("handleDelUser : {}", user);
+
+        String uuid = UUID.randomUUID().toString();
+        requestRegistrar.set(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", MessageType.DEL_USER.getValue());
         jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", UUID.randomUUID().toString());
+        jsonObject.addProperty("uuid", uuid);
         jsonObject.add("data", JsonHelper.makeData(user.getLogin()));
 
         socketHandler.send(jsonObject);
