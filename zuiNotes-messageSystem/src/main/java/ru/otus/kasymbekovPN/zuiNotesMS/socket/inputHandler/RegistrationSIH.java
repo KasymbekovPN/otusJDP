@@ -57,7 +57,12 @@ public class RegistrationSIH implements SocketInputHandler {
         boolean request = jsonObject.get("request").getAsBoolean();
         boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
-        MsClientUrl url = new MsClientUrl(from.get("host").getAsString(), from.get("port").getAsInt(), from.get("entity").getAsString());
+        MsClientUrl url = new MsClientUrl(
+                from.get("host").getAsString(),
+                from.get("port").getAsInt(),
+                from.get("entity").getAsString(),
+                type
+        );
 
         JsonObject error = new JsonObject();
         if (request){

@@ -26,4 +26,5 @@ public interface MsClientService {
     JsonObject deleteClient(MsClientUrl url) throws Exception;
     Optional<MSClient> get(MsClientUrl url);
     Map<String, Set<MsClientUrl>> search(Set<String> entities);
+    Set<MsClientUrl> getAll();
 }

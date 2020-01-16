@@ -73,4 +73,9 @@ public class MsClientServiceImpl implements MsClientService {
 
         return result;
     }
+
+    @Override
+    public Set<MsClientUrl> getAll() {
+        return clients.keySet();
+    }
 }

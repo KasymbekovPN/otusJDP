@@ -6,6 +6,7 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.introduce;
  * {@link Notifier#stop()} - метод, останавливающий работу уведомителя.
  */
 public interface Notifier {
+    void start();
     void stop();
 }
 

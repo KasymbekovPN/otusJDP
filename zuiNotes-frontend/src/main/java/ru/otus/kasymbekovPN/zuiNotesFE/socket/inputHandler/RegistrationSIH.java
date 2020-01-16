@@ -25,6 +25,11 @@ public class RegistrationSIH implements SocketInputHandler {
     @Override
     public void handle(JsonObject jsonObject) {
         logger.info("RegistrationSIH : {}", jsonObject);
-        notifier.stop();
+        boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
+        if (registration){
+            notifier.stop();
+        } else {
+            notifier.start();
+        }
     }
 }

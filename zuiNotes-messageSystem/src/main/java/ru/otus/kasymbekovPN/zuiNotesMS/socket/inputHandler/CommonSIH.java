@@ -41,8 +41,18 @@ public class CommonSIH implements SocketInputHandler {
 
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         JsonObject to = jsonObject.get("to").getAsJsonObject();
-        MsClientUrl fromUrl = new MsClientUrl(from.get("host").getAsString(), from.get("port").getAsInt(), from.get("entity").getAsString());
-        MsClientUrl toUrl = new MsClientUrl(to.get("host").getAsString(), to.get("port").getAsInt(), to.get("entity").getAsString());
+        MsClientUrl fromUrl = new MsClientUrl(
+                from.get("host").getAsString(),
+                from.get("port").getAsInt(),
+                from.get("entity").getAsString(),
+                type
+        );
+        MsClientUrl toUrl = new MsClientUrl(
+                to.get("host").getAsString(),
+                to.get("port").getAsInt(),
+                to.get("entity").getAsString(),
+                type
+        );
 
         Optional<MSClient> optFromMsClient = msClientService.get(fromUrl);
         Optional<MSClient> optToMsClient = msClientService.get(toUrl);

@@ -98,8 +98,8 @@ public class MessageSystemImplTest {
         socketHandler = createSocketHandler(msClientService);
         messageSystem = new MessageSystemImpl(msClientService);
 
-        dbMsClientUrl = new MsClientUrl("localhost", 1000, DATABASE);
-        feMsClientUrl = new MsClientUrl("localhost", 1001, FRONTEND);
+        dbMsClientUrl = new MsClientUrl("localhost", 1000, DATABASE, "I_AM");
+        feMsClientUrl = new MsClientUrl("localhost", 1001, FRONTEND, "I_AM");
 
         msClientService.addClient(
                 dbMsClientUrl,
