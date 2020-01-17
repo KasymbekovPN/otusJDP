@@ -35,7 +35,11 @@ public class SocketHandlerConfig {
 
     @Autowired
     @Qualifier("common")
-    private JsonErrorObjectGenerator jeoGenerator;
+    private JsonErrorObjectGenerator commonJeoGenerator;
+
+    @Autowired
+    @Qualifier("ms")
+    private JsonErrorObjectGenerator msJeoGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -52,13 +56,13 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(jeoGenerator),
+                new JsonCheckerImpl(commonJeoGenerator),
                 new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
-        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler, msJeoGenerator));
         socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
         socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
 

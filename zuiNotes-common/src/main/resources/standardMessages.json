@@ -46,8 +46,8 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "password" : "String",
-                "status" : "String"
+                "group" : "String",
+                "errors" : []
             },
             "from" : {
                 "host" : "String",

@@ -93,7 +93,7 @@ public class RegistrationSIH implements SocketInputHandler {
             if (error.size() == 0){
                 JsonObject data = new JsonObject();
                 data.addProperty("url", url.getUrl());
-                data.addProperty("registration", registration);
+                data.addProperty("registration", true);
                 respJsonObject.addProperty("type", type);
                 respJsonObject.addProperty("request", false);
                 respJsonObject.addProperty("uuid", uuid);

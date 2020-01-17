@@ -1,5 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.messageController;
 
+import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +28,27 @@ public class FrontendMessageTransmitter {
 
     private static final Logger logger = LoggerFactory.getLogger(FrontendMessageTransmitter.class);
 
-    private final RequestRegistrar requestRegistrar;
+    private final Registrar registrar;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
+    public void handle(String data, String uuid, String messageType){
+        logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
+
+//        String uiId = registrar.get(uuid);
+        //<
+        String UIId = registrar.getUIIdByRequestUUID(uuid);
+        String destination = "/topic/" + messageType + "/" + UIId;
+        simpMessagingTemplate.convertAndSend(destination, data);
+    }
+
+    //< del
     public void handle(OnlineUserPackage data, String uuid, String messageType){
         logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
 
-        String uiId = requestRegistrar.get(uuid);
-        String destination = "/topic/" + messageType + "/" + uiId;
+//        String uiId = registrar.get(uuid);
+        //<
+        String UIId = registrar.getUIIdByRequestUUID(uuid);
+        String destination = "/topic/" + messageType + "/" + UIId;
         simpMessagingTemplate.convertAndSend(destination, data);
     }
 }

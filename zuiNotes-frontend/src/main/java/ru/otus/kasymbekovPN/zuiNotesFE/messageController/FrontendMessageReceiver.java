@@ -32,7 +32,7 @@ public class FrontendMessageReceiver {
 
     private static final Logger logger = LoggerFactory.getLogger(FrontendMessageReceiver.class);
 
-    private final RequestRegistrar requestRegistrar;
+    private final Registrar registrar;
     private final SocketHandler socketHandler;
 
     @MessageMapping("/AUTH_USER")
@@ -40,7 +40,9 @@ public class FrontendMessageReceiver {
         logger.info("handleAuthUser : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-        requestRegistrar.set(uuid, user.getUiId());
+//        registrar.set(uuid, user.getUiId());
+        //<
+        registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", MessageType.AUTH_USER.getValue());
@@ -56,7 +58,9 @@ public class FrontendMessageReceiver {
         logger.info("handleAddUser : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-        requestRegistrar.set(uuid, user.getUiId());
+//        registrar.set(uuid, user.getUiId());
+        //<
+        registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", MessageType.ADD_USER.getValue());
@@ -72,7 +76,9 @@ public class FrontendMessageReceiver {
         logger.info("handleDelUser : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-        requestRegistrar.set(uuid, user.getUiId());
+//        registrar.set(uuid, user.getUiId());
+        //<
+        registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", MessageType.DEL_USER.getValue());

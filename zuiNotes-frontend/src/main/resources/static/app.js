@@ -22,9 +22,9 @@ $(() => {
     $("form").on('submit', event => event.preventDefault());
     $("#connect").click(connect);
     $("#disconnect").click(disconnect);
-    $("#authorization").click(authorization);
 
     connect();
+    fillEntryTopMenu();
 });
 
 const setConnected = connected => {
@@ -64,7 +64,7 @@ const disconnect = () => {
     console.log("Disconnected");
 };
 
-const authorization = () => stompClient.send(
+const authUserAction = () => stompClient.send(
     "/" + requestRoot + "/" + authUserMessageType,
     {},
     JSON.stringify(
@@ -212,3 +212,12 @@ const clearDelUser = () => {
     const delUser = document.getElementById("delUser");
     delUser.innerHTML = "";
 };
+
+const fillEntryTopMenu = () => {
+    const top_menu = document.getElementById("top-menu");
+    top_menu.innerHTML = "<label for='login'>Login</label>"
+                        + "<input id='login', type='text' class='form-control'>"
+                        + "<label for='password'>Password</label>"
+                        + "<input id='password', type='text' class='form-control'>"
+                        + "<button id='authorization' onclick='authUserAction();' class='btn btn-default' type='submit'>Enter</button>";
+}
