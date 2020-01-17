@@ -88,28 +88,30 @@ public class RegistrationSIH implements SocketInputHandler {
             error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
         }
 
-        JsonObject respJsonObject = new JsonObject();
-        if (error.size() == 0){
-            JsonObject data = new JsonObject();
-            data.addProperty("url", url.getUrl());
-            data.addProperty("registration", registration);
-            respJsonObject.addProperty("type", type);
-            respJsonObject.addProperty("request", false);
-            respJsonObject.addProperty("uuid", uuid);
-            respJsonObject.add("data", data);
-            respJsonObject.add("to", from);
-        } else {
-            JsonArray errors = new JsonArray();
-            errors.add(error);
+        if (registration){
+            JsonObject respJsonObject = new JsonObject();
+            if (error.size() == 0){
+                JsonObject data = new JsonObject();
+                data.addProperty("url", url.getUrl());
+                data.addProperty("registration", registration);
+                respJsonObject.addProperty("type", type);
+                respJsonObject.addProperty("request", false);
+                respJsonObject.addProperty("uuid", uuid);
+                respJsonObject.add("data", data);
+                respJsonObject.add("to", from);
+            } else {
+                JsonArray errors = new JsonArray();
+                errors.add(error);
 
-            respJsonObject.addProperty("type", "WRONG");
-            respJsonObject.addProperty("request", false);
-            respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            respJsonObject.add("original", jsonObject);
-            respJsonObject.add("errors", errors);
-            respJsonObject.add("to", from);
+                respJsonObject.addProperty("type", "WRONG");
+                respJsonObject.addProperty("request", false);
+                respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
+                respJsonObject.add("original", jsonObject);
+                respJsonObject.add("errors", errors);
+                respJsonObject.add("to", from);
+            }
+
+            socketHandler.send(respJsonObject);
         }
-
-        socketHandler.send(respJsonObject);
     }
 }

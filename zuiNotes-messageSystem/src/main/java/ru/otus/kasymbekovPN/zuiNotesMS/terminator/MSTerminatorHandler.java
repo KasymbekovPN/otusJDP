@@ -35,7 +35,7 @@ public class MSTerminatorHandler implements TerminatorHandler {
 
             JsonObject data = new JsonObject();
             data.addProperty("registration", false);
-            data.addProperty("utl", clientUrl.getUrl());
+            data.addProperty("url", clientUrl.getUrl());
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("type", clientUrl.getRegistrationMessageType());
