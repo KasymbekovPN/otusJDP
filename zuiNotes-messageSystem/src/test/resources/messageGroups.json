@@ -1,6 +1,6 @@
 {
     "common" : [
-        "AUTH_USER",
+        "LOGIN",
         "ADD_USER",
         "DEL_USER"
     ],

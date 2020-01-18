@@ -34,8 +34,6 @@ public class FrontendMessageTransmitter {
     public void handle(String data, String uuid, String messageType){
         logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
 
-//        String uiId = registrar.get(uuid);
-        //<
         String UIId = registrar.getUIIdByRequestUUID(uuid);
         String destination = "/topic/" + messageType + "/" + UIId;
         simpMessagingTemplate.convertAndSend(destination, data);

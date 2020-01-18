@@ -25,7 +25,14 @@ public class RegistrarImpl implements Registrar {
     @Override
     public String getUIIdByRequestUUID(String requestUUID) {
         logger.info("get UIId by requestUUID pair : {}", requestUUID);
-        return UIIdByRequestUUID.remove(requestUUID);
+//        return UIIdByRequestUUID.remove(requestUUID);
+        return UIIdByRequestUUID.getOrDefault(requestUUID, null);
+    }
+
+    @Override
+    public void delUIIdByRequestUUID(String requestUUID) {
+        logger.info("del UIId by requestUUID pair : {}", requestUUID);
+        UIIdByRequestUUID.remove(requestUUID);
     }
 
     @Override

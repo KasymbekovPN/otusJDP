@@ -4,13 +4,18 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
 
+import java.util.Optional;
 import java.util.UUID;
 
 ///**
@@ -35,22 +40,59 @@ public class FrontendMessageReceiver {
     private final Registrar registrar;
     private final SocketHandler socketHandler;
 
-    @MessageMapping("/AUTH_USER")
-    public void handleAuthUser(OnlineUser user){
-        logger.info("handleAuthUser : {}", user);
+    @Autowired
+    @Qualifier("ms")
+    private JsonErrorObjectGenerator jeoGenerator;
+
+    @MessageMapping("/LOGIN")
+    public void handleLogin(OnlineUser user){
+        logger.info("handleLogin : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-//        registrar.set(uuid, user.getUiId());
-        //<
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.AUTH_USER.getValue());
+        jsonObject.addProperty("type", MessageType.LOGIN.getValue());
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", uuid);
         jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
 
         socketHandler.send(jsonObject);
+    }
+
+    @MessageMapping("/LOGOUT")
+    public void handleLogout(OnlineUser user){
+        logger.info("handleLogout : {}", user);
+
+        registrar.delLoginBuUIId(user.getUiId());
+    }
+
+    @MessageMapping("USER_DATA")
+    public void handleUserData(OnlineUser user){
+        logger.info("handleUserdata : {}", user);
+
+        Optional<String> login = registrar.getLoginBuUIId(user.getUiId());
+        //<
+        System.out.println(" ------------ login : " + login);
+        //<
+
+        if (login.isPresent()){
+            String uuid = UUID.randomUUID().toString();
+            registrar.setUIIdByRequestUUID(uuid, user.getUiId());
+
+            JsonObject data = new JsonObject();
+            data.addProperty("login", login.get());
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("type", MessageType.USER_DATA.getValue());
+            jsonObject.addProperty("request", true);
+            jsonObject.addProperty("uuid", uuid);
+            jsonObject.add("data", data);
+
+            socketHandler.send(jsonObject);
+        } else {
+            //< !!!!!!
+        }
     }
 
     @MessageMapping("/ADD_USER")

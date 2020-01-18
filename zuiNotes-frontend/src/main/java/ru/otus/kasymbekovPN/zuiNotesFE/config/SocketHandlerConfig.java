@@ -15,10 +15,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
 
 @Configuration
@@ -61,7 +58,8 @@ public class SocketHandlerConfig {
         );
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
-        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(frontendMessageTransmitter, registrar));
+        socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(frontendMessageTransmitter, registrar));
+        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(frontendMessageTransmitter, registrar));
         socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(frontendMessageTransmitter));
         socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(frontendMessageTransmitter));
 

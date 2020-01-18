@@ -1,12 +1,9 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -23,15 +20,15 @@ import java.util.List;
 // * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки отправляет сообщение
 // * содержащее данные пользователей; при неуспещеой проверке сообщение содержит описание ошибки.
 // */
-public class AuthUserSIH implements SocketInputHandler {
+public class LoginSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthUserSIH.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginSIH.class);
 
     private final DBServiceOnlineUser dbService;
     private final SocketHandler socketHandler;
     private final JsonErrorObjectGenerator jeoGenerator;
 
-    public AuthUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
+    public LoginSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
         this.dbService = dbService;
         this.socketHandler = socketHandler;
         this.jeoGenerator = jeoGenerator;
@@ -39,7 +36,7 @@ public class AuthUserSIH implements SocketInputHandler {
 
     @Override
     public void handle(JsonObject jsonObject) throws Exception {
-        logger.info("AuthUserSIH : {}", jsonObject);
+        logger.info("LoginSIH : {}", jsonObject);
 
         String uuid = jsonObject.get("uuid").getAsString();
         String type = jsonObject.get("type").getAsString();

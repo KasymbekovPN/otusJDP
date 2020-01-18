@@ -2,7 +2,8 @@
     "DATABASE" : {
         "solus" : false,
         "messages" : [
-            "AUTH_USER",
+            "LOGIN",
+            "USER_DATA",
             "ADD_USER",
             "DEL_USER"
         ]
@@ -10,7 +11,8 @@
     "FRONTEND" : {
         "solus" : false,
         "messages" : [
-            "AUTH_USER",
+            "LOGIN",
+            "USER_DATA",
             "ADD_USER",
             "DEL_USER"
         ]
