@@ -27,6 +27,7 @@ public class TreeDataSIH implements SocketInputHandler {
         message.addProperty("type", type);
         message.addProperty("request", false);
         message.addProperty("uuid", uuid);
+        message.add("data", new JsonObject());
 
         socketHandler.send(message);
     }

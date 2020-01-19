@@ -40,7 +40,7 @@ public class UserDataSIH implements SocketInputHandler {
         JsonArray users = new JsonArray();
         JsonArray errors = new JsonArray();
         List<OnlineUser> onlineUsers = dbService.loadRecord(login);
-        if (onlineUsers.size() > 0){
+        if (!onlineUsers.isEmpty()){
             OnlineUser onlineUser = onlineUsers.get(0);
             if (onlineUser.isAdmin()){
                 users.addAll((JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll())));

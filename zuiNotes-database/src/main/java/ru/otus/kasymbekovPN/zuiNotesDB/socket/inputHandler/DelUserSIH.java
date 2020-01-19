@@ -51,7 +51,7 @@ public class DelUserSIH implements SocketInputHandler {
         JsonArray errors = new JsonArray();
         if (!login.isEmpty()){
             List<OnlineUser> onlineUsers = dbService.loadRecord(login);
-            if (onlineUsers.size() != 0){
+            if (!onlineUsers.isEmpty()){
                 dbService.deleteRecord(login);
             } else {
                 errors.add(jeoGenerator.generate(new DBJEDGUserDoesntExist()));

@@ -48,7 +48,7 @@ public class AddUserSIH implements SocketInputHandler {
         JsonArray errors = new JsonArray();
         if (!login.isEmpty() && !password.isEmpty()){
             List<OnlineUser> onlineUsers = dbService.loadRecord(login);
-            if (onlineUsers.size() == 0){
+            if (onlineUsers.isEmpty()){
                 dbService.createRecord(
                         new OnlineUser(0, login, password, false, "")
                 );

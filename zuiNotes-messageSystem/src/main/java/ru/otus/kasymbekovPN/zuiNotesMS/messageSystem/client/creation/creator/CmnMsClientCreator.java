@@ -9,6 +9,7 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class CmnMsClientCreator implements MsClientCreator {
@@ -26,7 +27,7 @@ public class CmnMsClientCreator implements MsClientCreator {
     }
 
     @Override
-    public MSClient create(MsClientUrl url, SocketHandler socketHandler, MessageSystem messageSystem) {
+    public Optional<MSClient> create(MsClientUrl url, SocketHandler socketHandler, MessageSystem messageSystem) {
         logger.info("Client creation : {}", url.getUrl());
 
         MsClientImpl msClient = new MsClientImpl(url, messageSystem);
@@ -35,7 +36,7 @@ public class CmnMsClientCreator implements MsClientCreator {
             msClient.addHandler(validMessage, commonHandler.deepCopy());
         }
 
-        return msClient;
+        return Optional.of(msClient);
     }
 
     @Override

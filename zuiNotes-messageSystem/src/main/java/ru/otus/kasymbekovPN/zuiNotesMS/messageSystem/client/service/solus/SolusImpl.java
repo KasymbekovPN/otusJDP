@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class SolusImpl implements Solus {
 
-    private static final Logger logger = LoggerFactory.getLogger(SolusImpl.class);
-
     private Map<String, Boolean> entityStates = new HashMap<>();
 
     public SolusImpl(JsonObject jsonConfig, String solusField) {

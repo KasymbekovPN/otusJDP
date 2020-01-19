@@ -59,10 +59,10 @@ public class SocketHandlerConfig {
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
         socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(frontendMessageTransmitter, registrar));
-        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(frontendMessageTransmitter, registrar));
-        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new TreeDataSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new CommonSIH(frontendMessageTransmitter));
 
         return socketHandler;
     }

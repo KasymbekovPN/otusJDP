@@ -101,14 +101,29 @@ public class MessageSystemImplTest {
         dbMsClientUrl = new MsClientUrl("localhost", 1000, DATABASE, "I_AM");
         feMsClientUrl = new MsClientUrl("localhost", 1001, FRONTEND, "I_AM");
 
-        msClientService.addClient(
+
+        Optional<MSClient> maybeDBMsClient = msClientCreatorFactory.get(dbMsClientUrl.getEntity()).create(
                 dbMsClientUrl,
-                msClientCreatorFactory.get(dbMsClientUrl.getEntity()).create(dbMsClientUrl, socketHandler, messageSystem)
+                socketHandler,
+                messageSystem
         );
-        msClientService.addClient(
+        if (maybeDBMsClient.isPresent()){
+            msClientService.addClient(
+                    dbMsClientUrl,
+                    maybeDBMsClient.get()
+            );
+        }
+        Optional<MSClient> maybeFEMsClient = msClientCreatorFactory.get(feMsClientUrl.getEntity()).create(
                 feMsClientUrl,
-                msClientCreatorFactory.get(feMsClientUrl.getEntity()).create(feMsClientUrl, socketHandler, messageSystem)
+                socketHandler,
+                messageSystem
         );
+        if (maybeFEMsClient.isPresent()){
+            msClientService.addClient(
+                    feMsClientUrl,
+                    maybeFEMsClient.get()
+            );
+        }
     }
 
     private SocketHandler createSocketHandler(MsClientService msClientService) throws Exception {

@@ -145,9 +145,9 @@ public class SocketHandlerImpl implements SocketHandler {
                 Set<EchoClient> echoClients = booleanSetMap.get(request);
                 echoClients.remove(echoClient);
 
-                if (echoClients.size() == 0){
+                if (echoClients.isEmpty()){
                     booleanSetMap.remove(request);
-                    if (booleanSetMap.size() == 0){
+                    if (booleanSetMap.isEmpty()){
                         echoTargets.remove(observedMessageType);
                     }
                 }

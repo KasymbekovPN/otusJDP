@@ -50,7 +50,7 @@ public class LoginSIH implements SocketInputHandler {
         JsonArray errors = new JsonArray();
         if (!login.isEmpty() && !password.isEmpty()){
             List<OnlineUser> onlineUsers = dbService.loadRecord(login);
-            if (onlineUsers.size() > 0){
+            if (!onlineUsers.isEmpty()){
                 OnlineUser onlineUser = onlineUsers.get(0);
                 if (onlineUser.getPassword().equals(password)){
                     if (onlineUser.isAdmin()){

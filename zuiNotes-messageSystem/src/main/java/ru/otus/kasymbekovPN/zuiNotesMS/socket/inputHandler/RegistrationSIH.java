@@ -70,9 +70,9 @@ public class RegistrationSIH implements SocketInputHandler {
             if (registration){
                 boolean notReg = solus.register(url.getEntity());
                 if (notReg){
-                    MSClient msClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
-                    if (msClient != null){
-                        error = msClientService.addClient(url, msClient);
+                    final Optional<MSClient> maybeMsClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
+                    if (maybeMsClient.isPresent()){
+                        error = msClientService.addClient(url, maybeMsClient.get());
                     } else {
                         error = jeoGenerator.generate(new MSJEDGMsClientHasWrongEntity(url.getEntity()));
                     }
