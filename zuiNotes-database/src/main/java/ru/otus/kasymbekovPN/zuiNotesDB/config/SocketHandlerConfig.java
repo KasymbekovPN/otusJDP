@@ -1,19 +1,23 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AddUserRequestSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AuthUserRequestSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.DelUserRequestSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.WrongTypeSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AddUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AuthUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.DelUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler.DBSocketSendingHandler;
 
 @Configuration
@@ -27,6 +31,11 @@ public class SocketHandlerConfig {
     private static final String TARGET_PORT = "target.port";
 
     private final DBServiceOnlineUser dbService;
+    private final Client client;
+
+    @Autowired
+    @Qualifier("common")
+    private JsonErrorObjectGenerator jeoGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -43,14 +52,15 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(),
-                new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort),
+                new JsonCheckerImpl(jeoGenerator),
+                new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
-        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongTypeSIH());
-        socketHandler.addHandler(MessageType.AUTH_USER_REQUEST.getValue(), new AuthUserRequestSIH(dbService, socketHandler));
-        socketHandler.addHandler(MessageType.ADD_USER_REQUEST.getValue(), new AddUserRequestSIH(dbService, socketHandler));
-        socketHandler.addHandler(MessageType.DEL_USER_REQUEST.getValue(), new DelUserRequestSIH(dbService, socketHandler));
+
+        socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
+        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
 
         return socketHandler;
     }

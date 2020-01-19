@@ -1,19 +1,23 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserResponseSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongResponseSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongSIH;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
 
 @Configuration
@@ -27,6 +31,12 @@ public class SocketHandlerConfig {
     private static final String MS_PORT = "ms.port";
     private static final String TARGET_HOST = "target.host";
     private static final String TARGET_PORT = "target.port";
+
+    private final Client client;
+
+    @Autowired
+    @Qualifier("common")
+    private JsonErrorObjectGenerator jeoGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -43,14 +53,15 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(),
-                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort),
+                new JsonCheckerImpl(jeoGenerator),
+                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
-        socketHandler.addHandler(MessageType.AUTH_USER_RESPONSE.getValue(), new AuthUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.ADD_USER_RESPONSE.getValue(), new AddUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.DEL_USER_RESPONSE.getValue(), new DelUserResponseSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.WRONG_TYPE.getValue(), new WrongResponseSIH());
+
+        socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
+        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(frontendMessageTransmitter));
 
         return socketHandler;
     }

@@ -8,11 +8,9 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.common.Serializers;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 
-//<
 //    /**
 //     * Обработчик сообщений верного типа. <br><br>
 //     */
-//<
 public class CommonMSMessageHandler implements MSMessageHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonMSMessageHandler.class);
@@ -31,5 +29,10 @@ public class CommonMSMessageHandler implements MSMessageHandler {
                 Serializers.deserialize(message.getPayload(), String.class)
         );
         socketHandler.send(jsonObject);
+    }
+
+    @Override
+    public MSMessageHandler deepCopy() {
+        return new CommonMSMessageHandler(socketHandler);
     }
 }

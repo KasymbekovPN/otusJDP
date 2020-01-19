@@ -1,18 +1,17 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service;
 
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientAlreadyExist;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactory;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 //    /**
 //     * Сервис клиентов {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
@@ -25,55 +24,53 @@ import java.util.Optional;
 //     *
 //     * {@link #get(String)} - геттер клиента <br>
 //     */
-//<
 @Service
 public class MsClientServiceImpl implements MsClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(MsClientServiceImpl.class);
 
-    private final MsClientCreatorFactory msClientCreatorFactory;
-    private final Map<String, MSClient> clients = new HashMap<>();
+    @Qualifier("ms")
+    @Autowired
+    private JsonErrorObjectGenerator jeoGenerator;
 
-    private SocketHandler socketHandler;
-
-    public MsClientServiceImpl(MsClientCreatorFactory msClientCreatorFactory) {
-        this.msClientCreatorFactory = msClientCreatorFactory;
-    }
+    private final Map<MsClientUrl, MSClient> clients = new HashMap<>();
 
     @Override
-    public synchronized boolean createClient(String host, int port, Entity entity, MessageSystem messageSystem) {
-        String url = JsonHelper.extractUrl(JsonHelper.makeUrl(host, port, entity));
-        if (!clients.containsKey(url)){
-            final MSClient client = msClientCreatorFactory.get(entity).create(url, socketHandler, messageSystem);
-            if (client != null){
-                clients.put(url, client);
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public synchronized void deleteClient(String url) {
-        MSClient removedClient = clients.remove(url);
-        if (removedClient == null){
-            logger.warn("MsClientServiceImpl::deleteClient : client '{}' not found", url);
+    public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
+        if (clients.containsKey(url)){
+            return jeoGenerator.generate(new MSJEDGMsClientAlreadyExist(url.getUrl()));
         } else {
-            logger.info("MsClientServiceImpl::deleteClient : client '{}' was delete", url);
+            clients.put(url, msClient);
+            return new JsonObject();
         }
     }
 
     @Override
-    public synchronized void setSocketHandler(SocketHandler socketHandler) {
-        this.socketHandler = socketHandler;
+    public synchronized JsonObject deleteClient(MsClientUrl url) throws Exception {
+        clients.remove(url);
+        return new JsonObject();
     }
 
     @Override
-    public synchronized Optional<MSClient> get(String url) {
+    public synchronized Optional<MSClient> get(MsClientUrl url) {
         return Optional.ofNullable(clients.getOrDefault(url, null));
     }
 
+    @Override
+    public Map<String, Set<MsClientUrl>> search(Set<String> entities) {
+
+        Map<String, Set<MsClientUrl>> result = new HashMap<>();
+        for (String entity : entities) {
+            result.put(entity, new HashSet<>());
+        }
+
+        for (MsClientUrl msClientUrl : clients.keySet()) {
+            String entity = msClientUrl.getEntity();
+            if (entities.contains(entity)){
+                result.get(entity).add(msClientUrl);
+            }
+        }
+
+        return result;
+    }
 }

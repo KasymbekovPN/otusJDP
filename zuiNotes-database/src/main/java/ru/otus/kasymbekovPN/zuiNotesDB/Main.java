@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //     * </ol>
 //     *
 //     */
-//<
 @SpringBootApplication
 public class Main {
 

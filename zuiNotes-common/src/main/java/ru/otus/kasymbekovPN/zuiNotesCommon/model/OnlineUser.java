@@ -26,8 +26,5 @@ public class OnlineUser {
 
     @Column(name = "admin")
     private boolean admin;
-    //<
-//    @Column(name = "group")
-//    private String group;
 }
 

@@ -14,6 +14,6 @@ import java.util.Set;
  */
 public interface JsonChecker {
     String getType();
-    void setJsonObject(JsonObject jsonObject, Set<String> validTypes);
+    void setJsonObject(JsonObject jsonObject, Set<String> validTypes) throws Exception;
     JsonObject getJsonObject();
 }

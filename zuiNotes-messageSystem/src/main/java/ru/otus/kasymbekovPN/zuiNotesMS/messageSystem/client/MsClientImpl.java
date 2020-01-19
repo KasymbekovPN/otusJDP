@@ -3,7 +3,6 @@ package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.Serializers;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-//<
 //    /**
 //     * Клиент системы сообщений {@link ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem} <br><br>
 //     *
@@ -26,42 +24,22 @@ import java.util.concurrent.ConcurrentHashMap;
 //     *
 //     * {@link #produceMessage(String, Object, MessageType)} - создание сообщения <br><br>
 //     */
-//<
 public class MsClientImpl implements MSClient {
 
-//    package ru.otus.kasymbekovPN.HW16M.messageSystem.client;
-//
-//import common.Serializers;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import message.MessageType;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.handler.MSMessageHandler;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.Message;
-//import ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem;
-//
-//import java.util.Map;
-//import java.util.Objects;
-//import java.util.concurrent.ConcurrentHashMap;
-//
-
-//    public class MsClientImpl implements MsClient {
-//
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
-    private final String url;
+    private final MsClientUrl url;
     private final MessageSystem messageSystem;
-
-    //< may be via synchronised
     private final Map<String, MSMessageHandler> handlers = new ConcurrentHashMap<>();
 
-    public MsClientImpl(String url, MessageSystem messageSystem) {
+    public MsClientImpl(MsClientUrl url, MessageSystem messageSystem) {
         this.url = url;
         this.messageSystem = messageSystem;
     }
 
     @Override
-    public void addHandler(MessageType type, MSMessageHandler handler) {
-        handlers.put(type.getValue(), handler);
+    public void addHandler(String type, MSMessageHandler handler) {
+        handlers.put(type, handler);
     }
 
     @Override
@@ -89,13 +67,13 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public String getUrl() {
+    public MsClientUrl getUrl() {
         return url;
     }
 
     @Override
-    public <T> Message produceMessage(String toUrl, T data, MessageType type) {
-        return new Message(url, toUrl, type.getValue(), Serializers.serialize(data));
+    public <T> Message produceMessage(MsClientUrl toUrl, T data, String type) {
+        return new Message(url, toUrl, type, Serializers.serialize(data));
     }
 
     @Override

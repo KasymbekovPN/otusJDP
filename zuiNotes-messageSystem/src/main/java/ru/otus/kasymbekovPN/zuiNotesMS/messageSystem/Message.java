@@ -1,5 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem;
 
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
+
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -8,8 +10,8 @@ public class Message {
     static final Message VOID_MESSAGE = new Message();
 
     private final UUID id = UUID.randomUUID();
-    private final String fromUrl;
-    private final String toUrl;
+    private final MsClientUrl fromUrl;
+    private final MsClientUrl toUrl;
     private final String type;
     private final int payloadLength;
     private final byte[] payload;
@@ -22,11 +24,11 @@ public class Message {
         return id;
     }
 
-    public String getFromUrl() {
+    public MsClientUrl getFromUrl() {
         return fromUrl;
     }
 
-    public String getToUrl() {
+    public MsClientUrl getToUrl() {
         return toUrl;
     }
 
@@ -50,7 +52,7 @@ public class Message {
         this.payloadLength = this.payload.length;
     }
 
-    public Message(String fromUrl, String toUrl, String type, byte[] payload)
+    public Message(MsClientUrl fromUrl, MsClientUrl toUrl, String type, byte[] payload)
     {
         this.fromUrl = fromUrl;
         this.toUrl = toUrl;

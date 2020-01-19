@@ -4,13 +4,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +41,7 @@ public class SocketHandlerImpl implements SocketHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(SocketHandlerImpl.class);
 
+    private final Map<String, Map<Boolean, Set<EchoClient>>> echoTargets = new HashMap<>();
     private final Map<String, SocketInputHandler> handlers = new ConcurrentHashMap<>();
     private final JsonChecker jsonChecker;
     private final SocketSendingHandler socketSendingHandler;
@@ -74,14 +78,41 @@ public class SocketHandlerImpl implements SocketHandler {
 
     private void handleClientSocket(Socket clientSocket){
         try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-            jsonChecker.setJsonObject(
-                    (JsonObject) new JsonParser().parse(in.readLine()),
-                    handlers.keySet()
-            );
+
+            JsonObject jsonObject = (JsonObject) new JsonParser().parse(in.readLine());
+            echoSend(jsonObject);
+            jsonChecker.setJsonObject(jsonObject, handlers.keySet());
             handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
 
         } catch (Exception ex){
             logger.error("SocketHandlerImpl::handleClientSocket : Error", ex);
+        }
+    }
+
+    private void echoSend(JsonObject jsonObject){
+        if (jsonObject.has("type") && jsonObject.has("request")){
+            String type = jsonObject.get("type").getAsString();
+            boolean request = jsonObject.get("request").getAsBoolean();
+
+            if (echoTargets.containsKey(type) && echoTargets.get(type).containsKey(request)){
+
+                JsonObject data = new JsonObject();
+                data.addProperty("message", type);
+                data.addProperty("request", request);
+                data.add("data", jsonObject.deepCopy());
+                JsonObject echoJsonObject = new JsonObject();
+                echoJsonObject.addProperty("request", false);
+                echoJsonObject.addProperty("uuid", UUID.randomUUID().toString());
+                echoJsonObject.add("data", data);
+
+                final Set<EchoClient> echoClients = echoTargets.get(type).get(request);
+                for (EchoClient echoClient : echoClients) {
+                    echoJsonObject.addProperty("type", echoClient.getEchoMessageType());
+                    echoJsonObject.add("to", echoClient.getUrl());
+
+                    send(echoJsonObject.deepCopy());
+                }
+            }
         }
     }
 
@@ -93,5 +124,34 @@ public class SocketHandlerImpl implements SocketHandler {
     @Override
     public void addHandler(String name, SocketInputHandler handler) {
         handlers.put(name, handler);
+    }
+
+    @Override
+    public synchronized void subscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+        if (!echoTargets.containsKey(observedMessageType)){
+            echoTargets.put(observedMessageType, new HashMap<>());
+        }
+        if (!echoTargets.get(observedMessageType).containsKey(request)){
+            echoTargets.get(observedMessageType).put(request, new HashSet<>());
+        }
+        echoTargets.get(observedMessageType).get(request).add(echoClient);
+    }
+
+    @Override
+    public synchronized void unsubscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+        if (echoTargets.containsKey(observedMessageType)){
+            Map<Boolean, Set<EchoClient>> booleanSetMap = echoTargets.get(observedMessageType);
+            if (booleanSetMap.containsKey(request)){
+                Set<EchoClient> echoClients = booleanSetMap.get(request);
+                echoClients.remove(echoClient);
+
+                if (echoClients.size() == 0){
+                    booleanSetMap.remove(request);
+                    if (booleanSetMap.size() == 0){
+                        echoTargets.remove(observedMessageType);
+                    }
+                }
+            }
+        }
     }
 }

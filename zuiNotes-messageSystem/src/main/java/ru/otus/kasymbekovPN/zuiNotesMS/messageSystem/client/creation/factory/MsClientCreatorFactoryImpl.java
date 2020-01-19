@@ -1,39 +1,39 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory;
 
-import org.springframework.stereotype.Service;
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.CmnMsClientCreator;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.MsClientCreator;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.WrongMsClientCreator;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-@Service
 public class MsClientCreatorFactoryImpl implements MsClientCreatorFactory {
-    private final Map<Entity, MsClientCreator> creators = new HashMap<Entity, MsClientCreator>(){{
-        put(Entity.DATABASE, new CmnMsClientCreator(MessageType.AUTH_USER_REQUEST, MessageType.ADD_USER_REQUEST, MessageType.DEL_USER_REQUEST));
-        put(Entity.FRONTEND, new CmnMsClientCreator(MessageType.AUTH_USER_RESPONSE, MessageType.ADD_USER_RESPONSE, MessageType.DEL_USER_RESPONSE));
-        put(Entity.MESSAGE_SYSTEM, new WrongMsClientCreator());
-        put(Entity.UNKNOWN, new WrongMsClientCreator());
-    }};
 
-    public MsClientCreatorFactoryImpl() throws Exception {
-        StringBuilder status = new StringBuilder();
-        for (Entity entity : Entity.values()) {
-            if (!creators.containsKey(entity)){
-                status.append(" ").append(entity.getValue()).append(";");
+    private final MsClientCreator commonCreator;
+    private final MsClientCreator wrongCreator;
+    private final Map<String, Set<String>> config = new HashMap<>();
+
+    public MsClientCreatorFactoryImpl(MsClientCreator commonCreator, MsClientCreator wrongCreator,
+                                      JsonObject jsonConfig, String messagesField) {
+        this.commonCreator = commonCreator;
+        this.wrongCreator = wrongCreator;
+        for (String entity : jsonConfig.keySet()) {
+            JsonArray entityMessages = jsonConfig.get(entity).getAsJsonObject().get(messagesField).getAsJsonArray();
+            Set<String> set = new HashSet<>();
+            for (JsonElement entityMessage : entityMessages) {
+                set.add(entityMessage.getAsString());
             }
-        }
-
-        if (!status.toString().isEmpty()){
-            throw new Exception("Creators is not complete : " + status);
+            this.config.put(entity, set);
         }
     }
 
     @Override
-    public MsClientCreator get(Entity entity) {
-        return creators.get(entity);
+    public MsClientCreator get(String entity) {
+        MsClientCreator creator = config.containsKey(entity) ? commonCreator : wrongCreator;
+        creator.setValidMessages(config.get(entity));
+        return creator;
     }
 }

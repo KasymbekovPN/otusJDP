@@ -2,15 +2,14 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.json;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
 
 public class JsonHelper {
 
-    public static JsonObject makeUrl(String host, int port, Entity entity){
+    public static JsonObject makeUrl(String host, int port, String entity){
         JsonObject url = new JsonObject();
         url.addProperty("host", host);
         url.addProperty("port", port);
-        url.addProperty("entity", entity.getValue());
+        url.addProperty("entity", entity);
 
         return url;
     }

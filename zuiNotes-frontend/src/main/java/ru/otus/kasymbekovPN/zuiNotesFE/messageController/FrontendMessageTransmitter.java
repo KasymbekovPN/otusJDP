@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 // * сообщений на запрос типа {@link MessageType#DEL_USER_REQUEST}, перенаправляет в GUI ответ {@link OnlineUserPackage}
 // * на соотв. запрос.<br><br>
 // */
-//<
 @Service
 @RequiredArgsConstructor
 public class FrontendMessageTransmitter {

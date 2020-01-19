@@ -3,9 +3,9 @@ package ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketSendingHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -23,9 +23,6 @@ public class DBSocketSendingHandler implements SocketSendingHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(DBSocketSendingHandler.class);
 
-    private static final Entity selfEntity = Entity.DATABASE;
-    private static final Entity targetEntity = Entity.FRONTEND;
-
     private final String msHost;
     private final String selfHost;
     private final String targetHost;
@@ -34,13 +31,16 @@ public class DBSocketSendingHandler implements SocketSendingHandler {
     private final int selfPort;
     private final int targetPort;
 
-    public DBSocketSendingHandler(String msHost, String targetHost, int msPort, int selfPort, int targetPort) throws UnknownHostException {
+    private final Client client;
+
+    public DBSocketSendingHandler(String msHost, String targetHost, int msPort, int selfPort, int targetPort, Client client) throws UnknownHostException {
         this.msHost = msHost;
         this.selfHost = InetAddress.getLocalHost().getHostAddress();
         this.targetHost = targetHost;
         this.msPort = msPort;
         this.selfPort = selfPort;
         this.targetPort = targetPort;
+        this.client = client;
     }
 
     @Override
@@ -48,8 +48,8 @@ public class DBSocketSendingHandler implements SocketSendingHandler {
         try(Socket clientSocket = new Socket(msHost, msPort)){
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, selfEntity));
-            jsonObject.add("to", JsonHelper.makeUrl(targetHost, targetPort, targetEntity));
+            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, client.getEntity()));
+            jsonObject.add("to", JsonHelper.makeUrl(targetHost, targetPort, "FRONTEND"));
 
             logger.info("DBSocketSendingHandler send : {}", jsonObject);
             out.println(jsonObject);

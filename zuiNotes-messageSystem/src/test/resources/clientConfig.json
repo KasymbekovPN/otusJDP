@@ -1,0 +1,18 @@
+{
+    "DATABASE" : {
+        "solus" : false,
+        "messages" : [
+            "AUTH_USER",
+            "ADD_USER",
+            "DEL_USER"
+        ]
+    },
+    "FRONTEND" : {
+        "solus" : false,
+        "messages" : [
+            "AUTH_USER",
+            "ADD_USER",
+            "DEL_USER"
+        ]
+    }
+}

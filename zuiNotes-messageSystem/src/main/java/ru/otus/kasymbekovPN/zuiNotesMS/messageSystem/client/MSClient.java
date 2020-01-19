@@ -1,10 +1,8 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 
-import ru.otus.kasymbekovPN.zuiNotesCommon.messages.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 
-//<
 //    /**
 //     * Интерфейс, служащий для создания клиента системы сообщений {@link ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem} <br><br>
 //     *
@@ -18,11 +16,10 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 //     *
 //     * {@link #produceMessage(String, Object, MessageType)} - создание сообщения <br><br>
 //     */
-//<
 public interface MSClient {
-    void addHandler(MessageType type, MSMessageHandler handler);
+    void addHandler(String type, MSMessageHandler handler);
     boolean sendMessage(Message message);
     void handle(Message message);
-    String getUrl();
-    <T> Message produceMessage(String toUrl, T data, MessageType type);
+    MsClientUrl getUrl();
+    <T> Message produceMessage(MsClientUrl toUrl, T data, String type);
 }

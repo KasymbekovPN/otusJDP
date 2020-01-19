@@ -7,7 +7,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 //    /**
 //     * Обработчик сообщений неверного типа
 //     */
-//<
 public class WrongMSMessageHandler implements MSMessageHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WrongMSMessageHandler.class);
@@ -18,5 +17,10 @@ public class WrongMSMessageHandler implements MSMessageHandler {
     @Override
     public void handle(Message message) {
         logger.warn("WrongMSMessageHandler : {}", message);
+    }
+
+    @Override
+    public MSMessageHandler deepCopy() {
+        return new WrongMSMessageHandler();
     }
 }

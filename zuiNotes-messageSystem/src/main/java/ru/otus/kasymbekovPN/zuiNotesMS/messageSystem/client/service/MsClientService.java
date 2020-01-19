@@ -1,13 +1,15 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service;
 
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
+import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
-//<
 //    /**
 //     * Интерфейс, служащйи для создания сервиса клиентов {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
 //     *
@@ -19,10 +21,9 @@ import java.util.Optional;
 //     *
 //     * {@link #get(String)} - геттер клиента <br>
 //     */
-//<
 public interface MsClientService {
-    boolean createClient(String host, int port, Entity entity, MessageSystem messageSystem);
-    void deleteClient(String url);
-    void setSocketHandler(SocketHandler socketHandler);
-    Optional<MSClient> get(String url);
+    JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception;
+    JsonObject deleteClient(MsClientUrl url) throws Exception;
+    Optional<MSClient> get(MsClientUrl url);
+    Map<String, Set<MsClientUrl>> search(Set<String> entities);
 }

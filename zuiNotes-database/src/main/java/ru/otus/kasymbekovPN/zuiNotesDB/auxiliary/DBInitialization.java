@@ -13,7 +13,6 @@ import java.util.List;
 // *
 // * {@link #init} - метод, записывающий данные администратора в БД.
 // */
-//<
 @Component
 @RequiredArgsConstructor
 public class DBInitialization {

@@ -1,0 +1,16 @@
+{
+    "common" : [
+        "AUTH_USER",
+        "ADD_USER",
+        "DEL_USER"
+    ],
+    "registration" : [
+        "I_AM"
+    ],
+    "echo" : [
+        "ECHO"
+    ],
+    "clients" : [
+        "CLIENTS"
+    ]
+}

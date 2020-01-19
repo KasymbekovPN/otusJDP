@@ -3,9 +3,9 @@ package ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.entity.Entity;
+import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketSendingHandler;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -20,14 +20,15 @@ import java.net.UnknownHostException;
 public class MSSocketSendingHandler implements SocketSendingHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(MSSocketSendingHandler.class);
-    private static final Entity SELF_ENTITY = Entity.MESSAGE_SYSTEM;
 
     private final String selfHost;
     private final int selfPort;
+    private final Client client;
 
-    public MSSocketSendingHandler(int selfPort) throws UnknownHostException {
+    public MSSocketSendingHandler(int selfPort, Client client) throws UnknownHostException {
         this.selfHost = InetAddress.getLocalHost().getHostAddress();
         this.selfPort = selfPort;
+        this.client = client;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class MSSocketSendingHandler implements SocketSendingHandler {
         int toPort = to.get("port").getAsInt();
 
         if (!jsonObject.has("from")){
-            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, SELF_ENTITY));
+            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, client.getEntity()));
         }
 
         try(Socket clientSocket = new Socket(toHost, toPort)){
