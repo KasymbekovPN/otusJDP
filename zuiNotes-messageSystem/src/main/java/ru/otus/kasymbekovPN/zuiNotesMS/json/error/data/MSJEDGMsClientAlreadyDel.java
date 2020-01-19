@@ -7,5 +7,6 @@ public class MSJEDGMsClientAlreadyDel extends BaseJEDG implements JsonErrorDataG
 
     public MSJEDGMsClientAlreadyDel(String url) {
         super(ErrorCode.MS_CLIENT_ALREADY_DEL.getCode());
+        data.addProperty("url", url);
     }
 }

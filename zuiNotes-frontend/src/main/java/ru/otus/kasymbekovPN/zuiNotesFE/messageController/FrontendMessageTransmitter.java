@@ -31,21 +31,13 @@ public class FrontendMessageTransmitter {
     private final Registrar registrar;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void handle(String data, String uuid, String messageType){
+    public void handle(String data, String uuid, String messageType, boolean uuidIsRequestUUID){
         logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
 
-        String UIId = registrar.getUIIdByRequestUUID(uuid);
-        String destination = "/topic/" + messageType + "/" + UIId;
-        simpMessagingTemplate.convertAndSend(destination, data);
-    }
+        String UIId = uuidIsRequestUUID
+                ? registrar.getUIIdByRequestUUID(uuid)
+                : uuid;
 
-    //< del
-    public void handle(OnlineUserPackage data, String uuid, String messageType){
-        logger.info("FrontendMessageTransmitter uuid : {}, messageTYpe : {}", uuid, messageType);
-
-//        String uiId = registrar.get(uuid);
-        //<
-        String UIId = registrar.getUIIdByRequestUUID(uuid);
         String destination = "/topic/" + messageType + "/" + UIId;
         simpMessagingTemplate.convertAndSend(destination, data);
     }

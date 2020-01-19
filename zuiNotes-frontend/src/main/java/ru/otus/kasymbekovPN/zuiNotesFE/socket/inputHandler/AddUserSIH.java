@@ -10,6 +10,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.OnlineUserPackage;
+import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class AddUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AddUserSIH.class);
 
-    private FrontendMessageTransmitter frontendMessageTransmitter;
+    private final FrontendMessageTransmitter frontendMessageTransmitter;
 
     public AddUserSIH(FrontendMessageTransmitter frontendMessageTransmitter) {
         this.frontendMessageTransmitter = frontendMessageTransmitter;
@@ -34,25 +35,10 @@ public class AddUserSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) {
         logger.info("AddUserSIH : {}", jsonObject);
 
-        JsonObject data = jsonObject.get("data").getAsJsonObject();
-        String status = data.get("status").getAsString();
-        JsonArray jsonUsers = data.get("users").getAsJsonArray();
-
-        List<OnlineUser> users = new ArrayList<>();
-        Gson gson = new Gson();
-        for (JsonElement element : jsonUsers) {
-            users.add(
-                    gson.fromJson((JsonObject)element, OnlineUser.class)
-            );
-        }
-
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
+        JsonObject data = jsonObject.get("data").getAsJsonObject();
 
-        OnlineUserPackage onlineUserPackage = new OnlineUserPackage();
-        onlineUserPackage.setStatus(status);
-        onlineUserPackage.setUsers(users);
-
-        frontendMessageTransmitter.handle(onlineUserPackage, uuid, type);
+        frontendMessageTransmitter.handle(data.toString(), uuid, type, true);
     }
 }

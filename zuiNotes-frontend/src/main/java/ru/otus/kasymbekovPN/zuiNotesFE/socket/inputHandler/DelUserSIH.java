@@ -34,25 +34,10 @@ public class DelUserSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) {
         logger.info("DelUserSIH : {}", jsonObject);
 
-        JsonObject data = jsonObject.get("data").getAsJsonObject();
-        String status = data.get("status").getAsString();
-        JsonArray jsonUsers = data.get("users").getAsJsonArray();
-
-        List<OnlineUser> users = new ArrayList<>();
-        Gson gson = new Gson();
-        for (JsonElement element : jsonUsers) {
-            users.add(
-                    gson.fromJson((JsonObject)element, OnlineUser.class)
-            );
-        }
-
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
+        JsonObject data = jsonObject.get("data").getAsJsonObject();
 
-        OnlineUserPackage onlineUserPackage = new OnlineUserPackage();
-        onlineUserPackage.setStatus(status);
-        onlineUserPackage.setUsers(users);
-
-        frontendMessageTransmitter.handle(onlineUserPackage, uuid, type);
+        frontendMessageTransmitter.handle(data.toString(), uuid, type, true);
     }
 }

@@ -29,18 +29,6 @@ public class LoginSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) {
         logger.info("LoginSIH : {}", jsonObject);
 
-        //<
-//        AuthUserSIH :
-//        {"type":"AUTH_USER",
-//        "request":false,
-//        "uuid":"8c0ce888-2918-4e67-855f-3a456cb913ae",
-//        "data":
-//                  {"login":"admin",
-//                  "group":"admin",
-//                  "errors":[]
-//                 },"from":{"host":"192.168.0.100","port":8101,"entity":"DATABASE"},"to":{"host":"192.168.0.100","port":8081,"entity":"FRO
-//            NTEND"}}
-
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
         JsonObject data = jsonObject.get("data").getAsJsonObject();
@@ -49,27 +37,6 @@ public class LoginSIH implements SocketInputHandler {
         String login = data.get("login").getAsString();
         registrar.setLoginByUIId(uiId, login);
 
-        frontendMessageTransmitter.handle(data.toString(), uuid, type);
-        //<
-//        JsonObject data = jsonObject.get("data").getAsJsonObject();
-//        String status = data.get("status").getAsString();
-//        JsonArray jsonUsers = data.get("users").getAsJsonArray();
-//
-//        List<OnlineUser> users = new ArrayList<>();
-//        Gson gson = new Gson();
-//        for (JsonElement element : jsonUsers) {
-//            users.add(
-//                    gson.fromJson((JsonObject)element, OnlineUser.class)
-//            );
-//        }
-//
-//        String type = jsonObject.get("type").getAsString();
-//        String uuid = jsonObject.get("uuid").getAsString();
-//
-//        OnlineUserPackage onlineUserPackage = new OnlineUserPackage();
-//        onlineUserPackage.setStatus(status);
-//        onlineUserPackage.setUsers(users);
-//
-//        frontendMessageTransmitter.handle(onlineUserPackage, uuid, type);
+        frontendMessageTransmitter.handle(data.toString(), uuid, type, true);
     }
 }

@@ -3,9 +3,6 @@ package ru.otus.kasymbekovPN.zuiNotesFE.messageController;
 import java.util.Optional;
 
 public interface Registrar {
-//    void set(String requestUUID, String UIId);
-//    String get(String requestUUID);
-    //<
     void setUIIdByRequestUUID(String requestUUID, String UIId);
     String getUIIdByRequestUUID(String requestUUID);
     void delUIIdByRequestUUID(String requestUUID);

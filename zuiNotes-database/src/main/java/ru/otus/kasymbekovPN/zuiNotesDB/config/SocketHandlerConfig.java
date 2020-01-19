@@ -61,8 +61,9 @@ public class SocketHandlerConfig {
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
         socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(dbService, socketHandler, msJeoGenerator));
         socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(dbService, socketHandler, msJeoGenerator));
-        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
-        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new TreeDataSIH(socketHandler));
 
         return socketHandler;
     }

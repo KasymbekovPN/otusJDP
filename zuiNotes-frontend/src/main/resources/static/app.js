@@ -9,10 +9,270 @@ var responseRoot = "topic";
 var loginMessageType = "LOGIN";
 var logoutMessageType = "LOGOUT";
 var userDataMessageType = "USER_DATA";
-
 var addUserMessageType = "ADD_USER";
 var delUserMessageType = "DEL_USER";
-var groupDataMessageType = "GROUP_DATA";
+var treeDataMessageType = 'TREE_DATA';
+
+var containerIds = {
+    top_menu : 'top-menu-container',
+    user_data_table : 'user-data-table-container',
+    add_user : 'add-user-container',
+    del_user : 'del-user-container',
+    error : 'error-container'
+};
+
+var entryTopMenuItems = [
+    {
+        type : 'label',
+        attrs : [
+            {key : 'for', value : 'login'}
+        ],
+        value : 'Login',
+        ended : true
+    },
+    {
+        type : 'input',
+        attrs : [
+            {key : 'id', value : 'login'},
+            {key : 'type', value : 'text'},
+            {key : 'class', value : 'form-control'}
+        ],
+        value : '',
+        ended : false
+    },
+    {
+        type : 'label',
+        attrs : [
+            {key : 'for', value : 'password'}
+        ],
+        value : 'Password',
+        ended : true
+    },
+    {
+        type : 'input',
+        attrs : [
+            {key : 'id', value : 'password'},
+            {key : 'type', value : 'text'},
+            {key : 'class', value : 'form-control'}
+        ],
+        value : '',
+        ended : false
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key : 'onclick', value : 'loginRequest();'},
+            {key : 'class', value : 'btn btn-default'},
+            {key : 'type', value : 'submit'}
+        ],   
+        value : 'Login',
+        ended : true
+    }
+];
+
+var adminWorkAreaTopMenuItems = [
+    {
+        type : 'label',
+        attrs : [
+            {key:'class', value:'form-control'}
+        ],
+        value : '',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'userDataRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'User Settings',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'groupDataRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Group Settings',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'logoutRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Logout',
+        ended : true
+    }
+];
+
+var userWorkAreaTopMenuItems = [
+    {
+        type : 'label',
+        attrs : [
+            {key:'class', value:'form-control'}
+        ],
+        value : '',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'logoutRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Logout',
+        ended : true
+    }
+];
+
+var userDataTopMenuItems = [
+    {
+        type : 'label',
+        attrs : [
+            {key:'class', value:'form-control'}
+        ],
+        value : '',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'treeDataRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Work Area',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'groupDataRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Group Settings',
+        ended : true
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'onclick', value:'logoutRequest();'},
+            {key:'class', value:'btn btn-default'},
+            {key:'type', value:'submit'}
+        ],
+        value : 'Logout',
+        ended : true
+    }
+];
+
+var addUserItems = [
+    {
+        type : 'hr',
+        attrs : [],
+        ended : false,
+    },
+    {
+        type : "h5",
+        attrs : [],
+        value : "User Addition",
+        ended : true
+    },
+    {
+        type : 'label',
+        attrs : [
+            {key:'for',value:'add-login'}
+        ],
+        value : 'Login',
+        ended : true
+    },
+    {
+        type : 'input',
+        attrs : [
+            {key:'id', value:"add-login"},
+            {key:'type',value:'text'},
+            {key:'class',value:'form-control'}
+        ],
+        ended : false
+    },
+    {
+        type : 'label',
+        attrs : [
+            {key:'for',value:'add-password'}
+        ],
+        value : 'Password',
+        ended : true
+    },
+    {
+        type : 'input',
+        attrs : [
+            {key:'id', value:"add-password"},
+            {key:'type',value:'text'},
+            {key:'class',value:'form-control'}
+        ],
+        ended : false
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'id',value:'addUserButton'},
+            {key:'onclick',value:'addUserRequest();'},
+            {key:'class',value:'btn btn-default'},
+            {key:'type',value:'submit'}
+        ],
+        value: 'Add',
+        ended : true
+    }
+];
+
+var delUserItems = [
+    {
+        type : 'hr',
+        attrs : [],
+        ended : false
+    },
+    {
+        type : "h5",
+        attrs : [],
+        value : 'User Deleting',
+        ended : true
+    },
+    {
+        type : 'label',
+        attrs : [
+            {key:'for',value:'del-login'}
+        ],
+        value : 'Login',
+        ended : true
+    },
+    {
+        type : 'input',
+        attrs : [
+            {key:'id',value:'del-login'},
+            {key:'type',value:'text'},
+            {key:'class',value:'form-control'}
+        ],
+        ended : false
+    },
+    {
+        type : 'button',
+        attrs : [
+            {key:'id',value:'del-user-button'},
+            {key:'onclick',value:'delUserRequest();'},
+            {key:'class',value:'btn btn-default'},
+            {key:'type',value:'submit'}
+        ],
+        value : 'Del',
+        ended : true
+    }
+];
 
 function uuidv4() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -20,27 +280,20 @@ function uuidv4() {
     );
 }
 
+
 $(() => {
 
     uiId = uuidv4();
 
     $("form").on('submit', event => event.preventDefault());
-    $("#connect").click(connect);
-    $("#disconnect").click(disconnect);
 
     connect();
-    fillEntryTopMenu();
+    setElementText(containerIds.top_menu, generateContent(entryTopMenuItems));
 });
-
-const setConnected = connected => {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-};
 
 const connect = () => {
     stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
     stompClient.connect({}, frame => {
-        setConnected(true);
         console.log(`Connected: ${frame}`);
         stompClient.subscribe(
             "/" + responseRoot + "/" + loginMessageType + "/" + uiId,
@@ -49,39 +302,20 @@ const connect = () => {
         stompClient.subscribe(
             '/' + responseRoot + '/' + userDataMessageType + '/' + uiId,
             message => userDataResponse(message)
+        );
+        stompClient.subscribe(
+            '/' + responseRoot + '/' + addUserMessageType + '/' + uiId,
+            message => addUserResponse(message)
+        );
+        stompClient.subscribe(
+            '/' + responseRoot + '/' + delUserMessageType + '/' + uiId,
+            message => delUserResponse(message)
+        );
+        stompClient.subscribe(
+            '/' + responseRoot + '/' + treeDataMessageType + '/' + uiId,
+            message => treeDataResponse(message)
         )
-
-        // stompClient.subscribe(
-        //     "/" + responseRoot + "/" + addUserMessageType + "/" + uiId,
-        //     rawData => handleAddUserResponse(rawData)
-        // );
-        // stompClient.subscribe(
-        //     "/" + responseRoot + "/" + delUserMessageType + "/" + uiId,
-        //     rawData => handleDelUserResponse(rawData)
-        // );
-
-        // stompClient.subscribe(
-        //     "/" + responseRoot + "/" + userDataMessageType + "/" + uiId,
-        //     data => userDateResponse(data)
-        // );
-        // stompClient.subscribe(
-        //     '/' + responseRoot + '/' + groupDataMessageType + '/' + uiId,
-        //     data => groupDataResponse(data)
-        // );
-
     });
-};
-
-const disconnect = () => {
-    clearStatusLine();
-    clearUserInformationTable();
-    clearAddUser();
-    clearDelUser();
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
 };
 
 const loginRequest = () => stompClient.send(    
@@ -97,9 +331,7 @@ const loginRequest = () => stompClient.send(
 );
 
 const loginResponse = message => {
-    //<
-    console.log(message);
-    //<
+    console.log('loginResponse : ' + message);
     data = JSON.parse(message.body);
     login = data.login;
     group = data.group;
@@ -107,12 +339,17 @@ const loginResponse = message => {
 
     if (Object.keys(errors).length == 0){
         if (group == 'admin'){
-            fillAdminTopMenu(login);
+            var items = adminWorkAreaTopMenuItems;
+            items[0].value = login;
+            setElementText(containerIds.top_menu, generateContent(items));
         } else {
-            fillUserTopMenu(login);
+            var items = userWorkAreaTopMenuItems;
+            items[0].value = login;
+            setElementText(containerIds.top_menu, generateContent(items));
         }
     } else {
-        fillErrorTopMenu(errors);
+        clearElementText([containerIds.add_user, containerIds.del_user, containerIds.user_data_table]);
+        setElementText(containerIds.error, generateErrorContent(errors));
     }
 };
 
@@ -127,7 +364,9 @@ const logoutRequest = () => {
             }
         )
     );
-    fillEntryTopMenu();
+
+    setElementText(containerIds.top_menu, generateContent(entryTopMenuItems));
+    clearElementText([containerIds.user_data_table, containerIds.add_user, containerIds.del_user, containerIds.error]);
 };
 
 const userDataRequest = () => {
@@ -143,222 +382,157 @@ const userDataRequest = () => {
 };
 
 const userDataResponse = (message) => {
-    //<
     console.log("userDataResponse : " + message);
-    //<
 
     data = JSON.parse(message.body);
     userData = data.users;
     errors = data.errors;
 
     if (Object.keys(errors).length == 0){
-        fillDataUserInformationTable(userData);
+        var items = userDataTopMenuItems;
+        items[0].value = login;
+        setElementText(containerIds.top_menu, generateContent(items));
+        setElementText(containerIds.user_data_table, generateUserDataTableContent(userData));
+        setElementText(containerIds.add_user, generateContent(addUserItems));
+        setElementText(containerIds.del_user, generateContent(delUserItems));
+        clearElementText([containerIds.error]);
     } else {
-        fillErrorsUserInfornationData(errors);
+        clearElementText([containerIds.add_user, containerIds.del_user, containerIds.user_data_table]);
+        setElementText(containerIds.error, generateErrorContent(errors));
     }
-
-    //<
-    // {"users":[{"id":1,"login":"admin","password":"qwerty","admin":true},{"id":2,"login":"user1","password":"user1pass","admin":false,"uiId":""},{"id":7,"login":"user6","password":"user6pass","admin":false,"uiId":""},{"id":8,"login":"user7","password":"user7pass","admin":false,"uiId":""},{"id":9,"login":"user8","password":"user8pass","admin":false,"uiId":""},{"id":10,"login":"user9","password":"user9pass","admin":false,"uiId":""}],"errors":[]}
 }
 
+const addUserRequest = () => {
+    console.log('addUserRequest');
 
-
-//<
-// const addUserAction = () => stompClient.send(
-//     "/" + requestRoot + "/" + addUserMessageType,
-//     {},
-//     JSON.stringify(
-//         {
-//             'login' : $("#addLogin").val(),
-//             'password' : $("#addPassword").val(),
-//             'uiId' : uiId
-//         }
-//     )
-// );
-
-// const delUserAction = () => stompClient.send(
-//     "/" + requestRoot + "/" + delUserMessageType,
-//     {},
-//     JSON.stringify(
-//         {
-//             'login' : $("#delLogin").val(),
-//             'uiId' : uiId
-//         }
-//     )
-// );
-
-
-
-// const handleAdminAuthResponse = userData => {
-//     fillStatusLine("User Information was load.");
-//     fillUserInformationTable(userData);
-//     fillAddUser();
-//     fillDelUser();
-// };
-
-// const handleUserAuthResponse = userData => {
-//     login = userData[0].login;
-//     fillStatusLine("You are '" + login + "'.");
-//     clearUserInformationTable();
-//     clearAddUser();
-//     clearDelUser();
-// };
-
-// const handleWrongAuthResponse = status => {
-//     fillStatusLine(status);
-//     clearUserInformationTable();
-//     clearAddUser();
-//     clearDelUser();
-// };
-
-// const handleAddUserResponse = rawData => {
-//     data = JSON.parse(rawData.body);
-//     fillStatusLine(data.status);
-//     fillUserInformationTable(data.users);
-// };
-
-// const handleDelUserResponse = rawData => {
-//     data = JSON.parse(rawData.body);
-//     fillStatusLine(data.status);
-//     fillUserInformationTable(data.users);
-// }
-
-// const fillUserInformationTable = userData => {
-//     const userDataTableContainer = document.getElementById("userDataTableContainer");
-//     userDataTableContainer.innerHTML = "<table id='conversation' class='table table-striped'><thead><tr><th>User Information</th></tr></thead><tbody id='userInformation'><tr><td>ID</td><td>Login</td><td>Password</td><td>Is Admin</td></tr></tbody></table>";
-
-//     const userInfoNode = document.getElementById("userInformation");
-
-//     for (var i in userData){
-//         id = userData[i].id;
-//         login = userData[i].login;
-//         password = userData[i].password;
-//         admin = userData[i].admin
-//         $("#userInformation").append(
-//             `<tr><td>${id}</td><td>${login}</td><td>${password}</td><td>${admin}</td></tr>`
-//         );
-//     }
-// };
-
-// const fillStatusLine = line => {
-//     const statusLine = document.getElementById("statusLine");
-//     statusLine.innerHTML = "<hr><p>"+ line +"</p><hr>";
-// };
-
-// const fillAddUser = () => {
-//     const addUser = document.getElementById("addUser");
-//     addUser.innerHTML = "<hr>"
-//         + "<h5>User Addition</h5>"
-//         + "<label for='addLogin'>Login</label>"
-//         + "<input id='addLogin' type'text' class='form-control'>"
-//         + "<label for='addPassword'>Password</label>"
-//         + "<input id='addPassword' type'text' class='form-control'>"
-//         + "<button id='addUserButton' onclick='addUserAction();' class='btn btn-default' type='submit'>Add</button";
-// };
-
-// const fillDelUser = () => {
-//     const delUser = document.getElementById("delUser");
-//     delUser.innerHTML = "<hr>"
-//         + "<h5>User Deleting</h5>"
-//         + "<label for='delLogin'>Login</label>"
-//         + "<input id='delLogin' type'text' class='form-control'>"
-//         + "<button id='delUserButton' onclick='delUserAction();' class='btn btn-default' type='submit'>Del</button";
-// };
-
-// const clearStatusLine = () => {
-//     const statusLine = document.getElementById("statusLine");
-//     statusLine.innerHTML = "";
-// };
-
-// const clearUserInformationTable = () => {
-//     const userDataTableContainer = document.getElementById("userDataTableContainer");
-//     userDataTableContainer.innerHTML = "";
-// };
-
-// const clearAddUser = () => {
-//     const addUser = document.getElementById("addUser");
-//     addUser.innerHTML = "";
-// };
-
-// const clearDelUser = () => {
-//     const delUser = document.getElementById("delUser");
-//     delUser.innerHTML = "";
-// };
-
-// --------------- TOP MENU FILLING BEGIN ------------------
-
-const fillEntryTopMenu = () => {
-    const top_menu = document.getElementById("top-menu");
-    top_menu.innerHTML = "<label for='login'>Login</label>"
-                        + "<input id='login', type='text' class='form-control'>"
-                        + "<label for='password'>Password</label>"
-                        + "<input id='password', type='text' class='form-control'>"
-                        + "<button onclick='loginRequest();' class='btn btn-default' type='submit'>Login</button>";
-}
-
-const fillErrorTopMenu = (errors) => {
-    //<
-    console.log('fillErrorTopMenu errors : ' + errors);
-    //<
+    var login = document.getElementById('add-login').value;
+    var password = document.getElementById('add-password').value;
+    stompClient.send(
+        '/' + requestRoot + '/' + addUserMessageType,
+        {},
+        JSON.stringify(
+            {
+                'login' : login,
+                'password' : password,
+                'uiId' : uiId
+            }
+        )
+    );
 };
 
-const fillAdminTopMenu = (login) => {
-    //<
-    console.log('fillAdminTopMenu login : ' + login);
-    //<
+const addUserResponse = (message) => {
+    console.log('addUserResponse : ' + message);
 
-    const top_menu = document.getElementById('top-menu');
-    top_menu.innerHTML = "<label class='form-control'>"+ login +"</label>"
-                        + "<button onclick='userDataRequest();' class='btn btn-default' type='submit'>User Settings</button>"
-                        + "<button onclick='groupDataRequest();' class='btn btn-default' type='submit'>Group Settings</button>"
-                        + "<button onclick='logoutRequest();' class='btn btn-default' type='submit'>Logout</button>";
-};
+    data = JSON.parse(message.body);
+    userData = data.users;
+    errors = data.errors;
 
-const fillUserTopMenu = (login) => {
-    //<
-    console.log('fillUserTopMenu login : ' + login);
-    //<
-
-    const top_menu = document.getElementById('top-menu');
-    top_menu.innerHTML = "<label class='form-control'>"+ login +"</label>"
-                        + "<button onclick='logoutRequest();' class='btn btn-default' type='submit'>Logout</button>";
-};
-
-// --------------- TOP MENU FILLING END --------------------
-
-// --------------- MAIN FIELD FILLING USER DATA BEGIN ------------------
-
-const fillDataUserInformationTable = userData => {
-
-    //<
-    console.log("users : " + userData);
-    //<
-
-    const userDataTableContainer = document.getElementById("userDataTableContainer");
-    userDataTableContainer.innerHTML = "<table id='conversation' class='table table-striped'><thead><tr><th>User Information</th></tr></thead><tbody id='userInformation'><tr><td>ID</td><td>Login</td><td>Password</td><td>Is Admin</td></tr></tbody></table>";
-
-    const userInfoNode = document.getElementById("userInformation");
-
-    for (var i in userData){
-        id = userData[i].id;
-        login = userData[i].login;
-        password = userData[i].password;
-        admin = userData[i].admin
-        $("#userInformation").append(
-            `<tr><td>${id}</td><td>${login}</td><td>${password}</td><td>${admin}</td></tr>`
-        );
+    if (Object.keys(errors).length == 0){
+        setElementText(containerIds.user_data_table, generateUserDataTableContent(userData));
+        clearElementText([containerIds.error]);
+    } else {
+        setElementText(containerIds.error, generateErrorContent(errors));
     }
 };
 
-const fillErrorsUserInfornationData = errors => {
-    //<
-    console.log("errors : " + errors);
-    //<
+const delUserRequest = () => {
+    console.log('delUserRequest');
+
+    var login = document.getElementById('del-login').value;
+    stompClient.send(
+        '/' + requestRoot + '/' + delUserMessageType,
+        {},
+        JSON.stringify(
+            {
+                'login' : login,
+                'uiId' : uiId
+            }
+        )
+    );
 };
 
-const clearUserInformationTable = () => {
-    const userDataTableContainer = document.getElementById("userDataTableContainer");
-    userDataTableContainer.innerHTML = "";
+const delUserResponse = (message) => {
+    console.log('delUserResponse : ' + message);
+
+    data = JSON.parse(message.body);
+    userData = data.users;
+    errors = data.errors;
+
+    if (Object.keys(errors).length == 0){
+        setElementText(containerIds.user_data_table, generateUserDataTableContent(userData));
+        clearElementText([containerIds.error]);
+    } else {
+        setElementText(containerIds.error, generateErrorContent(errors));
+    }
 };
 
-// --------------- MAIN FIELD FILLING USER DATA END ------------------
+const treeDataRequest = () => {
+    console.log('treeDataRequest');
+
+    stompClient.send(
+        '/' + requestRoot + '/' + treeDataMessageType,
+        {},
+        JSON.stringify(
+            {
+                'uiId' : uiId
+            }
+        )
+    );
+};
+
+const treeDataResponse = (message) => {
+    console.log('treeDataResponse : ' + message);
+
+    var items = adminWorkAreaTopMenuItems;
+    items[0].value = login;
+    setElementText(containerIds.top_menu, generateContent(items));
+    clearElementText([containerIds.add_user, containerIds.del_user, containerIds.error, containerIds.user_data_table]);
+};
+
+const setElementText = (id, text) => {
+    document.getElementById(id).innerHTML = text;
+};
+
+const clearElementText = (ids) => {
+    for(i = 0; i < ids.length; i++){
+        document.getElementById(ids[i]).innerHTML = "";
+    }
+};
+
+const generateContent = (items) => {
+    var itemNumber = items.length;
+    var content = "";
+    for(i = 0; i < itemNumber; i++){
+        var line = "<" + items[i].type;
+        for(j = 0; j < items[i].attrs.length; j++){
+            line += " " + items[i].attrs[j].key + "='" + items[i].attrs[j].value + "'"
+        }
+        line += ">";
+
+        if (items[i].ended){
+            line += items[i].value + "</" + items[i].type + ">";
+        }
+        content += line;
+    }
+
+    return content;
+};
+
+const generateUserDataTableContent = (userData) => {
+
+    var content = "<table id='conversation' class='table table-striped'><thead><tr><th>User Information</th></tr></thead><tbody><tr><td>ID</td><td>Login</td><td>Password</td><td>Is Admin</td></tr>";
+    for(var i in userData){
+        content += '<tr><td>' + userData[i].id + '</td><td>' + userData[i].login + "</td><td>" + userData[i].password + "</td><td>" + userData[i].admin + "</td></tr>";
+    }
+    content + "</tbody></table>";
+
+    return content;
+};
+
+const generateErrorContent = (errors) => {
+    var content = '';
+    for(var i in errors){
+        content += '<p>code : ' + errors[i].code + "; common : " + errors[i].common + "; entity : " + errors[i].entity + "; data : " + errors[i].data + "</p>"
+    }
+    return content;
+};

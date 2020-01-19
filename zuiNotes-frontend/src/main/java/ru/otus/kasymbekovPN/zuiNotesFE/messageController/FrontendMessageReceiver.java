@@ -1,5 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.messageController;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
+import ru.otus.kasymbekovPN.zuiNotesFE.json.error.data.FEJEDGInvalidLogin;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
 
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class FrontendMessageReceiver {
 
     private final Registrar registrar;
     private final SocketHandler socketHandler;
+    private final FrontendMessageTransmitter frontendMessageTransmitter;
 
     @Autowired
     @Qualifier("ms")
@@ -67,15 +70,11 @@ public class FrontendMessageReceiver {
         registrar.delLoginBuUIId(user.getUiId());
     }
 
-    @MessageMapping("USER_DATA")
-    public void handleUserData(OnlineUser user){
+    @MessageMapping("/USER_DATA")
+    public void handleUserData(OnlineUser user) throws Exception {
         logger.info("handleUserdata : {}", user);
 
         Optional<String> login = registrar.getLoginBuUIId(user.getUiId());
-        //<
-        System.out.println(" ------------ login : " + login);
-        //<
-
         if (login.isPresent()){
             String uuid = UUID.randomUUID().toString();
             registrar.setUIIdByRequestUUID(uuid, user.getUiId());
@@ -91,7 +90,14 @@ public class FrontendMessageReceiver {
 
             socketHandler.send(jsonObject);
         } else {
-            //< !!!!!!
+            JsonArray errors = new JsonArray();
+            errors.add(jeoGenerator.generate(new FEJEDGInvalidLogin(user.getLogin())));
+
+            JsonObject data = new JsonObject();
+            data.add("users", new JsonObject());
+            data.add("errors", errors);
+
+            frontendMessageTransmitter.handle(data.toString(), user.getUiId(), MessageType.USER_DATA.getValue(), false);
         }
     }
 
@@ -100,8 +106,6 @@ public class FrontendMessageReceiver {
         logger.info("handleAddUser : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-//        registrar.set(uuid, user.getUiId());
-        //<
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
@@ -118,8 +122,6 @@ public class FrontendMessageReceiver {
         logger.info("handleDelUser : {}", user);
 
         String uuid = UUID.randomUUID().toString();
-//        registrar.set(uuid, user.getUiId());
-        //<
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonObject();
@@ -127,6 +129,21 @@ public class FrontendMessageReceiver {
         jsonObject.addProperty("request", true);
         jsonObject.addProperty("uuid", uuid);
         jsonObject.add("data", JsonHelper.makeData(user.getLogin()));
+
+        socketHandler.send(jsonObject);
+    }
+
+    @MessageMapping("/TREE_DATA")
+    public void handleTreeData(OnlineUser user) {
+        logger.info("handleTreeData : {}", user);
+
+        String uuid = UUID.randomUUID().toString();
+        registrar.setUIIdByRequestUUID(uuid, user.getUiId());
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", MessageType.TREE_DATA.getValue());
+        jsonObject.addProperty("request", true);
+        jsonObject.addProperty("uuid", uuid);
 
         socketHandler.send(jsonObject);
     }

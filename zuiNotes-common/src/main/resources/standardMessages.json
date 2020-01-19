@@ -142,8 +142,7 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "password" : "String",
-                "status" : "String",
+                "errors" : [],
                 "users" : []
             },
             "from" : {
@@ -177,9 +176,35 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "status" : "String",
+                "errors" : [],
                 "users" : []
             },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "TREE_DATA" : {
+        "requestMessageContent" : {
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
             "from" : {
                 "host" : "String",
                 "port" : "Integer",

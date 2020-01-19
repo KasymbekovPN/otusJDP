@@ -56,7 +56,6 @@ public class LoginSIH implements SocketInputHandler {
                     if (onlineUser.isAdmin()){
                         //< load from DB
                         group = "admin";
-                        //<
                     } else {
                         //< load from DB
                         group = "user";
@@ -83,41 +82,5 @@ public class LoginSIH implements SocketInputHandler {
         responseJsonObject.add("data", responseData);
 
         socketHandler.send(responseJsonObject);
-
-        //<
-//        String status = "";
-//
-//        if (!login.isEmpty() && !password.isEmpty()){
-//            List<OnlineUser> onlineUsers = dbService.loadRecord(login);
-//            if (onlineUsers.size() > 0){
-//                OnlineUser onlineUser = onlineUsers.get(0);
-//                if (onlineUser.getPassword().equals(password)){
-//                    if (onlineUser.isAdmin()){
-//                        jsonUsers.addAll((JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll())));
-//                        status = "admin";
-//                    } else {
-//                        JsonObject jsonUser = new JsonObject();
-//                        jsonUser.addProperty("login", onlineUser.getLogin());
-//                        jsonUsers.add(jsonUser);
-//                        status = "user";
-//                    }
-//                } else {
-//                    status = "Wrong login or/and password.";
-//                }
-//            } else {
-//                status = "Wrong login or/and password.";
-//            }
-//        } else {
-//            status = "Login or/and password is empty.";
-//        }
-//        logger.info("AuthUserSIH : {}", status);
-//
-//        JsonObject responseJsonObject = new JsonObject();
-//        responseJsonObject.addProperty("type", type);
-//        responseJsonObject.addProperty("request", false);
-//        responseJsonObject.addProperty("uuid", uuid);
-//        responseJsonObject.add("data", JsonHelper.makeData(login, password, status, jsonUsers));
-//
-//        socketHandler.send(responseJsonObject);
     }
 }

@@ -6,7 +6,8 @@ public enum MessageType {
     LOGIN("LOGIN"),
     USER_DATA("USER_DATA"),
     ADD_USER("ADD_USER"),
-    DEL_USER("DEL_USER");
+    DEL_USER("DEL_USER"),
+    TREE_DATA("TREE_DATA");
 
     private String value;
 
