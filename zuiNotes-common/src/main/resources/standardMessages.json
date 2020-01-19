@@ -1,0 +1,201 @@
+{
+    "WRONG" : {
+        "requestMessageContent" : {},
+        "responseMessageContent" : {}
+    },
+    "I_AM" : {
+        "requestMessageContent" : {
+            "data" : {
+                "registration" : "Boolean"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "registration" : "Boolean",
+                "url" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "AUTH_USER" : {
+        "requestMessageContent" : {
+            "data" : {
+                "login" : "String",
+                "password" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }                
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "login" : "String",
+                "password" : "String",
+                "status" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "ADD_USER" : {
+        "requestMessageContent" : {
+            "data" : {
+                "login" : "String",
+                "password" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "login" : "String",
+                "password" : "String",
+                "status" : "String",
+                "users" : []
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "DEL_USER" : {
+        "requestMessageContent" : {
+            "data" : {
+                "login" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "login" : "String",
+                "status" : "String",
+                "users" : []
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "ECHO" : {
+        "requestMessageContent" : {
+            "data" : {
+                "subscribe" : "Boolean",
+                "message" : "String",
+                "request" : "Boolean"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "message" : "String",
+                "request" : "Boolean",
+                "data" : {}
+             },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "CLIENTS" : {
+        "requestMessageContent" : {
+            "data" : {
+                "entities" : []
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "data" : {
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    }
+}
