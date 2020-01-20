@@ -21,11 +21,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 import java.util.Optional;
 import java.util.UUID;
 
-//    /**
-//     * Обработчик сообщений, регистрирующих программы-клиенты. <br><br>
-//     *
-//     * {@link #handle(JsonObject)} - в обработчике создаются клиенты {@link MsClient} системы обмена сообщениями. <br><br>
-//     */
 public class RegistrationSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
@@ -57,7 +52,12 @@ public class RegistrationSIH implements SocketInputHandler {
         boolean request = jsonObject.get("request").getAsBoolean();
         boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
-        MsClientUrl url = new MsClientUrl(from.get("host").getAsString(), from.get("port").getAsInt(), from.get("entity").getAsString());
+        MsClientUrl url = new MsClientUrl(
+                from.get("host").getAsString(),
+                from.get("port").getAsInt(),
+                from.get("entity").getAsString(),
+                type
+        );
 
         JsonObject error = new JsonObject();
         if (request){
@@ -65,9 +65,9 @@ public class RegistrationSIH implements SocketInputHandler {
             if (registration){
                 boolean notReg = solus.register(url.getEntity());
                 if (notReg){
-                    MSClient msClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
-                    if (msClient != null){
-                        error = msClientService.addClient(url, msClient);
+                    final Optional<MSClient> maybeMsClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
+                    if (maybeMsClient.isPresent()){
+                        error = msClientService.addClient(url, maybeMsClient.get());
                     } else {
                         error = jeoGenerator.generate(new MSJEDGMsClientHasWrongEntity(url.getEntity()));
                     }
@@ -75,6 +75,7 @@ public class RegistrationSIH implements SocketInputHandler {
                     error = jeoGenerator.generate(new MSJEDGSolusReg(url.getEntity()));
                 }
             } else {
+                solus.unregister(url.getEntity());
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)
                         : jeoGenerator.generate(new MSJEDGMsClientAlreadyDel(url.getUrl()));
@@ -83,28 +84,30 @@ public class RegistrationSIH implements SocketInputHandler {
             error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
         }
 
-        JsonObject respJsonObject = new JsonObject();
-        if (error.size() == 0){
-            JsonObject data = new JsonObject();
-            data.addProperty("url", url.getUrl());
-            data.addProperty("registration", registration);
-            respJsonObject.addProperty("type", type);
-            respJsonObject.addProperty("request", false);
-            respJsonObject.addProperty("uuid", uuid);
-            respJsonObject.add("data", data);
-            respJsonObject.add("to", from);
-        } else {
-            JsonArray errors = new JsonArray();
-            errors.add(error);
+        if (registration){
+            JsonObject respJsonObject = new JsonObject();
+            if (error.size() == 0){
+                JsonObject data = new JsonObject();
+                data.addProperty("url", url.getUrl());
+                data.addProperty("registration", true);
+                respJsonObject.addProperty("type", type);
+                respJsonObject.addProperty("request", false);
+                respJsonObject.addProperty("uuid", uuid);
+                respJsonObject.add("data", data);
+                respJsonObject.add("to", from);
+            } else {
+                JsonArray errors = new JsonArray();
+                errors.add(error);
 
-            respJsonObject.addProperty("type", "WRONG");
-            respJsonObject.addProperty("request", false);
-            respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            respJsonObject.add("original", jsonObject);
-            respJsonObject.add("errors", errors);
-            respJsonObject.add("to", from);
+                respJsonObject.addProperty("type", "WRONG");
+                respJsonObject.addProperty("request", false);
+                respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
+                respJsonObject.add("original", jsonObject);
+                respJsonObject.add("errors", errors);
+                respJsonObject.add("to", from);
+            }
+
+            socketHandler.send(respJsonObject);
         }
-
-        socketHandler.send(respJsonObject);
     }
 }

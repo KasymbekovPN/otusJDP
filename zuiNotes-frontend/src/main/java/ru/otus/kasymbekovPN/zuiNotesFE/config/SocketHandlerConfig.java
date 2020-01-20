@@ -13,11 +13,9 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
+import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AddUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.AuthUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.DelUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.WrongSIH;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
 
 @Configuration
@@ -25,6 +23,7 @@ import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHand
 public class SocketHandlerConfig {
 
     private final FrontendMessageTransmitter frontendMessageTransmitter;
+    private final Registrar registrar;
 
     private static final String SELF_PORT = "self.port";
     private static final String MS_HOST = "ms.host";
@@ -59,9 +58,11 @@ public class SocketHandlerConfig {
         );
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
-        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(frontendMessageTransmitter));
-        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(frontendMessageTransmitter, registrar));
+        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new CommonSIH(frontendMessageTransmitter));
+        socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new CommonSIH(frontendMessageTransmitter));
 
         return socketHandler;
     }

@@ -26,7 +26,7 @@
             }
         }
     },
-    "AUTH_USER" : {
+    "LOGIN" : {
         "requestMessageContent" : {
             "data" : {
                 "login" : "String",
@@ -46,8 +46,8 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "password" : "String",
-                "status" : "String"
+                "group" : "String",
+                "errors" : []
             },
             "from" : {
                 "host" : "String",
@@ -59,6 +59,67 @@
                 "port" : "Integer",
                 "entity" : "String"
             }
+        }
+    },
+    "LOGOUT" : {
+        "requestMessageContent" : {
+            "data" : {},
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }   
+        },
+        "responseMessageContent" : {
+            "data" : {},
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }   
+        }
+    },
+    "USER_DATA" :{
+        "requestMessageContent" : {
+            "data" : {
+                "login" : "String"
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }   
+        },
+        "responseMessageContent" : {
+            "data" : {
+                "users" : [],
+                "errors" : []
+            },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }   
         }
     },
     "ADD_USER" : {
@@ -81,8 +142,7 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "password" : "String",
-                "status" : "String",
+                "errors" : [],
                 "users" : []
             },
             "from" : {
@@ -116,9 +176,35 @@
         "responseMessageContent" : {
             "data" : {
                 "login" : "String",
-                "status" : "String",
+                "errors" : [],
                 "users" : []
             },
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        }
+    },
+    "TREE_DATA" : {
+        "requestMessageContent" : {
+            "from" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            },
+            "to" : {
+                "host" : "String",
+                "port" : "Integer",
+                "entity" : "String"
+            }
+        },
+        "responseMessageContent" : {
             "from" : {
                 "host" : "String",
                 "port" : "Integer",

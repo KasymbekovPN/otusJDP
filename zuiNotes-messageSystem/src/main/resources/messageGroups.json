@@ -1,8 +1,10 @@
 {
     "common" : [
-        "AUTH_USER",
+        "LOGIN",
+        "USER_DATA",
         "ADD_USER",
-        "DEL_USER"
+        "DEL_USER",
+        "TREE_DATA"
     ],
     "registration" : [
         "I_AM"

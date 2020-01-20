@@ -26,5 +26,7 @@ public class OnlineUser {
 
     @Column(name = "admin")
     private boolean admin;
+
+    private String uiId;
 }
 

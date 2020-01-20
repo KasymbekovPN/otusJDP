@@ -7,7 +7,7 @@ public class MsClientUrl {
     private final String host;
     private final int port;
     private final String entity;
-
+    private final String registrationMessageType;
 
     public String getHost() {
         return host;
@@ -21,14 +21,19 @@ public class MsClientUrl {
         return entity;
     }
 
+    public String getRegistrationMessageType() {
+        return registrationMessageType;
+    }
+
     public String getUrl(){
         return  host + ":" + String.valueOf(port) + "/" + entity;
     }
 
-    public MsClientUrl(String host, int port, String entity) {
+    public MsClientUrl(String host, int port, String entity, String registrationMessageType) {
         this.host = host;
         this.port = port;
         this.entity = entity;
+        this.registrationMessageType = registrationMessageType;
     }
 
     @Override

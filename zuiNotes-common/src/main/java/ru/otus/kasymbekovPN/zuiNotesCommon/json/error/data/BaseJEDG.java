@@ -9,6 +9,7 @@ public class BaseJEDG implements JsonErrorDataGenerator {
 
     public BaseJEDG(int errorCode) {
         this.errorCode = errorCode;
+        this.data = new JsonObject();
     }
 
     @Override

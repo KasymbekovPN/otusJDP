@@ -7,6 +7,7 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class WrongMsClientCreator implements MsClientCreator {
@@ -14,9 +15,9 @@ public class WrongMsClientCreator implements MsClientCreator {
     private static final Logger logger = LoggerFactory.getLogger(WrongMsClientCreator.class);
 
     @Override
-    public MSClient create(MsClientUrl url, SocketHandler socketHandler, MessageSystem messageSystem) {
+    public Optional<MSClient> create(MsClientUrl url, SocketHandler socketHandler, MessageSystem messageSystem) {
         logger.warn("The attempt client creation with wrong entity : {}", url.getUrl());
-        return null;
+        return Optional.empty();
     }
 
     @Override

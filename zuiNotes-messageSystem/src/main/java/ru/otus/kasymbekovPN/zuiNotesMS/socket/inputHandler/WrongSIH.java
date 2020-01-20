@@ -6,9 +6,6 @@ import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
-//    /**
-//     * Обработчик невалидный сообщений.
-//     */
 public class WrongSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WrongSIH.class);

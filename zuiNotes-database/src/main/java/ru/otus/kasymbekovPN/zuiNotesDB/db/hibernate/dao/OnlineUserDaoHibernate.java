@@ -154,7 +154,7 @@ public class OnlineUserDaoHibernate implements OnlineUserDao {
         DataBaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try{
             List<OnlineUser> records = loadRecord(login);
-            if (records.size() > 0){
+            if (!records.isEmpty()){
                 for (OnlineUser record : records) {
                     currentSession.getSession().delete(record);
                 }

@@ -14,10 +14,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AddUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.AuthUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.DelUserSIH;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.WrongSIH;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler.DBSocketSendingHandler;
 
 @Configuration
@@ -35,7 +32,11 @@ public class SocketHandlerConfig {
 
     @Autowired
     @Qualifier("common")
-    private JsonErrorObjectGenerator jeoGenerator;
+    private JsonErrorObjectGenerator commonJeoGenerator;
+
+    @Autowired
+    @Qualifier("ms")
+    private JsonErrorObjectGenerator msJeoGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -52,15 +53,17 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(jeoGenerator),
+                new JsonCheckerImpl(commonJeoGenerator),
                 new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
-        socketHandler.addHandler(MessageType.AUTH_USER.getValue(), new AuthUserSIH(dbService, socketHandler));
-        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler));
-        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler));
+        socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new TreeDataSIH(socketHandler));
 
         return socketHandler;
     }
