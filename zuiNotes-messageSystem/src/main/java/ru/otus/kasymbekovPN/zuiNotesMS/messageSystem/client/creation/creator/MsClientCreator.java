@@ -8,9 +8,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import java.util.Optional;
 import java.util.Set;
 
-//    /**
-//     * Интерфейс, служащий для реализации классов, создающих клиенты {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
-//     */
 public interface MsClientCreator {
     Optional<MSClient> create(MsClientUrl url, SocketHandler socketHandler, MessageSystem messageSystem);
     void setValidMessages(Set<String> validMessages);

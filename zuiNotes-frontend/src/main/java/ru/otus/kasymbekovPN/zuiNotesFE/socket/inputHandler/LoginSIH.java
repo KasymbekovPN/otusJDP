@@ -7,12 +7,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 
-///**
-// * Обработчик входящего сообщения типа {@link MessageType#AUTH_USER_RESPONSE} <br><br>
-// *
-// * {@link #handle(JsonObject)} - преобразует ответ в инстанс {@link OnlineUserPackage}, передает полученный инстанс в
-// * соответствующий обработчик {@link #frontendMessageTransmitter}
-// */
 public class LoginSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginSIH.class);

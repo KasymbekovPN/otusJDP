@@ -11,7 +11,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGeneratorImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.json.error.data.FEJEDGInvalidLogin;
@@ -20,19 +19,6 @@ import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
 import java.util.Optional;
 import java.util.UUID;
 
-///**
-// * Контроллер, осуществляющий обработку сообщений из GUI.<br><br>
-// *
-// * {@link FrontendMessageReceiver#handleAuthUserRequest(OnlineUser)} - обработчик авторизационного
-// * запроса от GUI. В систему сообщений отправляется сообщение типа - {@link MessageType#AUTH_USER_REQUEST}
-// * <br>
-// * <br>
-// * {@link FrontendMessageReceiver#handleAddUserRequest(OnlineUser)} - обработчик запроса на
-// * добавление пользователя от GUI. В систему сообщений отправляется сообщение типа - {@link MessageType#ADD_USER_REQUEST}<br><br>
-// *
-// * {@link FrontendMessageReceiver#handleDelUserRequest(OnlineUser)} - обработчик запроса на удаления
-// * пользователя от GUI. В систему сообщений отправляется сообщение типа - {@link MessageType#DEL_USER_REQUEST}<br><br>
-// */
 @Controller
 @RequiredArgsConstructor
 public class FrontendMessageReceiver {

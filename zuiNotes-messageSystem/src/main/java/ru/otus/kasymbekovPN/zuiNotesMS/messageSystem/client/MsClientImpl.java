@@ -11,19 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-//    /**
-//     * Клиент системы сообщений {@link ru.otus.kasymbekovPN.HW16M.messageSystem.MessageSystem} <br><br>
-//     *
-//     * {@link #addHandler(MessageType, MSMessageHandler)} - добавление обработчика сообщений {@link MSMessageHandler} <br><br>
-//     *
-//     * {@link #sendMessage(Message)} - отправка сообщения <br><br>
-//     *
-//     * {@link #handle(Message)} - обработка принятого сообщения <br><br>
-//     *
-//     * {@link #getUrl()} - геттер уникального url <br><br>
-//     *
-//     * {@link #produceMessage(String, Object, MessageType)} - создание сообщения <br><br>
-//     */
 public class MsClientImpl implements MSClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);

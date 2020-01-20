@@ -21,11 +21,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.solus.Solus;
 import java.util.Optional;
 import java.util.UUID;
 
-//    /**
-//     * Обработчик сообщений, регистрирующих программы-клиенты. <br><br>
-//     *
-//     * {@link #handle(JsonObject)} - в обработчике создаются клиенты {@link MsClient} системы обмена сообщениями. <br><br>
-//     */
 public class RegistrationSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
@@ -80,6 +75,7 @@ public class RegistrationSIH implements SocketInputHandler {
                     error = jeoGenerator.generate(new MSJEDGSolusReg(url.getEntity()));
                 }
             } else {
+                solus.unregister(url.getEntity());
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)
                         : jeoGenerator.generate(new MSJEDGMsClientAlreadyDel(url.getUrl()));

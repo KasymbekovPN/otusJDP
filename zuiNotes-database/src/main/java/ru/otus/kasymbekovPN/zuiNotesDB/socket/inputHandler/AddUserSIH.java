@@ -3,7 +3,6 @@ package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -14,12 +13,12 @@ import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserAlreadyExist;
 
 import java.util.List;
 
-///**
-// * Обработчик входящего сообщения типа {@link MessageType#ADD_USER_REQUEST} <br><br>
-// *
-// * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки добавляет нового
-// * пользователя; отправляет сообщение содержащее данные пользователей.
-// */
+/**
+ * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType#ADD_USER} <br><br>
+ *
+ * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки добавляет нового
+ * пользователя; отправляет сообщение содержащее данные пользователей.
+ */
 public class AddUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AddUserSIH.class);

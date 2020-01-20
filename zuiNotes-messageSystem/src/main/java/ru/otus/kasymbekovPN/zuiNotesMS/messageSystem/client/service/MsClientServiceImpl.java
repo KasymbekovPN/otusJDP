@@ -13,17 +13,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
 import java.util.*;
 
-//    /**
-//     * Сервис клиентов {@link MsClient} системы сообщений {@link MessageSystem} <br><br>
-//     *
-//     * {@link #createClient(String, int, Entity, MessageSystem)} - создание нового клиента.
-//     *
-//     * {@link #deleteClient(String)} - удаление клиента <br>
-//     *
-//     * {@link #setSocketHandler(SocketHandler)} - сеттер обработчика сокета <br>
-//     *
-//     * {@link #get(String)} - геттер клиента <br>
-//     */
 @Service
 public class MsClientServiceImpl implements MsClientService {
 

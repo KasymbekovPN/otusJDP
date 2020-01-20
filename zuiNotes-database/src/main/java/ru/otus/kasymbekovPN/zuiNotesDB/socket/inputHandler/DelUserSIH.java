@@ -6,24 +6,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGEmptyLoginPassword;
-import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserAlreadyExist;
 import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserDoesntExist;
 
 import java.util.List;
 
-///**
-// * Обработчик входящего сообщения типа {@link MessageType#DEL_USER_REQUEST} <br><br>
-// *
-// * {@link #handle(JsonObject)} - проверяет, переданные логин, в случае успешной проверки удаляет пользователя; отправляет
-// * сообщение содержащее данные пользователей.
-// */
+/**
+ * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType#DEL_USER} <br><br>
+ *
+ * {@link #handle(JsonObject)} - проверяет, переданные логин, в случае успешной проверки удаляет пользователя; отправляет
+ * сообщение содержащее данные пользователей.
+ */
 public class DelUserSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(DelUserSIH.class);

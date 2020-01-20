@@ -14,12 +14,12 @@ import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGWrongLoginPassword;
 
 import java.util.List;
 
-///**
-// * Обработчик входящего сообщения типа {@link MessageType#AUTH_USER_REQUEST} <br><br>
-// *
-// * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки отправляет сообщение
-// * содержащее данные пользователей; при неуспещеой проверке сообщение содержит описание ошибки.
-// */
+/**
+ * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType#LOGIN} <br><br>
+ *
+ * {@link #handle(JsonObject)} - проверяет, переданные логин и пароль, в случае успешной проверки отправляет сообщение
+ * содержащее данные пользователей; при неуспещеой проверке сообщение содержит описание ошибки.
+ */
 public class LoginSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginSIH.class);

@@ -41,7 +41,7 @@ public class SocketHandlerImpl implements SocketHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(SocketHandlerImpl.class);
 
-    private final Map<String, Map<Boolean, Set<EchoClient>>> echoTargets = new HashMap<>();
+    private final Map<String, Map<Boolean, Set<EchoClient>>> echoTargets = new ConcurrentHashMap<>();
     private final Map<String, SocketInputHandler> handlers = new ConcurrentHashMap<>();
     private final JsonChecker jsonChecker;
     private final SocketSendingHandler socketSendingHandler;
@@ -127,7 +127,7 @@ public class SocketHandlerImpl implements SocketHandler {
     }
 
     @Override
-    public synchronized void subscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+    public void subscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
         if (!echoTargets.containsKey(observedMessageType)){
             echoTargets.put(observedMessageType, new HashMap<>());
         }
@@ -138,7 +138,7 @@ public class SocketHandlerImpl implements SocketHandler {
     }
 
     @Override
-    public synchronized void unsubscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
+    public void unsubscribeEcho(String observedMessageType, boolean request, EchoClient echoClient) {
         if (echoTargets.containsKey(observedMessageType)){
             Map<Boolean, Set<EchoClient>> booleanSetMap = echoTargets.get(observedMessageType);
             if (booleanSetMap.containsKey(request)){

@@ -1,7 +1,5 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 
-import org.springframework.scheduling.support.SimpleTriggerContext;
-
 import java.util.Objects;
 
 public class MsClientUrl {

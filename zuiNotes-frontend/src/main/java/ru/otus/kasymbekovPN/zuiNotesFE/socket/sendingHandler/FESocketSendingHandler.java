@@ -12,13 +12,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-///**
-// * Обработчик отправки сообщения. <br><br>
-// *
-// * {@link FESocketSendingHandler#send(JsonObject)} - отправка сообщения. Сообщение отправляется в систему сообщений
-// * {@link #msHost}:{@link #msPort}; в сообщение добавляются поля "from", содержащие данные об источнике сообщении и
-// * "to", содержащее данные о приемнике. <br>
-// */
 public class FESocketSendingHandler implements SocketSendingHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(FESocketSendingHandler.class);
