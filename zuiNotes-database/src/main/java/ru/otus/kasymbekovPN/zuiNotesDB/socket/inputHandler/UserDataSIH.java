@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -54,15 +55,17 @@ public class UserDataSIH implements SocketInputHandler {
         String type = jsonObject.get("type").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
 
-        JsonObject responseData = new JsonObject();
-        responseData.add("users", users);
-        responseData.add("errors", errors);
-
-        JsonObject responseMessage = new JsonObject();
-        responseMessage.addProperty("type", type);
-        responseMessage.addProperty("uuid", uuid);
-        responseMessage.addProperty("request", false);
-        responseMessage.add("data", responseData);
+        JsonObject responseMessage = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", false)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("users", users)
+                        .add("errors", errors)
+                        .get()
+                ).get();
 
         socketHandler.send(responseMessage);
     }

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
@@ -54,12 +55,13 @@ public class ClientsSIH implements SocketInputHandler {
                 JsonArray jsonEntityUrls = new JsonArray();
                 Set<MsClientUrl> entityMsClientUrls = urls.get(entity);
                 for (MsClientUrl entityMsClientUrl : entityMsClientUrls) {
-                    JsonObject object = new JsonObject();
-                    object.addProperty("url", entityMsClientUrl.getUrl());
-                    object.addProperty("host", entityMsClientUrl.getHost());
-                    object.addProperty("port", entityMsClientUrl.getPort());
-
-                    jsonEntityUrls.add(object);
+                    jsonEntityUrls.add(
+                            new JsonBuilderImpl()
+                            .add("url", entityMsClientUrl.getUrl())
+                            .add("host", entityMsClientUrl.getHost())
+                            .add("port", entityMsClientUrl.getPort())
+                            .get()
+                    );
                 }
 
                 data.add(entity, jsonEntityUrls);
@@ -68,23 +70,28 @@ public class ClientsSIH implements SocketInputHandler {
             error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
         }
 
-        JsonObject responseJsonObject = new JsonObject();
+        JsonObject responseJsonObject;
         if (error.size() == 0){
-            responseJsonObject.addProperty("type", type);
-            responseJsonObject.addProperty("request", false);
-            responseJsonObject.addProperty("uuid", uuid);
-            responseJsonObject.add("data", data);
-            responseJsonObject.add("to", to);
+            responseJsonObject = new JsonBuilderImpl()
+                    .add("type", type)
+                    .add("request", false)
+                    .add("uuid", uuid)
+                    .add("data", data)
+                    .add("to", to)
+                    .get();
+
         } else {
             JsonArray errors = new JsonArray();
             errors.add(error);
 
-            responseJsonObject.addProperty("type", "WRONG");
-            responseJsonObject.addProperty("request", false);
-            responseJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            responseJsonObject.add("original", jsonObject);
-            responseJsonObject.add("errors", errors);
-            responseJsonObject.add("to", to);
+            responseJsonObject = new JsonBuilderImpl()
+                    .add("type", "WRONG")
+                    .add("request", false)
+                    .add("uuid", UUID.randomUUID().toString())
+                    .add("original", jsonObject)
+                    .add("errors", errors)
+                    .add("to", to)
+                    .get();
         }
 
         socketHandler.send(responseJsonObject);

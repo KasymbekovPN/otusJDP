@@ -131,11 +131,13 @@ public class JsonCheckerImpl implements JsonChecker {
         }
 
         if (errors.size() != 0) {
-            jsonObject.addProperty("type", WRONG_TYPE);
-            jsonObject.addProperty("request", false);
-            jsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            jsonObject.add("original", original);
-            jsonObject.add("errors", errors);
+            jsonObject = new JsonBuilderImpl(jsonObject.deepCopy())
+                    .add("type", WRONG_TYPE)
+                    .add("request", false)
+                    .add("uuid", UUID.randomUUID().toString())
+                    .add("original", original)
+                    .add("errors", errors)
+                    .get();
         }
     }
 

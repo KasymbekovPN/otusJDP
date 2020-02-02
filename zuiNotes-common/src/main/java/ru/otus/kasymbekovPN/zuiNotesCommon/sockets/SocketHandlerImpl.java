@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
@@ -96,14 +97,18 @@ public class SocketHandlerImpl implements SocketHandler {
 
             if (echoTargets.containsKey(type) && echoTargets.get(type).containsKey(request)){
 
-                JsonObject data = new JsonObject();
-                data.addProperty("message", type);
-                data.addProperty("request", request);
-                data.add("data", jsonObject.deepCopy());
-                JsonObject echoJsonObject = new JsonObject();
-                echoJsonObject.addProperty("request", false);
-                echoJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-                echoJsonObject.add("data", data);
+                JsonObject echoJsonObject = new JsonBuilderImpl()
+                        .add("request", false)
+                        .add("uuid", UUID.randomUUID().toString())
+                        .add(
+                                "data",
+                                new JsonBuilderImpl()
+                                .add("message", type)
+                                .add("request", request)
+                                .add("data", jsonObject.deepCopy())
+                                .get()
+                        )
+                        .get();
 
                 final Set<EchoClient> echoClients = echoTargets.get(type).get(request);
                 for (EchoClient echoClient : echoClients) {

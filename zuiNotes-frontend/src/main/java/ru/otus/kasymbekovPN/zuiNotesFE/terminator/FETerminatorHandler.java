@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesFE.terminator;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.terminator.TerminatorHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
@@ -23,14 +24,15 @@ public class FETerminatorHandler implements TerminatorHandler {
     public void handle() {
         logger.info("MessageSystem-client was was notify about shutdowning");
 
-        JsonObject data = new JsonObject();
-        data.addProperty("registration", false);
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.I_AM.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", UUID.randomUUID().toString());
-        jsonObject.add("data", data);
+        JsonObject jsonObject = new JsonBuilderImpl()
+                .add("type", MessageType.I_AM.getValue())
+                .add("request", true)
+                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "data",
+                        new JsonBuilderImpl().add("registration", false).get()
+                )
+                .get();
 
         socketHandler.send(jsonObject);
     }

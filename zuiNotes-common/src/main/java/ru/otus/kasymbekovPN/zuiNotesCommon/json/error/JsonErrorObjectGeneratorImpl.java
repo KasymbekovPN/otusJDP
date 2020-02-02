@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.json.error;
 
 import com.google.gson.JsonObject;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerator;
 
 import java.util.*;
@@ -20,13 +21,12 @@ public class JsonErrorObjectGeneratorImpl implements JsonErrorObjectGenerator {
     @Override
     public JsonObject generate(JsonErrorDataGenerator dataGenerator) throws Exception {
         if (dataGenerator != null){
-            JsonObject jsonError = new JsonObject();
-            jsonError.addProperty("code", dataGenerator.getCode());
-            jsonError.addProperty("common", common);
-            jsonError.addProperty("entity", entity);
-            jsonError.add("data", dataGenerator.getData());
-
-            return jsonError;
+            return new JsonBuilderImpl()
+                    .add("code", dataGenerator.getCode())
+                    .add("common", common)
+                    .add("entity", entity)
+                    .add("data", dataGenerator.getData())
+                    .get();
         } else {
             throw new Exception("DataGenerator-argument is null");
         }

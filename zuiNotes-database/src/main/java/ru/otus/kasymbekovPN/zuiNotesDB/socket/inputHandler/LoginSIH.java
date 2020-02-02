@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -70,16 +71,18 @@ public class LoginSIH implements SocketInputHandler {
             errors.add(jeoGenerator.generate(new DBJEDGEmptyLoginPassword()));
         }
 
-        JsonObject responseData = new JsonObject();
-        responseData.addProperty("login", login);
-        responseData.addProperty("group", group);
-        responseData.add("errors", errors);
-
-        JsonObject responseJsonObject = new JsonObject();
-        responseJsonObject.addProperty("type", type);
-        responseJsonObject.addProperty("request", false);
-        responseJsonObject.addProperty("uuid", uuid);
-        responseJsonObject.add("data", responseData);
+        JsonObject responseJsonObject = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", false)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("login", login)
+                        .add("group", group)
+                        .add("errors", errors)
+                        .get()
+                ).get();
 
         socketHandler.send(responseJsonObject);
     }

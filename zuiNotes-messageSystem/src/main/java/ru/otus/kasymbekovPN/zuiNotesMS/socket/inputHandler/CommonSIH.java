@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
@@ -64,11 +65,6 @@ public class CommonSIH implements SocketInputHandler {
             fromMsClient.sendMessage(message);
         } else {
 
-            JsonObject original = new JsonObject();
-            original.addProperty("type", type);
-            original.addProperty("request", request);
-            original.addProperty("uuid", uuid);
-
             JsonArray errors = new JsonArray();
             if (!optFromMsClient.isPresent()){
                 errors.add(
@@ -81,12 +77,19 @@ public class CommonSIH implements SocketInputHandler {
                 );
             }
 
-            JsonObject responseJsonObject = new JsonObject();
-            responseJsonObject.addProperty("type", "WRONG");
-            responseJsonObject.addProperty("request", false);
-            responseJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            responseJsonObject.add("original", original);
-            responseJsonObject.add("errors", errors);
+            JsonObject responseJsonObject = new JsonBuilderImpl()
+                    .add("type", "WRONG")
+                    .add("request", false)
+                    .add("uuid", UUID.randomUUID().toString())
+                    .add("errors", errors)
+                    .add(
+                            "original",
+                            new JsonBuilderImpl()
+                            .add("type", type)
+                            .add("request", request)
+                            .add("uuid", uuid)
+                            .get()
+                    ).get();
 
             socketHandler.send(responseJsonObject);
         }

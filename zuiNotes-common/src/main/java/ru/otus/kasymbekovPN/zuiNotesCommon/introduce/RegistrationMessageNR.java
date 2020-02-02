@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.introduce;
 
 import com.google.gson.JsonObject;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 
 import java.util.UUID;
@@ -16,14 +17,15 @@ public class RegistrationMessageNR implements NotifierRunner {
 
     public RegistrationMessageNR(SocketHandler socketHandler, String type) {
         this.socketHandler = socketHandler;
-        this.message = new JsonObject();
-        this.message.addProperty("type", type);
-        this.message.addProperty("request", true);
-        this.message.addProperty("uuid", UUID.randomUUID().toString());
-
-        JsonObject data = new JsonObject();
-        data.addProperty("registration", true);
-        this.message.add("data", data);
+        this.message = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", true)
+                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "data",
+                        new JsonBuilderImpl().add("registration", true).get()
+                )
+                .get();
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
@@ -85,26 +86,33 @@ public class RegistrationSIH implements SocketInputHandler {
         }
 
         if (registration){
-            JsonObject respJsonObject = new JsonObject();
+            JsonObject respJsonObject;
             if (error.size() == 0){
-                JsonObject data = new JsonObject();
-                data.addProperty("url", url.getUrl());
-                data.addProperty("registration", true);
-                respJsonObject.addProperty("type", type);
-                respJsonObject.addProperty("request", false);
-                respJsonObject.addProperty("uuid", uuid);
-                respJsonObject.add("data", data);
-                respJsonObject.add("to", from);
+                respJsonObject = new JsonBuilderImpl()
+                        .add("type", type)
+                        .add("request", false)
+                        .add("uuid", uuid)
+                        .add("to", from)
+                        .add(
+                                "data",
+                                new JsonBuilderImpl()
+                                .add("url", url.getUrl())
+                                .add("registration", true)
+                                .get()
+                        )
+                        .get();
             } else {
                 JsonArray errors = new JsonArray();
                 errors.add(error);
 
-                respJsonObject.addProperty("type", "WRONG");
-                respJsonObject.addProperty("request", false);
-                respJsonObject.addProperty("uuid", UUID.randomUUID().toString());
-                respJsonObject.add("original", jsonObject);
-                respJsonObject.add("errors", errors);
-                respJsonObject.add("to", from);
+                respJsonObject = new JsonBuilderImpl()
+                        .add("type", "WRONG")
+                        .add("request", false)
+                        .add("uuid", UUID.randomUUID().toString())
+                        .add("original", jsonObject)
+                        .add("errors", errors)
+                        .add("to", from)
+                        .get();
             }
 
             socketHandler.send(respJsonObject);

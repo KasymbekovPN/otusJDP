@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo;
 
 import com.google.gson.JsonObject;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 
 import java.util.Objects;
 
@@ -20,12 +21,11 @@ public class EchoClientImpl implements EchoClient {
 
     @Override
     public JsonObject getUrl() {
-        JsonObject url = new JsonObject();
-        url.addProperty("host", host);
-        url.addProperty("port", port);
-        url.addProperty("entity", entity);
-
-        return url;
+        return new JsonBuilderImpl()
+                .add("host", host)
+                .add("port", port)
+                .add("entity", entity)
+                .get();
     }
 
     @Override

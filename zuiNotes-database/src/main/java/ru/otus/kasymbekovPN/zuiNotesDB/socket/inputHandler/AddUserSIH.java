@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -12,6 +13,7 @@ import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGEmptyLoginPassword;
 import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserAlreadyExist;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType#ADD_USER} <br><br>
@@ -60,16 +62,19 @@ public class AddUserSIH implements SocketInputHandler {
 
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
 
-        JsonObject responseData = new JsonObject();
-        responseData.addProperty("login", login);
-        responseData.add("users", users);
-        responseData.add("errors", errors);
-
-        JsonObject responseJsonObject = new JsonObject();
-        responseJsonObject.addProperty("type", type);
-        responseJsonObject.addProperty("request", false);
-        responseJsonObject.addProperty("uuid", uuid);
-        responseJsonObject.add("data", responseData);
+        JsonObject responseJsonObject = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", false)
+                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("login", login)
+                        .add("users", users)
+                        .add("errors", errors)
+                        .get()
+                )
+                .get();
 
         socketHandler.send(responseJsonObject);
     }

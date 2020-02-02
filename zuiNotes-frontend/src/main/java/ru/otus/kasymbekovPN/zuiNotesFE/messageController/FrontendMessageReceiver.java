@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
@@ -40,11 +41,18 @@ public class FrontendMessageReceiver {
         String uuid = UUID.randomUUID().toString();
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.LOGIN.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", uuid);
-        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
+        JsonObject jsonObject = new JsonBuilderImpl()
+                .add("type", MessageType.LOGIN.getValue())
+                .add("request", true)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("login", user.getLogin())
+                        .add("password", user.getPassword())
+                        .get()
+                )
+                .get();
 
         socketHandler.send(jsonObject);
     }
@@ -65,25 +73,28 @@ public class FrontendMessageReceiver {
             String uuid = UUID.randomUUID().toString();
             registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
-            JsonObject data = new JsonObject();
-            data.addProperty("login", login.get());
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("type", MessageType.USER_DATA.getValue());
-            jsonObject.addProperty("request", true);
-            jsonObject.addProperty("uuid", uuid);
-            jsonObject.add("data", data);
+            JsonObject jsonObject = new JsonBuilderImpl()
+                    .add("type", MessageType.USER_DATA.getValue())
+                    .add("request", true)
+                    .add("uuid", uuid)
+                    .add(
+                            "data",
+                            new JsonBuilderImpl().add("login", login.get()).get()
+                    )
+                    .get();
 
             socketHandler.send(jsonObject);
         } else {
             JsonArray errors = new JsonArray();
             errors.add(jeoGenerator.generate(new FEJEDGInvalidLogin(user.getLogin())));
 
-            JsonObject data = new JsonObject();
-            data.add("users", new JsonObject());
-            data.add("errors", errors);
+            String data = new JsonBuilderImpl()
+                    .add("users", new JsonObject())
+                    .add("errors", errors)
+                    .get()
+                    .toString();
 
-            frontendMessageTransmitter.handle(data.toString(), user.getUiId(), MessageType.USER_DATA.getValue(), false);
+            frontendMessageTransmitter.handle(data, user.getUiId(), MessageType.USER_DATA.getValue(), false);
         }
     }
 
@@ -94,11 +105,18 @@ public class FrontendMessageReceiver {
         String uuid = UUID.randomUUID().toString();
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.ADD_USER.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", uuid);
-        jsonObject.add("data", JsonHelper.makeData(user.getLogin(), user.getPassword()));
+        JsonObject jsonObject = new JsonBuilderImpl()
+                .add("type", MessageType.ADD_USER.getValue())
+                .add("request", true)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("login", user.getLogin())
+                        .add("password", user.getPassword())
+                        .get()
+                )
+                .get();
 
         socketHandler.send(jsonObject);
     }
@@ -110,11 +128,15 @@ public class FrontendMessageReceiver {
         String uuid = UUID.randomUUID().toString();
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.DEL_USER.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", uuid);
-        jsonObject.add("data", JsonHelper.makeData(user.getLogin()));
+        JsonObject jsonObject = new JsonBuilderImpl()
+                .add("type", MessageType.DEL_USER.getValue())
+                .add("request", true)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl().add("login", user.getLogin()).get()
+                )
+                .get();
 
         socketHandler.send(jsonObject);
     }
@@ -126,10 +148,11 @@ public class FrontendMessageReceiver {
         String uuid = UUID.randomUUID().toString();
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", MessageType.TREE_DATA.getValue());
-        jsonObject.addProperty("request", true);
-        jsonObject.addProperty("uuid", uuid);
+        JsonObject jsonObject = new JsonBuilderImpl()
+                .add("type", MessageType.TREE_DATA.getValue())
+                .add("request", true)
+                .add("uuid", uuid)
+                .get();
 
         socketHandler.send(jsonObject);
     }

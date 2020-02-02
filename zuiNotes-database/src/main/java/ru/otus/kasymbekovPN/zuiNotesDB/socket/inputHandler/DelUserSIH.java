@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -59,16 +60,19 @@ public class DelUserSIH implements SocketInputHandler {
         }
 
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
-        JsonObject responseData = new JsonObject();
-        responseData.add("users", users);
-        responseData.add("errors", errors);
-        responseData.addProperty("login", login);
 
-        JsonObject message = new JsonObject();
-        message.addProperty("type", type);
-        message.addProperty("request", false);
-        message.addProperty("uuid", uuid);
-        message.add("data", responseData);
+        JsonObject message = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", false)
+                .add("uuid", uuid)
+                .add(
+                        "data",
+                        new JsonBuilderImpl()
+                        .add("login", login)
+                        .add("users", users)
+                        .add("errors", errors)
+                        .get()
+                ).get();
 
         socketHandler.send(message);
     }

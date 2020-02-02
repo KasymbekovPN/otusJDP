@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
@@ -23,11 +24,12 @@ public class TreeDataSIH implements SocketInputHandler {
         String uuid = jsonObject.get("uuid").getAsString();
         String type = jsonObject.get("type").getAsString();
 
-        JsonObject message = new JsonObject();
-        message.addProperty("type", type);
-        message.addProperty("request", false);
-        message.addProperty("uuid", uuid);
-        message.add("data", new JsonObject());
+        JsonObject message = new JsonBuilderImpl()
+                .add("type", type)
+                .add("request", false)
+                .add("uuid", uuid)
+                .add("data", new JsonObject())
+                .get();
 
         socketHandler.send(message);
     }

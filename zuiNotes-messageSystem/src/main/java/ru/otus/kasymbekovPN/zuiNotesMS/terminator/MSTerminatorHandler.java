@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.terminator;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.terminator.TerminatorHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
@@ -28,21 +29,27 @@ public class MSTerminatorHandler implements TerminatorHandler {
 
         Set<MsClientUrl> clientUrls = msClientService.getAll();
         for (MsClientUrl clientUrl : clientUrls) {
-            JsonObject to = new JsonObject();
-            to.addProperty("host", clientUrl.getHost());
-            to.addProperty("port", clientUrl.getPort());
-            to.addProperty("entity", clientUrl.getEntity());
 
-            JsonObject data = new JsonObject();
-            data.addProperty("registration", false);
-            data.addProperty("url", clientUrl.getUrl());
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("type", clientUrl.getRegistrationMessageType());
-            jsonObject.addProperty("request", true);
-            jsonObject.addProperty("uuid", UUID.randomUUID().toString());
-            jsonObject.add("to", to);
-            jsonObject.add("data", data);
+            JsonObject jsonObject = new JsonBuilderImpl()
+                    .add("type", clientUrl.getRegistrationMessageType())
+                    .add("request", true)
+                    .add("uuid", UUID.randomUUID().toString())
+                    .add(
+                            "to",
+                            new JsonBuilderImpl()
+                            .add("host", clientUrl.getHost())
+                            .add("port", clientUrl.getPort())
+                            .add("entity", clientUrl.getEntity())
+                            .get()
+                    )
+                    .add(
+                            "data",
+                            new JsonBuilderImpl()
+                            .add("registration", false)
+                            .add("url", clientUrl.getUrl())
+                            .get()
+                    )
+                    .get();
 
             socketHandler.send(jsonObject);
         }
