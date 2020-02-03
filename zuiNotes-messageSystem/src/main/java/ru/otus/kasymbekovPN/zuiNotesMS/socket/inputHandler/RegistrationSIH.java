@@ -48,9 +48,11 @@ public class RegistrationSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) throws Exception {
         logger.info("RegistrationSIH : {}", jsonObject);
 
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
-        boolean request = jsonObject.get("request").getAsBoolean();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
+        boolean request = header.get("request").getAsBoolean();
+
         boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         MsClientUrl url = new MsClientUrl(
@@ -89,9 +91,14 @@ public class RegistrationSIH implements SocketInputHandler {
             JsonObject respJsonObject;
             if (error.size() == 0){
                 respJsonObject = new JsonBuilderImpl()
-                        .add("type", type)
-                        .add("request", false)
-                        .add("uuid", uuid)
+                        .add(
+                                "header",
+                                new JsonBuilderImpl()
+                                .add("type", type)
+                                .add("request", false)
+                                .add("uuid", uuid)
+                                .get()
+                        )
                         .add("to", from)
                         .add(
                                 "data",
@@ -106,9 +113,14 @@ public class RegistrationSIH implements SocketInputHandler {
                 errors.add(error);
 
                 respJsonObject = new JsonBuilderImpl()
-                        .add("type", "WRONG")
-                        .add("request", false)
-                        .add("uuid", UUID.randomUUID().toString())
+                        .add(
+                                "header",
+                                new JsonBuilderImpl()
+                                .add("type", "WRONG")
+                                .add("request", false)
+                                .add("uuid", UUID.randomUUID().toString())
+                                .get()
+                        )
                         .add("original", jsonObject)
                         .add("errors", errors)
                         .add("to", from)

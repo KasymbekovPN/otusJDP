@@ -91,31 +91,39 @@ public class SocketHandlerImpl implements SocketHandler {
     }
 
     private void echoSend(JsonObject jsonObject){
-        if (jsonObject.has("type") && jsonObject.has("request")){
-            String type = jsonObject.get("type").getAsString();
-            boolean request = jsonObject.get("request").getAsBoolean();
+        if (jsonObject.has("header")){
+            JsonObject header = jsonObject.get("header").getAsJsonObject();
+            if (header.has("type") && header.has("request")){
+                String type = header.get("type").getAsString();
+                boolean request = header.get("request").getAsBoolean();
 
-            if (echoTargets.containsKey(type) && echoTargets.get(type).containsKey(request)){
+                if (echoTargets.containsKey(type) && echoTargets.get(type).containsKey(request)){
 
-                JsonObject echoJsonObject = new JsonBuilderImpl()
-                        .add("request", false)
-                        .add("uuid", UUID.randomUUID().toString())
-                        .add(
-                                "data",
-                                new JsonBuilderImpl()
-                                .add("message", type)
-                                .add("request", request)
-                                .add("data", jsonObject.deepCopy())
-                                .get()
-                        )
-                        .get();
+                    JsonObject echoJsonObject = new JsonBuilderImpl()
+                            .add(
+                                    "header",
+                                    new JsonBuilderImpl()
+                                    .add("request", false)
+                                    .add("uuid", UUID.randomUUID().toString())
+                                    .get()
+                            )
+                            .add(
+                                    "data",
+                                    new JsonBuilderImpl()
+                                    .add("message", type)
+                                    .add("request", request)
+                                    .add("data", jsonObject.deepCopy())
+                                    .get()
+                            )
+                            .get();
 
-                final Set<EchoClient> echoClients = echoTargets.get(type).get(request);
-                for (EchoClient echoClient : echoClients) {
-                    echoJsonObject.addProperty("type", echoClient.getEchoMessageType());
-                    echoJsonObject.add("to", echoClient.getUrl());
+                    Set<EchoClient> echoClients = echoTargets.get(type).get(request);
+                    for (EchoClient echoClient : echoClients) {
+                        echoJsonObject.get("header").getAsJsonObject().addProperty("type", echoClient.getEchoMessageType());
+                        echoJsonObject.add("to", echoClient.getUrl());
 
-                    send(echoJsonObject.deepCopy());
+                        send(echoJsonObject.deepCopy());
+                    }
                 }
             }
         }

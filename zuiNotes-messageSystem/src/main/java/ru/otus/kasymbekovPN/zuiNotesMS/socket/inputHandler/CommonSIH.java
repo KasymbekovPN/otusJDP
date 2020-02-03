@@ -35,10 +35,10 @@ public class CommonSIH implements SocketInputHandler {
 
     @Override
     public void handle(JsonObject jsonObject) throws Exception {
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
-        boolean request = jsonObject.get("request").getAsBoolean();
-        logger.info("CommonSIH type : {}, request : {}, uuid : {}, data : {}", type, request, uuid, jsonObject);
+
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        logger.info("CommonSIH header : {}, data : {}", header, jsonObject);
 
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         JsonObject to = jsonObject.get("to").getAsJsonObject();
@@ -78,17 +78,18 @@ public class CommonSIH implements SocketInputHandler {
             }
 
             JsonObject responseJsonObject = new JsonBuilderImpl()
-                    .add("type", "WRONG")
-                    .add("request", false)
-                    .add("uuid", UUID.randomUUID().toString())
+                    .add(
+                            "header",
+                            new JsonBuilderImpl()
+                            .add("type", "WRONG")
+                            .add("request", false)
+                            .add("uuid", UUID.randomUUID().toString())
+                            .get()
+                    )
                     .add("errors", errors)
                     .add(
                             "original",
-                            new JsonBuilderImpl()
-                            .add("type", type)
-                            .add("request", request)
-                            .add("uuid", uuid)
-                            .get()
+                            new JsonBuilderImpl().add("header", header).get()
                     ).get();
 
             socketHandler.send(responseJsonObject);

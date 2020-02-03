@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 
 import com.google.gson.*;
+import org.hibernate.cache.spi.access.CachedDomainDataAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
@@ -39,8 +40,9 @@ public class AddUserSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) throws Exception {
         logger.info("AddUserSIH : {}", jsonObject);
 
-        String uuid = jsonObject.get("uuid").getAsString();
-        String type = jsonObject.get("type").getAsString();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
 
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String login = data.get("login").getAsString().trim();
@@ -63,9 +65,14 @@ public class AddUserSIH implements SocketInputHandler {
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
 
         JsonObject responseJsonObject = new JsonBuilderImpl()
-                .add("type", type)
-                .add("request", false)
-                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", type)
+                        .add("request", false)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl()

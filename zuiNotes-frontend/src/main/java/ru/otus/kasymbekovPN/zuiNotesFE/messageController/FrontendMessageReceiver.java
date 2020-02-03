@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
@@ -42,9 +41,14 @@ public class FrontendMessageReceiver {
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonBuilderImpl()
-                .add("type", MessageType.LOGIN.getValue())
-                .add("request", true)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", MessageType.LOGIN.getValue())
+                        .add("request", true)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl()
@@ -74,9 +78,14 @@ public class FrontendMessageReceiver {
             registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
             JsonObject jsonObject = new JsonBuilderImpl()
-                    .add("type", MessageType.USER_DATA.getValue())
-                    .add("request", true)
-                    .add("uuid", uuid)
+                    .add(
+                            "header",
+                            new JsonBuilderImpl()
+                            .add("type", MessageType.USER_DATA.getValue())
+                            .add("request", true)
+                            .add("uuid", uuid)
+                            .get()
+                    )
                     .add(
                             "data",
                             new JsonBuilderImpl().add("login", login.get()).get()
@@ -106,9 +115,14 @@ public class FrontendMessageReceiver {
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonBuilderImpl()
-                .add("type", MessageType.ADD_USER.getValue())
-                .add("request", true)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", MessageType.ADD_USER.getValue())
+                        .add("request", true)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl()
@@ -129,9 +143,14 @@ public class FrontendMessageReceiver {
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonBuilderImpl()
-                .add("type", MessageType.DEL_USER.getValue())
-                .add("request", true)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", MessageType.DEL_USER.getValue())
+                        .add("request", true)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl().add("login", user.getLogin()).get()
@@ -149,9 +168,14 @@ public class FrontendMessageReceiver {
         registrar.setUIIdByRequestUUID(uuid, user.getUiId());
 
         JsonObject jsonObject = new JsonBuilderImpl()
-                .add("type", MessageType.TREE_DATA.getValue())
-                .add("request", true)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", MessageType.TREE_DATA.getValue())
+                        .add("request", true)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .get();
 
         socketHandler.send(jsonObject);

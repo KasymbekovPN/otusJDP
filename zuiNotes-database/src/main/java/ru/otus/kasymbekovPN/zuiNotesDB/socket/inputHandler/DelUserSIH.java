@@ -41,8 +41,9 @@ public class DelUserSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) throws Exception {
         logger.info("DelUserSIH : {}", jsonObject);
 
-        String uuid = jsonObject.get("uuid").getAsString();
-        String type = jsonObject.get("type").getAsString();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String uuid = header.get("uuid").getAsString();
+        String type = header.get("type").getAsString();
 
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         String login = data.get("login").getAsString().trim();
@@ -62,9 +63,14 @@ public class DelUserSIH implements SocketInputHandler {
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));
 
         JsonObject message = new JsonBuilderImpl()
-                .add("type", type)
-                .add("request", false)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", type)
+                        .add("request", false)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl()

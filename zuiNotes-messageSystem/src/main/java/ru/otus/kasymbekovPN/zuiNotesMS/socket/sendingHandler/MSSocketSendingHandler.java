@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.PrintWriter;
@@ -38,7 +38,16 @@ public class MSSocketSendingHandler implements SocketSendingHandler {
         int toPort = to.get("port").getAsInt();
 
         if (!jsonObject.has("from")){
-            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, client.getEntity()));
+            jsonObject = new JsonBuilderImpl(jsonObject)
+                    .add(
+                            "from",
+                            new JsonBuilderImpl()
+                            .add("host", selfHost)
+                            .add("port", selfPort)
+                            .add("entity", client.getEntity())
+                            .get()
+                    )
+                    .get();
         }
 
         try(Socket clientSocket = new Socket(toHost, toPort)){

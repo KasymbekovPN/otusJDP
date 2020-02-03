@@ -43,11 +43,13 @@ import java.util.*;
 public class JsonCheckerImpl implements JsonChecker {
     private static final String WRONG_TYPE = "WRONG";
     private static final String FILE_NAME = "/standardMessages.json";
-    private static final Set<String> MANDATORY_FIELDS = new HashSet<String>(){{
+
+    private static final Set<String> MANDATORY_HEADER_FIELDS = new HashSet<>(){{
         add("type");
         add("request");
         add("uuid");
     }};
+    private static final String MESSAGE_HEADER_FIELD = "header";
 
     private final JsonErrorObjectGenerator jeoGenerator;
 
@@ -89,7 +91,7 @@ public class JsonCheckerImpl implements JsonChecker {
 
     @Override
     public String getType() {
-        return jsonObject.get("type").getAsString();
+        return jsonObject.get(MESSAGE_HEADER_FIELD).getAsJsonObject().get("type").getAsString();
     }
 
     @Override
@@ -107,19 +109,29 @@ public class JsonCheckerImpl implements JsonChecker {
 
         JsonObject original = new JsonObject();
         JsonArray errors = new JsonArray();
-        for (String mandatoryField : MANDATORY_FIELDS) {
-            if (!jsonObject.has(mandatoryField)){
-                errors.add(
-                        jeoGenerator.generate(new CommonJEDGFieldDoesntExist(mandatoryField))
-                );
-            } else {
-                original.add(mandatoryField, jsonObject.get(mandatoryField));
+        JsonObject header = new JsonObject();
+        if (jsonObject.has(MESSAGE_HEADER_FIELD)) {
+            header = jsonObject.get(MESSAGE_HEADER_FIELD).getAsJsonObject();
+            original.add(MESSAGE_HEADER_FIELD, new JsonObject());
+
+            for (String mandatoryHeaderField : MANDATORY_HEADER_FIELDS) {
+                if (!header.has(mandatoryHeaderField)){
+                    errors.add(
+                            jeoGenerator.generate(new CommonJEDGFieldDoesntExist(mandatoryHeaderField))
+                    );
+                } else {
+                    original.get(MESSAGE_HEADER_FIELD).getAsJsonObject().add(mandatoryHeaderField, header.get(mandatoryHeaderField));
+                }
             }
+        } else {
+            errors.add(
+                    jeoGenerator.generate(new CommonJEDGFieldDoesntExist(MESSAGE_HEADER_FIELD))
+            );
         }
 
         if (errors.size() == 0){
-            String type = jsonObject.get("type").getAsString();
-            boolean request = jsonObject.get("request").getAsBoolean();
+            String type = header.get("type").getAsString();
+            boolean request = header.get("request").getAsBoolean();
             if (validTypes.contains(type)){
                 String path = "";
                 traverse(jsonObject, standardJsonObjects.get(type).get(request), errors, path);
@@ -131,10 +143,15 @@ public class JsonCheckerImpl implements JsonChecker {
         }
 
         if (errors.size() != 0) {
-            jsonObject = new JsonBuilderImpl(jsonObject.deepCopy())
-                    .add("type", WRONG_TYPE)
-                    .add("request", false)
-                    .add("uuid", UUID.randomUUID().toString())
+            this.jsonObject = new JsonBuilderImpl(this.jsonObject.deepCopy())
+                    .add(
+                            MESSAGE_HEADER_FIELD,
+                            new JsonBuilderImpl()
+                            .add("type", WRONG_TYPE)
+                            .add("request", false)
+                            .add("uuid", UUID.randomUUID().toString())
+                            .get()
+                    )
                     .add("original", original)
                     .add("errors", errors)
                     .get();

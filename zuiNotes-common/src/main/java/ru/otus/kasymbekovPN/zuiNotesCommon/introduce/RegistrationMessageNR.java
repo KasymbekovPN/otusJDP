@@ -18,9 +18,14 @@ public class RegistrationMessageNR implements NotifierRunner {
     public RegistrationMessageNR(SocketHandler socketHandler, String type) {
         this.socketHandler = socketHandler;
         this.message = new JsonBuilderImpl()
-                .add("type", type)
-                .add("request", true)
-                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", type)
+                        .add("request", true)
+                        .add("uuid", UUID.randomUUID().toString())
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl().add("registration", true).get()

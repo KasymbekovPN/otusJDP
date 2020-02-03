@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonHelper;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.PrintWriter;
@@ -41,8 +41,24 @@ public class FESocketSendingHandler implements SocketSendingHandler {
         try(Socket clientSocket = new Socket(msHost, msPort)){
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            jsonObject.add("from", JsonHelper.makeUrl(selfHost, selfPort, client.getEntity()));
-            jsonObject.add("to", JsonHelper.makeUrl(targetHost, targetPort, "DATABASE"));
+            jsonObject = new JsonBuilderImpl(jsonObject)
+                    .add(
+                            "from",
+                            new JsonBuilderImpl()
+                            .add("host", selfHost)
+                            .add("port", selfPort)
+                            .add("entity", client.getEntity())
+                            .get()
+                    )
+                    .add(
+                            "to",
+                            new JsonBuilderImpl()
+                            .add("host", targetHost)
+                            .add("port", targetPort)
+                            .add("entity", "DATABASE")
+                            .get()
+                    )
+                    .get();
 
             logger.info("FESocketSendingHandler send : {}", jsonObject);
             out.println(jsonObject);

@@ -36,9 +36,10 @@ public class ClientsSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) throws Exception {
         logger.info("ClientsSIH : {}", jsonObject);
 
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
-        boolean request = jsonObject.get("request").getAsBoolean();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
+        boolean request = header.get("request").getAsBoolean();
         JsonArray jsonEntities = jsonObject.get("data").getAsJsonObject().get("entities").getAsJsonArray();
         JsonObject to = jsonObject.get("from").getAsJsonObject().deepCopy();
 
@@ -73,9 +74,14 @@ public class ClientsSIH implements SocketInputHandler {
         JsonObject responseJsonObject;
         if (error.size() == 0){
             responseJsonObject = new JsonBuilderImpl()
-                    .add("type", type)
-                    .add("request", false)
-                    .add("uuid", uuid)
+                    .add(
+                            "header",
+                            new JsonBuilderImpl()
+                            .add("type", type)
+                            .add("request", false)
+                            .add("uuid", uuid)
+                            .get()
+                    )
                     .add("data", data)
                     .add("to", to)
                     .get();
@@ -85,9 +91,14 @@ public class ClientsSIH implements SocketInputHandler {
             errors.add(error);
 
             responseJsonObject = new JsonBuilderImpl()
-                    .add("type", "WRONG")
-                    .add("request", false)
-                    .add("uuid", UUID.randomUUID().toString())
+                    .add(
+                            "header",
+                            new JsonBuilderImpl()
+                            .add("type", type)
+                            .add("request", false)
+                            .add("uuid", UUID.randomUUID().toString())
+                            .get()
+                    )
                     .add("original", jsonObject)
                     .add("errors", errors)
                     .add("to", to)

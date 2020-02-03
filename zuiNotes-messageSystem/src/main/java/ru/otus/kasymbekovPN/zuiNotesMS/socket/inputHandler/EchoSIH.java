@@ -22,7 +22,7 @@ public class EchoSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) {
         logger.info("EchoSIH : {}", jsonObject);
 
-        String echoMessageType = jsonObject.get("type").getAsString();
+        String echoMessageType = jsonObject.get("header").getAsJsonObject().get("type").getAsString();
         JsonObject from = jsonObject.get("from").getAsJsonObject();
         String host = from.get("host").getAsString();
         int port = from.get("port").getAsInt();

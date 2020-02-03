@@ -25,9 +25,14 @@ public class DBTerminatorHandler implements TerminatorHandler {
         logger.info("MessageSystem-client was notify about shutdowning");
 
         JsonObject jsonObject = new JsonBuilderImpl()
-                .add("type", MessageType.I_AM.getValue())
-                .add("request", true)
-                .add("uuid", UUID.randomUUID().toString())
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", MessageType.I_AM.getValue())
+                        .add("request", true)
+                        .add("uuid", UUID.randomUUID().toString())
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl().add("registration", false).get()

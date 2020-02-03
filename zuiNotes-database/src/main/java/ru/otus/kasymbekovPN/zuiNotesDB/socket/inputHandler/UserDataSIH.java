@@ -52,13 +52,19 @@ public class UserDataSIH implements SocketInputHandler {
             errors.add(jeoGenerator.generate(new DBJEDGWrongLoginPassword()));
         }
 
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
 
         JsonObject responseMessage = new JsonBuilderImpl()
-                .add("type", type)
-                .add("request", false)
-                .add("uuid", uuid)
+                .add(
+                        "header",
+                        new JsonBuilderImpl()
+                        .add("type", type)
+                        .add("request", false)
+                        .add("uuid", uuid)
+                        .get()
+                )
                 .add(
                         "data",
                         new JsonBuilderImpl()

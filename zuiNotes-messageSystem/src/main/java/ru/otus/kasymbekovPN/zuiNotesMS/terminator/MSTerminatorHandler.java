@@ -31,9 +31,14 @@ public class MSTerminatorHandler implements TerminatorHandler {
         for (MsClientUrl clientUrl : clientUrls) {
 
             JsonObject jsonObject = new JsonBuilderImpl()
-                    .add("type", clientUrl.getRegistrationMessageType())
-                    .add("request", true)
-                    .add("uuid", UUID.randomUUID().toString())
+                    .add(
+                            "header",
+                            new JsonBuilderImpl()
+                            .add("type", clientUrl.getRegistrationMessageType())
+                            .add("request", true)
+                            .add("uuid", UUID.randomUUID().toString())
+                            .get()
+                    )
                     .add(
                             "to",
                             new JsonBuilderImpl()

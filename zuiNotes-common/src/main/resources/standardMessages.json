@@ -1,10 +1,27 @@
 {
     "WRONG" : {
-        "requestMessageContent" : {},
-        "responseMessageContent" : {}
+        "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            }
+        },
+        "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            }
+        }
     },
     "I_AM" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "registration" : "Boolean"
             },
@@ -15,6 +32,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "registration" : "Boolean",
                 "url" : "String"
@@ -28,6 +50,11 @@
     },
     "LOGIN" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String",
                 "password" : "String"
@@ -44,6 +71,11 @@
             }                
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String",
                 "group" : "String",
@@ -63,6 +95,11 @@
     },
     "LOGOUT" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {},
             "from" : {
                 "host" : "String",
@@ -76,6 +113,11 @@
             }   
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {},
             "from" : {
                 "host" : "String",
@@ -91,6 +133,11 @@
     },
     "USER_DATA" :{
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String"
             },
@@ -106,6 +153,11 @@
             }   
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "users" : [],
                 "errors" : []
@@ -124,6 +176,11 @@
     },
     "ADD_USER" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String",
                 "password" : "String"
@@ -140,6 +197,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String",
                 "errors" : [],
@@ -159,6 +221,11 @@
     },
     "DEL_USER" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String"
             },
@@ -174,6 +241,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "login" : "String",
                 "errors" : [],
@@ -193,6 +265,11 @@
     },
     "TREE_DATA" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "from" : {
                 "host" : "String",
                 "port" : "Integer",
@@ -205,6 +282,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "from" : {
                 "host" : "String",
                 "port" : "Integer",
@@ -219,6 +301,11 @@
     },
     "ECHO" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "subscribe" : "Boolean",
                 "message" : "String",
@@ -236,6 +323,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "message" : "String",
                 "request" : "Boolean",
@@ -255,6 +347,11 @@
     },
     "CLIENTS" : {
         "requestMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
                 "entities" : []
             },
@@ -270,6 +367,11 @@
             }
         },
         "responseMessageContent" : {
+            "header" : {
+                "type" : "String",
+                "request" : "Boolean",
+                "uuid" : "String"
+            },
             "data" : {
             },
             "from" : {

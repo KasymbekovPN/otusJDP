@@ -18,8 +18,9 @@ public class CommonSIH implements SocketInputHandler {
 
     @Override
     public void handle(JsonObject jsonObject) throws Exception {
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
         JsonObject data = jsonObject.get("data").getAsJsonObject();
 
         frontendMessageTransmitter.handle(data.toString(), uuid, type, true);

@@ -23,8 +23,9 @@ public class LoginSIH implements SocketInputHandler {
     public void handle(JsonObject jsonObject) {
         logger.info("LoginSIH : {}", jsonObject);
 
-        String type = jsonObject.get("type").getAsString();
-        String uuid = jsonObject.get("uuid").getAsString();
+        JsonObject header = jsonObject.get("header").getAsJsonObject();
+        String type = header.get("type").getAsString();
+        String uuid = header.get("uuid").getAsString();
         JsonObject data = jsonObject.get("data").getAsJsonObject();
 
         String uiId = registrar.getUIIdByRequestUUID(uuid);
