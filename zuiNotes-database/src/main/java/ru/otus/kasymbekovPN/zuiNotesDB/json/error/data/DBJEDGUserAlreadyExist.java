@@ -5,6 +5,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 
 public class DBJEDGUserAlreadyExist extends BaseJEDG implements JsonErrorDataGenerator {
     public DBJEDGUserAlreadyExist() {
-        super(ErrorCode.USER_ALREADY_EXIST.getCode());
+        super(DBErrorCode.USER_ALREADY_EXIST.getCode());
     }
 }

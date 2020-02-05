@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.json.error;
 import com.google.gson.JsonObject;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class JsonErrorHandlerImpl implements JsonErrorHandler {
@@ -25,6 +26,23 @@ public class JsonErrorHandlerImpl implements JsonErrorHandler {
         this.numberProperties = numberProperties;
         this.characterProperties = characterProperties;
         this.booleanProperties = booleanProperties;
+    }
+
+    public JsonErrorHandlerImpl(JsonErrorBase jeBase,
+                                Set<String> stringProperties) {
+        this.jeBase = jeBase;
+        this.stringProperties = stringProperties;
+        this.numberProperties = new HashSet<>();
+        this.characterProperties = new HashSet<>();
+        this.booleanProperties = new HashSet<>();
+    }
+
+    public JsonErrorHandlerImpl(JsonErrorBase jeBase){
+        this.jeBase = jeBase;
+        this.stringProperties = new HashSet<>();
+        this.numberProperties = new HashSet<>();
+        this.characterProperties = new HashSet<>();
+        this.booleanProperties = new HashSet<>();
     }
 
     @Override

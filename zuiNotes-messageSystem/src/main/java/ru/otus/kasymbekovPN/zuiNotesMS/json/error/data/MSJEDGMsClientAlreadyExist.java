@@ -6,7 +6,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 public class MSJEDGMsClientAlreadyExist extends BaseJEDG implements JsonErrorDataGenerator {
 
     public MSJEDGMsClientAlreadyExist(String url) {
-        super(ErrorCode.MS_CLIENT_ALREADY_EXIST.getCode());
+        super(MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode());
         data.addProperty("url", url);
     }
 }

@@ -6,7 +6,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 public class MSJEDGToMsClientDoesntExist extends BaseJEDG implements JsonErrorDataGenerator {
 
     public MSJEDGToMsClientDoesntExist(String client) {
-        super(ErrorCode.TO_MS_CLIENT_DOESNT_EXIST.getCode());
+        super(MSErrorCode.TO_MS_CLIENT_DOESNT_EXIST.getCode());
         data.addProperty("client", client);
     }
 }

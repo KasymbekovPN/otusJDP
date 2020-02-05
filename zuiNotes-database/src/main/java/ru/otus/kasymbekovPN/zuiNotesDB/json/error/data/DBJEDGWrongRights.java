@@ -5,6 +5,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 
 public class DBJEDGWrongRights extends BaseJEDG implements JsonErrorDataGenerator {
     public DBJEDGWrongRights() {
-        super(ErrorCode.WRONG_RIGHTS.getCode());
+        super(DBErrorCode.WRONG_RIGHTS.getCode());
     }
 }

@@ -1,6 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.json.error.data;
 
-public enum ErrorCode {
+public enum MSErrorCode {
     FROM_MS_CLIENT_DOESNT_EXIST("FROM_MS_CLIENT_DOESNT_EXIST", 1),
     TO_MS_CLIENT_DOESNT_EXIST("TO_MS_CLIENT_DOESNT_EXIST", 2),
     MS_CLIENT_ALREADY_EXIST("MS_CLIENT_ALREADY_EXIST", 3),
@@ -20,7 +20,7 @@ public enum ErrorCode {
         return code;
     }
 
-    ErrorCode(String name, int code) {
+    MSErrorCode(String name, int code) {
         this.name = name;
         this.code = code;
     }

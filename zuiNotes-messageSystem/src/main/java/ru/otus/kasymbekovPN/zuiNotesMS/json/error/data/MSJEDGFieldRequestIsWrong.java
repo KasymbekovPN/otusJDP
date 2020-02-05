@@ -6,6 +6,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 public class MSJEDGFieldRequestIsWrong extends BaseJEDG implements JsonErrorDataGenerator {
 
     public MSJEDGFieldRequestIsWrong() {
-        super(ErrorCode.FIELD_REQUEST_IS_WRONG.getCode());
+        super(MSErrorCode.FIELD_REQUEST_IS_WRONG.getCode());
     }
 }

@@ -5,7 +5,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 
 public class FEJEDGInvalidLogin extends BaseJEDG implements JsonErrorDataGenerator {
     public FEJEDGInvalidLogin(String login) {
-        super(ErrorCode.INVALID_LOGIN.getCode());
+        super(FEErrorCode.INVALID_LOGIN.getCode());
         data.addProperty("login", login);
     }
 }

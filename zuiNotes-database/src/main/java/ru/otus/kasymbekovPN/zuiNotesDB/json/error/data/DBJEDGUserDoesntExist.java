@@ -5,6 +5,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 
 public class DBJEDGUserDoesntExist extends BaseJEDG implements JsonErrorDataGenerator {
     public DBJEDGUserDoesntExist() {
-        super(ErrorCode.USER_DOESNT_EXIST.getCode());
+        super(DBErrorCode.USER_DOESNT_EXIST.getCode());
     }
 }

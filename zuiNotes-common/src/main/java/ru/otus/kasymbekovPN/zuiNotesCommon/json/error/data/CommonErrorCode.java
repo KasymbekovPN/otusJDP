@@ -1,6 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data;
 
-public enum ErrorCode {
+public enum CommonErrorCode {
     FIELD_DOESNT_EXIST("FIELD_DOESNT_EXIST", 1),
     INVALID_MESSAGE_TYPE("INVALID_MESSAGE_TYPE", 2),
     INVALID_FIELD_TYPE("INVALID_FIELD_TYPE", 3),
@@ -17,7 +17,7 @@ public enum ErrorCode {
         return code;
     }
 
-    ErrorCode(String name, int code) {
+    CommonErrorCode(String name, int code) {
         this.name = name;
         this.code = code;
     }

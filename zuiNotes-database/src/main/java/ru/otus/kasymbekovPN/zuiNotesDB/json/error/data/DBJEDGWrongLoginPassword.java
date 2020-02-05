@@ -5,6 +5,6 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.JsonErrorDataGenerato
 
 public class DBJEDGWrongLoginPassword extends BaseJEDG implements JsonErrorDataGenerator {
     public DBJEDGWrongLoginPassword() {
-        super(ErrorCode.WRONG_LOGIN_PASSWORD.getCode());
+        super(DBErrorCode.WRONG_LOGIN_PASSWORD.getCode());
     }
 }
