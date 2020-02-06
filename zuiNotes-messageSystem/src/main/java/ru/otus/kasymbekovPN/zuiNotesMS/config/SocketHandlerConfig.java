@@ -5,15 +5,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
@@ -30,8 +28,6 @@ import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,13 +55,7 @@ public class SocketHandlerConfig {
     private final MsClientService msClientService;
     private final Client client;
 
-    @Autowired
-    @Qualifier("common")
-    private JsonErrorObjectGenerator commonJeoGenerator;
-
-    @Autowired
-    @Qualifier("ms")
-    private JsonErrorObjectGenerator msJeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -84,7 +74,7 @@ public class SocketHandlerConfig {
         JsonArray clientsMessages = config.get(CLIENTS_FIELD).getAsJsonArray();
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(commonJeoGenerator),
+                new JsonCheckerImpl(jeGenerator),
                 new MSSocketSendingHandler(msPort, client),
                 msPort
         );
@@ -92,7 +82,7 @@ public class SocketHandlerConfig {
         for (JsonElement commonMessage : commonMessages) {
             socketHandler.addHandler(
                     commonMessage.getAsString(),
-                    new CommonSIH(msClientService, socketHandler, msJeoGenerator)
+                    new CommonSIH(msClientService, socketHandler, jeGenerator)
             );
         }
 
@@ -100,7 +90,7 @@ public class SocketHandlerConfig {
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
                     new RegistrationSIH(socketHandler, messageSystem, msClientService,
-                                        msJeoGenerator, createMsClientCreatorFactory(socketHandler), createSolus())
+                            jeGenerator, createMsClientCreatorFactory(socketHandler), createSolus())
             );
         }
 
@@ -114,7 +104,7 @@ public class SocketHandlerConfig {
         for (JsonElement clientsMessage : clientsMessages) {
             socketHandler.addHandler(
                     clientsMessage.getAsString(),
-                    new ClientsSIH(socketHandler, msClientService, msJeoGenerator)
+                    new ClientsSIH(socketHandler, msClientService, jeGenerator)
             );
         }
 

@@ -4,17 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGFieldDoesntExist;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGInvalidMessageType;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGInvalidFieldType;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.CommonJEDGUnknownFieldType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.data.*;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -51,13 +44,13 @@ public class JsonCheckerImpl implements JsonChecker {
     }};
     private static final String MESSAGE_HEADER_FIELD = "header";
 
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     private Map<String, Map<Boolean, JsonObject>> standardJsonObjects = new HashMap<>();
     private JsonObject jsonObject;
 
-    public JsonCheckerImpl(JsonErrorObjectGenerator jeoGenerator) throws Exception {
-        this.jeoGenerator = jeoGenerator;
+    public JsonCheckerImpl(JsonErrorGenerator jeGenerator) throws Exception {
+        this.jeGenerator = jeGenerator;
         this.jsonObject = new JsonObject();
 
         StringBuilder content = new StringBuilder();
@@ -117,7 +110,10 @@ public class JsonCheckerImpl implements JsonChecker {
             for (String mandatoryHeaderField : MANDATORY_HEADER_FIELDS) {
                 if (!header.has(mandatoryHeaderField)){
                     errors.add(
-                            jeoGenerator.generate(new CommonJEDGFieldDoesntExist(mandatoryHeaderField))
+                            jeGenerator
+                                    .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                                    .set("field", mandatoryHeaderField)
+                                    .get()
                     );
                 } else {
                     original.get(MESSAGE_HEADER_FIELD).getAsJsonObject().add(mandatoryHeaderField, header.get(mandatoryHeaderField));
@@ -125,7 +121,10 @@ public class JsonCheckerImpl implements JsonChecker {
             }
         } else {
             errors.add(
-                    jeoGenerator.generate(new CommonJEDGFieldDoesntExist(MESSAGE_HEADER_FIELD))
+                    jeGenerator
+                        .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                        .set("field", MESSAGE_HEADER_FIELD)
+                        .get()
             );
         }
 
@@ -137,7 +136,10 @@ public class JsonCheckerImpl implements JsonChecker {
                 traverse(jsonObject, standardJsonObjects.get(type).get(request), errors, path);
             } else {
                 errors.add(
-                        jeoGenerator.generate(new CommonJEDGInvalidMessageType(type))
+                        jeGenerator
+                            .handle(true, CommonErrorCode.INVALID_MESSAGE_TYPE.getCode())
+                            .set("type", type)
+                            .get()
                 );
             }
         }
@@ -168,7 +170,10 @@ public class JsonCheckerImpl implements JsonChecker {
                 element = jsonObject.get(key);
             } else {
                 errors.add(
-                        jeoGenerator.generate(new CommonJEDGFieldDoesntExist(currentPath))
+                        jeGenerator
+                            .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                            .set("field", currentPath)
+                            .get()
                 );
             }
 
@@ -178,7 +183,11 @@ public class JsonCheckerImpl implements JsonChecker {
                         traverse(element.getAsJsonObject(), stdElement.getAsJsonObject(), errors, currentPath);
                     } else {
                         errors.add(
-                                jeoGenerator.generate(new CommonJEDGInvalidFieldType("Object", currentPath))
+                                jeGenerator
+                                    .handle(true, CommonErrorCode.INVALID_FIELD_TYPE.getCode())
+                                    .set("type", "Object")
+                                    .set("field", currentPath)
+                                    .get()
                         );
                     }
                 }
@@ -186,7 +195,11 @@ public class JsonCheckerImpl implements JsonChecker {
                 if (element != null){
                     if (!element.isJsonArray()){
                         errors.add(
-                                jeoGenerator.generate(new CommonJEDGInvalidFieldType("Array", currentPath))
+                                jeGenerator
+                                        .handle(true, CommonErrorCode.INVALID_FIELD_TYPE.getCode())
+                                        .set("type", "Array")
+                                        .set("field", currentPath)
+                                        .get()
                         );
                     }
                 }
@@ -198,7 +211,11 @@ public class JsonCheckerImpl implements JsonChecker {
                                 element.getAsString();
                             } catch (NumberFormatException ex){
                                 errors.add(
-                                        jeoGenerator.generate(new CommonJEDGInvalidFieldType("String", currentPath))
+                                        jeGenerator
+                                                .handle(true, CommonErrorCode.INVALID_FIELD_TYPE.getCode())
+                                                .set("type", "String")
+                                                .set("field", currentPath)
+                                                .get()
                                 );
                             }
                             break;
@@ -207,7 +224,11 @@ public class JsonCheckerImpl implements JsonChecker {
                                 element.getAsInt();
                             } catch (NumberFormatException ex){
                                 errors.add(
-                                        jeoGenerator.generate(new CommonJEDGInvalidFieldType("Integer", currentPath))
+                                        jeGenerator
+                                                .handle(true, CommonErrorCode.INVALID_FIELD_TYPE.getCode())
+                                                .set("type", "Integer")
+                                                .set("field", currentPath)
+                                                .get()
                                 );
                             }
                             break;
@@ -216,13 +237,20 @@ public class JsonCheckerImpl implements JsonChecker {
                                 element.getAsBoolean();
                             } catch (NumberFormatException ex){
                                 errors.add(
-                                        jeoGenerator.generate(new CommonJEDGInvalidFieldType("Boolean", currentPath))
+                                        jeGenerator
+                                                .handle(true, CommonErrorCode.INVALID_FIELD_TYPE.getCode())
+                                                .set("type", "Boolean")
+                                                .set("field", currentPath)
+                                                .get()
                                 );
                             }
                             break;
                         default:
                             errors.add(
-                                    jeoGenerator.generate(new CommonJEDGUnknownFieldType(currentPath))
+                                    jeGenerator
+                                        .handle(true, CommonErrorCode.UNKNOWN_FIELD_TYPE.getCode())
+                                        .set("field", currentPath)
+                                        .get()
                             );
                             break;
                     }

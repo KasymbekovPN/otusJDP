@@ -1,20 +1,17 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler;
 
 import com.google.gson.*;
-import org.hibernate.cache.spi.access.CachedDomainDataAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGEmptyLoginPassword;
-import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserAlreadyExist;
+import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBErrorCode;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Обработчик входящего сообщения типа {@link ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType#ADD_USER} <br><br>
@@ -28,12 +25,12 @@ public class AddUserSIH implements SocketInputHandler {
 
     private final DBServiceOnlineUser dbService;
     private final SocketHandler socketHandler;
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
-    public AddUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
+    public AddUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorGenerator jeGenerator) {
         this.dbService = dbService;
         this.socketHandler = socketHandler;
-        this.jeoGenerator = jeoGenerator;
+        this.jeGenerator = jeGenerator;
     }
 
     @Override
@@ -56,10 +53,14 @@ public class AddUserSIH implements SocketInputHandler {
                         new OnlineUser(0, login, password, false, "")
                 );
             } else {
-                errors.add(jeoGenerator.generate(new DBJEDGUserAlreadyExist()));
+                errors.add(
+                        jeGenerator.handle(false, DBErrorCode.USER_ALREADY_EXIST.getCode()).get()
+                );
             }
         } else {
-            errors.add(jeoGenerator.generate(new DBJEDGEmptyLoginPassword()));
+            errors.add(
+                    jeGenerator.handle(false, DBErrorCode.EMPTY_LOGIN_PASSWORD.getCode()).get()
+            );
         }
 
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));

@@ -7,13 +7,12 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
-import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGEmptyLoginPassword;
-import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBJEDGUserDoesntExist;
+import ru.otus.kasymbekovPN.zuiNotesDB.json.error.data.DBErrorCode;
 
 import java.util.List;
 
@@ -29,12 +28,12 @@ public class DelUserSIH implements SocketInputHandler {
 
     private final DBServiceOnlineUser dbService;
     private final SocketHandler socketHandler;
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
-    public DelUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
+    public DelUserSIH(DBServiceOnlineUser dbService, SocketHandler socketHandler, JsonErrorGenerator jeGenerator) {
         this.dbService = dbService;
         this.socketHandler = socketHandler;
-        this.jeoGenerator = jeoGenerator;
+        this.jeGenerator = jeGenerator;
     }
 
     @Override
@@ -54,10 +53,14 @@ public class DelUserSIH implements SocketInputHandler {
             if (!onlineUsers.isEmpty()){
                 dbService.deleteRecord(login);
             } else {
-                errors.add(jeoGenerator.generate(new DBJEDGUserDoesntExist()));
+                errors.add(
+                        jeGenerator.handle(false, DBErrorCode.USER_DOESNT_EXIST.getCode()).get()
+                );
             }
         } else {
-            errors.add(jeoGenerator.generate(new DBJEDGEmptyLoginPassword()));
+            errors.add(
+                    jeGenerator.handle(false, DBErrorCode.EMPTY_LOGIN_PASSWORD.getCode()).get()
+            );
         }
 
         JsonArray users = (JsonArray) new JsonParser().parse(new Gson().toJson(dbService.loadAll()));

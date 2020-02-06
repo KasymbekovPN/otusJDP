@@ -1,15 +1,13 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
@@ -32,10 +30,7 @@ public class SocketHandlerConfig {
     private static final String TARGET_PORT = "target.port";
 
     private final Client client;
-
-    @Autowired
-    @Qualifier("common")
-    private JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -52,7 +47,7 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(jeoGenerator),
+                new JsonCheckerImpl(jeGenerator),
                 new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );

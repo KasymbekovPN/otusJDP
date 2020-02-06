@@ -5,13 +5,10 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientHasWrongEntity;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGSolusReg;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFieldRequestIsWrong;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientAlreadyDel;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
@@ -29,17 +26,17 @@ public class RegistrationSIH implements SocketInputHandler {
     private final SocketHandler socketHandler;
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
     private final MsClientCreatorFactory msClientCreatorFactory;
     private final Solus solus;
 
     public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService,
-                           JsonErrorObjectGenerator jeoGenerator, MsClientCreatorFactory msClientCreatorFactory,
+                           JsonErrorGenerator jeGenerator, MsClientCreatorFactory msClientCreatorFactory,
                            Solus solus) {
         this.socketHandler = socketHandler;
         this.messageSystem = messageSystem;
         this.msClientService = msClientService;
-        this.jeoGenerator = jeoGenerator;
+        this.jeGenerator = jeGenerator;
         this.msClientCreatorFactory = msClientCreatorFactory;
         this.solus = solus;
     }
@@ -72,19 +69,23 @@ public class RegistrationSIH implements SocketInputHandler {
                     if (maybeMsClient.isPresent()){
                         error = msClientService.addClient(url, maybeMsClient.get());
                     } else {
-                        error = jeoGenerator.generate(new MSJEDGMsClientHasWrongEntity(url.getEntity()));
+                        error = jeGenerator.handle(false, MSErrorCode.MS_CLIENT_HAS_WRONG_ENTITY.getCode())
+                                .set("entity", url.getEntity())
+                                .get();
                     }
                 } else {
-                    error = jeoGenerator.generate(new MSJEDGSolusReg(url.getEntity()));
+                    error = jeGenerator.handle(false, MSErrorCode.SOLUS_REG.getCode())
+                            .set("entity", url.getEntity())
+                            .get();
                 }
             } else {
                 solus.unregister(url.getEntity());
                 error = optMsClient.isPresent()
                         ? msClientService.deleteClient(url)
-                        : jeoGenerator.generate(new MSJEDGMsClientAlreadyDel(url.getUrl()));
+                        : jeGenerator.handle(false, MSErrorCode.MS_CLIENT_ALREADY_DEL.getCode()).set("url", url.getUrl()).get();
             }
         } else {
-            error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
+            error = jeGenerator.handle(false, MSErrorCode.FIELD_REQUEST_IS_WRONG.getCode()).get();
         }
 
         if (registration){

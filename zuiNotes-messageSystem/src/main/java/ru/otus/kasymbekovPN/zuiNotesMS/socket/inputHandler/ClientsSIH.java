@@ -6,10 +6,10 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFieldRequestIsWrong;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSErrorCode;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
 
@@ -24,12 +24,12 @@ public class ClientsSIH implements SocketInputHandler {
 
     private final SocketHandler socketHandler;
     private final MsClientService msClientService;
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
-    public ClientsSIH(SocketHandler socketHandler, MsClientService msClientService, JsonErrorObjectGenerator jeoGenerator) {
+    public ClientsSIH(SocketHandler socketHandler, MsClientService msClientService, JsonErrorGenerator jeGenerator) {
         this.socketHandler = socketHandler;
         this.msClientService = msClientService;
-        this.jeoGenerator = jeoGenerator;
+        this.jeGenerator = jeGenerator;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ClientsSIH implements SocketInputHandler {
                 data.add(entity, jsonEntityUrls);
             }
         } else {
-            error = jeoGenerator.generate(new MSJEDGFieldRequestIsWrong());
+            error = jeGenerator.handle(false, MSErrorCode.FIELD_REQUEST_IS_WRONG.getCode()).get();
         }
 
         JsonObject responseJsonObject;

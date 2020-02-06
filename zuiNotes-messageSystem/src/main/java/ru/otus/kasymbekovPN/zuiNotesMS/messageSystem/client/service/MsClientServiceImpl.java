@@ -1,33 +1,33 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service;
 
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGMsClientAlreadyExist;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSErrorCode;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class MsClientServiceImpl implements MsClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(MsClientServiceImpl.class);
 
-    @Qualifier("ms")
-    @Autowired
-    private JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     private final Map<MsClientUrl, MSClient> clients = new HashMap<>();
 
     @Override
     public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
         if (clients.containsKey(url)){
-            return jeoGenerator.generate(new MSJEDGMsClientAlreadyExist(url.getUrl()));
+            return jeGenerator.handle(false, MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode())
+                    .set("url", url.getUrl())
+                    .get();
         } else {
             clients.put(url, msClient);
             return new JsonObject();

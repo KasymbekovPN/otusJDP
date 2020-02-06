@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
@@ -30,13 +30,7 @@ public class SocketHandlerConfig {
     private final DBServiceOnlineUser dbService;
     private final Client client;
 
-    @Autowired
-    @Qualifier("common")
-    private JsonErrorObjectGenerator commonJeoGenerator;
-
-    @Autowired
-    @Qualifier("ms")
-    private JsonErrorObjectGenerator msJeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     @Bean
     public SocketHandler socketHandler(ApplicationArguments args) throws Exception {
@@ -53,16 +47,16 @@ public class SocketHandlerConfig {
         }
 
         SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-                new JsonCheckerImpl(commonJeoGenerator),
+                new JsonCheckerImpl(jeGenerator),
                 new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
-        socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(dbService, socketHandler, msJeoGenerator));
-        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(dbService, socketHandler, msJeoGenerator));
-        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler, msJeoGenerator));
-        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler, msJeoGenerator));
+        socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(dbService, socketHandler, jeGenerator));
+        socketHandler.addHandler(MessageType.USER_DATA.getValue(), new UserDataSIH(dbService, socketHandler, jeGenerator));
+        socketHandler.addHandler(MessageType.ADD_USER.getValue(), new AddUserSIH(dbService, socketHandler, jeGenerator));
+        socketHandler.addHandler(MessageType.DEL_USER.getValue(), new DelUserSIH(dbService, socketHandler, jeGenerator));
         socketHandler.addHandler(MessageType.TREE_DATA.getValue(), new TreeDataSIH(socketHandler));
 
         return socketHandler;

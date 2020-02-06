@@ -5,15 +5,13 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesFE.json.error.data.FEJEDGInvalidLogin;
+import ru.otus.kasymbekovPN.zuiNotesFE.json.error.data.FEErrorCode;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
 
 import java.util.Optional;
@@ -29,9 +27,7 @@ public class FrontendMessageReceiver {
     private final SocketHandler socketHandler;
     private final FrontendMessageTransmitter frontendMessageTransmitter;
 
-    @Autowired
-    @Qualifier("ms")
-    private JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
     @MessageMapping("/LOGIN")
     public void handleLogin(OnlineUser user){
@@ -95,7 +91,12 @@ public class FrontendMessageReceiver {
             socketHandler.send(jsonObject);
         } else {
             JsonArray errors = new JsonArray();
-            errors.add(jeoGenerator.generate(new FEJEDGInvalidLogin(user.getLogin())));
+            errors.add(
+                    jeGenerator
+                        .handle(false, FEErrorCode.INVALID_LOGIN.getCode())
+                        .set("login", user.getLogin())
+                        .get()
+            );
 
             String data = new JsonBuilderImpl()
                     .add("users", new JsonObject())

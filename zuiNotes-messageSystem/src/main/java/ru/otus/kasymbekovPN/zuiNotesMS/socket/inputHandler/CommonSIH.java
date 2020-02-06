@@ -5,11 +5,10 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorObjectGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGFromMsClientDoesntExist;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSJEDGToMsClientDoesntExist;
+import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSErrorCode;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
@@ -25,12 +24,12 @@ public class CommonSIH implements SocketInputHandler {
     private final MsClientService msClientService;
     private final SocketHandler socketHandler;
 
-    private final JsonErrorObjectGenerator jeoGenerator;
+    private final JsonErrorGenerator jeGenerator;
 
-    public CommonSIH(MsClientService msClientService, SocketHandler socketHandler, JsonErrorObjectGenerator jeoGenerator) {
+    public CommonSIH(MsClientService msClientService, SocketHandler socketHandler, JsonErrorGenerator jeGenerator) {
         this.msClientService = msClientService;
         this.socketHandler = socketHandler;
-        this.jeoGenerator = jeoGenerator;
+        this.jeGenerator = jeGenerator;
     }
 
     @Override
@@ -68,12 +67,18 @@ public class CommonSIH implements SocketInputHandler {
             JsonArray errors = new JsonArray();
             if (!optFromMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(new MSJEDGFromMsClientDoesntExist(fromUrl.getUrl()))
+                        jeGenerator
+                            .handle(false, MSErrorCode.FROM_MS_CLIENT_DOESNT_EXIST.getCode())
+                            .set("client", fromUrl.getUrl())
+                            .get()
                 );
             }
             if (!optToMsClient.isPresent()){
                 errors.add(
-                        jeoGenerator.generate(new MSJEDGToMsClientDoesntExist(toUrl.getUrl()))
+                        jeGenerator
+                            .handle(false, MSErrorCode.TO_MS_CLIENT_DOESNT_EXIST.getCode())
+                            .set("client", toUrl.getUrl())
+                            .get()
                 );
             }
 
