@@ -8,6 +8,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.NioSocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
@@ -15,6 +16,7 @@ import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageSystem.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.FESocketSendingHandler;
+import ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler.NioSocketSendingHandler;
 
 @Configuration
 @RequiredArgsConstructor
@@ -46,9 +48,15 @@ public class SocketHandlerConfig {
             throw new Exception(clArgsParser.getStatus());
         }
 
-        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+//        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+//                new JsonCheckerImpl(jeGenerator),
+//                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
+//                selfPort
+//        );
+        //<
+        SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
-                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
+                new NioSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 

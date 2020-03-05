@@ -37,7 +37,7 @@ public class JsonCheckerImpl implements JsonChecker {
     private static final String WRONG_TYPE = "WRONG";
     private static final String FILE_NAME = "/standardMessages.json";
 
-    private static final Set<String> MANDATORY_HEADER_FIELDS = new HashSet<>(){{
+    private static final Set<String> MANDATORY_HEADER_FIELDS = new HashSet<String>(){{
         add("type");
         add("request");
         add("uuid");

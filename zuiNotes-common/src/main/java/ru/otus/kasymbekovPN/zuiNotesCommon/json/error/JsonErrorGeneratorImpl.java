@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class JsonErrorGeneratorImpl implements JsonErrorGenerator {
 
-    private final Map<Boolean, Map<Integer, JsonErrorHandler>> jeHandlers = new HashMap<>(){{
-        put(false, new HashMap<>());
-        put(true, new HashMap<>());
+    private final Map<Boolean, Map<Integer, JsonErrorHandler>> jeHandlers = new HashMap<Boolean, Map<Integer, JsonErrorHandler>>(){{
+        put(false, new HashMap<Integer, JsonErrorHandler>());
+        put(true, new HashMap<Integer, JsonErrorHandler>());
     }};
 
     @Override

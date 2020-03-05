@@ -12,6 +12,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.NioSocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
@@ -26,6 +27,7 @@ import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.CommonMSMessageHand
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.WrongMSMessageHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.*;
 import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
+import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.NioSocketSendingHandler;
 
 import java.io.*;
 import java.util.HashSet;
@@ -73,9 +75,15 @@ public class SocketHandlerConfig {
         JsonArray echoMessages = config.get(ECHO_FIELD).getAsJsonArray();
         JsonArray clientsMessages = config.get(CLIENTS_FIELD).getAsJsonArray();
 
-        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+//        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+//                new JsonCheckerImpl(jeGenerator),
+//                new MSSocketSendingHandler(msPort, client),
+//                msPort
+//        );
+        //<
+        SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
-                new MSSocketSendingHandler(msPort, client),
+                new NioSocketSendingHandler(msPort, client),
                 msPort
         );
 
