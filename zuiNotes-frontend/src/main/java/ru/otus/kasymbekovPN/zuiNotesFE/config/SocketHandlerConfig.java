@@ -48,12 +48,6 @@ public class SocketHandlerConfig {
             throw new Exception(clArgsParser.getStatus());
         }
 
-//        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-//                new JsonCheckerImpl(jeGenerator),
-//                new FESocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
-//                selfPort
-//        );
-        //<
         SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
                 new NioSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),

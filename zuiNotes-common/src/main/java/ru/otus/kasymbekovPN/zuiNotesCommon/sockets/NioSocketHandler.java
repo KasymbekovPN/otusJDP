@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.sockets;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
@@ -80,20 +81,20 @@ public class NioSocketHandler implements SocketHandler {
     }
 
     private void handle(ByteBuffer buffer, SelectionKey key) throws IOException {
-
         SocketChannel client = (SocketChannel) key.channel();
         client.read(buffer);
-
-        //<
-        final String trim = new String(buffer.array()).trim();
-        log.info("handle buffer : {}", trim);
-        //<
-
         client.close();
-        //<
-        buffer.flip();
-        //<
+
+        JsonObject jsonObject = (JsonObject) new JsonParser().parse(new String(buffer.array()).trim());
         buffer.clear();
+
+        echoSend(jsonObject);
+        try{
+            jsonChecker.setJsonObject(jsonObject, handlers.keySet());
+            handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private void register(Selector selector, ServerSocketChannel channel) throws IOException {
@@ -101,34 +102,6 @@ public class NioSocketHandler implements SocketHandler {
         client.configureBlocking(false);
         client.register(selector, SelectionKey.OP_READ);
     }
-
-    //<
-//        private void handleInProcessor(){
-//            try(ServerSocket serverSocket = new ServerSocket(selfPort)){
-//                while(!Thread.currentThread().isInterrupted()){
-//                    logger.info("SocketHandlerImpl : Waiting for client connection");
-//                    try(Socket clientSocket = serverSocket.accept()){
-//                        handleClientSocket(clientSocket);
-//                    }
-//                }
-//            } catch (Exception ex){
-//                logger.error("SocketHandlerImpl::handleInProcessor : Error", ex);
-//            }
-//        }
-//
-//        private void handleClientSocket(Socket clientSocket){
-//            try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-//
-//                JsonObject jsonObject = (JsonObject) new JsonParser().parse(in.readLine());
-//                echoSend(jsonObject);
-//                jsonChecker.setJsonObject(jsonObject, handlers.keySet());
-//                handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
-//
-//            } catch (Exception ex){
-//                logger.error("SocketHandlerImpl::handleClientSocket : Error", ex);
-//            }
-//        }
-//
 
     private void echoSend(JsonObject jsonObject){
         if (jsonObject.has("header")){

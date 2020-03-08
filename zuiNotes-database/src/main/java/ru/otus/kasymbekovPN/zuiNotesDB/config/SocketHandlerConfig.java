@@ -1,8 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +8,12 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.CLArgsParser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.NioSocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
 import ru.otus.kasymbekovPN.zuiNotesDB.db.api.service.DBServiceOnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesDB.messageSystem.MessageType;
 import ru.otus.kasymbekovPN.zuiNotesDB.socket.inputHandler.*;
-import ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler.DBSocketSendingHandler;
+import ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler.NioSocketSendingHandler;
 
 @Configuration
 @RequiredArgsConstructor
@@ -46,9 +44,9 @@ public class SocketHandlerConfig {
             throw new Exception(clArgsParser.getStatus());
         }
 
-        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
+        SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
-                new DBSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
+                new NioSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
 

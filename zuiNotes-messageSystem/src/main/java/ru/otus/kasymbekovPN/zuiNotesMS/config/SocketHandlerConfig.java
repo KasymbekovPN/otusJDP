@@ -75,12 +75,6 @@ public class SocketHandlerConfig {
         JsonArray echoMessages = config.get(ECHO_FIELD).getAsJsonArray();
         JsonArray clientsMessages = config.get(CLIENTS_FIELD).getAsJsonArray();
 
-//        SocketHandlerImpl socketHandler = new SocketHandlerImpl(
-//                new JsonCheckerImpl(jeGenerator),
-//                new MSSocketSendingHandler(msPort, client),
-//                msPort
-//        );
-        //<
         SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
                 new NioSocketSendingHandler(msPort, client),

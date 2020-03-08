@@ -20,9 +20,6 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
     private final int selfPort;
     private final Client client;
 
-    //< !!!!!!!!!! Как задавать
-    private static final int BUFFER_SIZE = 4096;
-
     public NioSocketSendingHandler(int selfPort, Client client) throws UnknownHostException {
         this.selfHost = InetAddress.getLocalHost().getHostAddress();
         this.selfPort = selfPort;
@@ -49,10 +46,10 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
         }
 
         try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(toHost, toPort))){
-//            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
-            //<
             ByteBuffer buffer = ByteBuffer.wrap(jsonObject.toString().getBytes());
             channel.write(buffer);
+
+            log.info("NioSocketSendingHandler send : {}", jsonObject);
         } catch (IOException ex){
             log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", toHost, toPort);
         }
