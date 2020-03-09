@@ -66,35 +66,5 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
         } catch (IOException ex){
             log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
         }
-
-
-        //<
-//        try(Socket clientSocket = new Socket(msHost, msPort)){
-//            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-//
-//            jsonObject = new JsonBuilderImpl(jsonObject)
-//                    .add(
-//                            "from",
-//                            new JsonBuilderImpl()
-//                                    .add("host", selfHost)
-//                                    .add("port", selfPort)
-//                                    .add("entity", client.getEntity())
-//                                    .get()
-//                    )
-//                    .add(
-//                            "to",
-//                            new JsonBuilderImpl()
-//                                    .add("host", targetHost)
-//                                    .add("port", targetPort)
-//                                    .add("entity", "FRONTEND")
-//                                    .get()
-//                    )
-//                    .get();
-//
-//            logger.info("DBSocketSendingHandler send : {}", jsonObject);
-//            out.println(jsonObject);
-//        } catch (Exception ex){
-//            logger.error("DBSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
-//        }
     }
 }

@@ -81,12 +81,18 @@ public class NioSocketHandler implements SocketHandler {
     }
 
     private void handle(ByteBuffer buffer, SelectionKey key) throws IOException {
-        SocketChannel client = (SocketChannel) key.channel();
-        client.read(buffer);
-        client.close();
+        SocketChannel channel = (SocketChannel) key.channel();
+        channel.read(buffer);
+        channel.close();
 
-        JsonObject jsonObject = (JsonObject) new JsonParser().parse(new String(buffer.array()).trim());
+        String line = new String(buffer.array()).trim();
+        int length = buffer.array().length;
+        for(int i = 0; i < length; i++){
+            buffer.put(i, (byte)'\0');
+        }
         buffer.clear();
+
+        JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
 
         echoSend(jsonObject);
         try{
