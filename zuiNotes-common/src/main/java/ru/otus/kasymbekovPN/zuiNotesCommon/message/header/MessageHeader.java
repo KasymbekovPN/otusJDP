@@ -3,6 +3,8 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.message.header;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.UUID;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = MessageHeaderImpl.class, name = "MessageHeaderImpl")
 )
 public interface MessageHeader {
-    String getEntity();
-    String getHost();
-    int getPort();
+    String getType();
+    Boolean isRequest();
+    UUID getUUID();
 }

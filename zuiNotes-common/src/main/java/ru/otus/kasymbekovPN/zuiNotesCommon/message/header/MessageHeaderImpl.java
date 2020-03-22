@@ -1,45 +1,43 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.message.header;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @JsonTypeName("MessageHeaderImpl")
 public class MessageHeaderImpl implements MessageHeader {
 
-    private String entity;
-    private String host;
-    private int port;
+    private String type;
+    private Boolean request;
+    private UUID uuid;
 
-    @JsonGetter("entity")
+    @JsonGetter("type")
     @Override
-    public String getEntity() {
-        return entity;
+    public String getType() {
+        return type;
     }
 
-    @JsonGetter("host")
+    @JsonGetter("request")
     @Override
-    public String getHost() {
-        return host;
+    public Boolean isRequest() {
+        return request;
     }
 
-    @JsonGetter("port")
+    @JsonGetter("uuid")
     @Override
-    public int getPort() {
-        return port;
+    public UUID getUUID() {
+        return uuid;
     }
 
     @JsonCreator
     public MessageHeaderImpl(
-            @JsonProperty("entity") String entity,
-            @JsonProperty("host") String host,
-            @JsonProperty("port") int port) {
-        this.entity = entity;
-        this.host = host;
-        this.port = port;
+            @JsonProperty("type") String type,
+            @JsonProperty("request") Boolean request,
+            @JsonProperty("uuid") UUID uuid) {
+        this.type = type;
+        this.request = request;
+        this.uuid = uuid;
     }
 
     @Override
@@ -47,22 +45,22 @@ public class MessageHeaderImpl implements MessageHeader {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageHeaderImpl that = (MessageHeaderImpl) o;
-        return port == that.port &&
-                Objects.equals(entity, that.entity) &&
-                Objects.equals(host, that.host);
+        return request == that.request &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(uuid, that.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(entity, host, port);
+        return Objects.hash(type, request, uuid);
     }
 
     @Override
     public String toString() {
         return "MessageHeaderImpl{" +
-                "entity='" + entity + '\'' +
-                ", host='" + host + '\'' +
-                ", port=" + port +
+                "type='" + type + '\'' +
+                ", request=" + request +
+                ", uuid=" + uuid +
                 '}';
     }
 }
