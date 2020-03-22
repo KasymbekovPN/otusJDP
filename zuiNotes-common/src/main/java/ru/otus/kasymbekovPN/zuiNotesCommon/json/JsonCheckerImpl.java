@@ -111,7 +111,7 @@ public class JsonCheckerImpl implements JsonChecker {
                 if (!header.has(mandatoryHeaderField)){
                     errors.add(
                             jeGenerator
-                                    .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                                    .handle(true, CommonErrorCode.FIELD_NOT_EXIST.getCode())
                                     .set("field", mandatoryHeaderField)
                                     .get()
                     );
@@ -122,7 +122,7 @@ public class JsonCheckerImpl implements JsonChecker {
         } else {
             errors.add(
                     jeGenerator
-                        .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                        .handle(true, CommonErrorCode.FIELD_NOT_EXIST.getCode())
                         .set("field", MESSAGE_HEADER_FIELD)
                         .get()
             );
@@ -171,7 +171,7 @@ public class JsonCheckerImpl implements JsonChecker {
             } else {
                 errors.add(
                         jeGenerator
-                            .handle(true, CommonErrorCode.FIELD_DOESNT_EXIST.getCode())
+                            .handle(true, CommonErrorCode.FIELD_NOT_EXIST.getCode())
                             .set("field", currentPath)
                             .get()
                 );

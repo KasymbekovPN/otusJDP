@@ -25,9 +25,9 @@ public class JEGeneratorConfig {
 
         jeGenerator.addHandler(
                 true,
-                CommonErrorCode.FIELD_DOESNT_EXIST.getCode(),
+                CommonErrorCode.FIELD_NOT_EXIST.getCode(),
                 new JsonErrorHandlerImpl(
-                        new JsonErrorBase(CommonErrorCode.FIELD_DOESNT_EXIST.getCode(), true, client.getEntity()),
+                        new JsonErrorBase(CommonErrorCode.FIELD_NOT_EXIST.getCode(), true, client.getEntity()),
                         new HashSet<String>(){{add("field");}}
                 )
         );
