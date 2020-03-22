@@ -3,7 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.common.Serializers;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MSMessage;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.MSMessageHandler;
 
@@ -30,26 +30,26 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public boolean sendMessage(Message message) {
-        boolean result = messageSystem.newMessage(message);
+    public boolean sendMessage(MSMessage MSMessage) {
+        boolean result = messageSystem.newMessage(MSMessage);
         if (!result){
-            logger.error("Last message was reject : {}", message);
+            logger.error("Last message was reject : {}", MSMessage);
         }
         return result;
     }
 
     @Override
-    public void handle(Message message) {
-        logger.info("New message : {}", message);
+    public void handle(MSMessage MSMessage) {
+        logger.info("New message : {}", MSMessage);
         try{
-            MSMessageHandler handler = handlers.get(message.getType());
+            MSMessageHandler handler = handlers.get(MSMessage.getType());
             if (handler != null){
-                handler.handle(message);
+                handler.handle(MSMessage);
             } else {
-                logger.error("Handler not found for the message type : {}; url : {}", message.getType(), url);
+                logger.error("Handler not found for the message type : {}; url : {}", MSMessage.getType(), url);
             }
         } catch(Exception ex){
-            logger.error("Message : {}, {}", message, ex);
+            logger.error("Message : {}, {}", MSMessage, ex);
         }
     }
 
@@ -59,8 +59,8 @@ public class MsClientImpl implements MSClient {
     }
 
     @Override
-    public <T> Message produceMessage(MsClientUrl toUrl, T data, String type) {
-        return new Message(url, toUrl, type, Serializers.serialize(data));
+    public <T> MSMessage produceMessage(MsClientUrl toUrl, T data, String type) {
+        return new MSMessage(url, toUrl, type, Serializers.serialize(data));
     }
 
     @Override

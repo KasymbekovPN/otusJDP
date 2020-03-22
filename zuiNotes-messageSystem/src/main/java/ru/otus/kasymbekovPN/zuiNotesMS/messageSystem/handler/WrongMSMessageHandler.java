@@ -2,7 +2,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MSMessage;
 
 public class WrongMSMessageHandler implements MSMessageHandler {
 
@@ -12,8 +12,8 @@ public class WrongMSMessageHandler implements MSMessageHandler {
     }
 
     @Override
-    public void handle(Message message) {
-        logger.warn("WrongMSMessageHandler : {}", message);
+    public void handle(MSMessage MSMessage) {
+        logger.warn("WrongMSMessageHandler : {}", MSMessage);
     }
 
     @Override

@@ -9,7 +9,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSErrorCode;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MSMessage;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
@@ -60,8 +60,8 @@ public class CommonSIH implements SocketInputHandler {
         if (optFromMsClient.isPresent() && optToMsClient.isPresent()){
             String str = jsonObject.toString();
             MSClient fromMsClient = optFromMsClient.get();
-            Message message = fromMsClient.produceMessage(toUrl, str, type);
-            fromMsClient.sendMessage(message);
+            MSMessage MSMessage = fromMsClient.produceMessage(toUrl, str, type);
+            fromMsClient.sendMessage(MSMessage);
         } else {
 
             JsonArray errors = new JsonArray();

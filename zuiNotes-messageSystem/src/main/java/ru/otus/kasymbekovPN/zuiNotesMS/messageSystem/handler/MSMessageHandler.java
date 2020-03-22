@@ -1,8 +1,8 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler;
 
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
+import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MSMessage;
 
 public interface MSMessageHandler {
-    void handle(Message message);
+    void handle(MSMessage MSMessage);
     MSMessageHandler deepCopy();
 }

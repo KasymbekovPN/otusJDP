@@ -1,6 +1,6 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem;
 
 public interface MessageSystem {
-    boolean newMessage(Message message);
+    boolean newMessage(MSMessage MSMessage);
     void dispose() throws  InterruptedException;
 }

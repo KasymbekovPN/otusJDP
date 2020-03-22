@@ -1,38 +1,5 @@
 package ru.otus.kasymbekovPN.zuiNotesMS;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
-import ru.otus.kasymbekovPN.zuiNotesCommon.client.ClientImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonCheckerImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
-import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandlerImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.Message;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystem;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.MessageSystemImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.CmnMsClientCreator;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.creator.WrongMsClientCreator;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.creation.factory.MsClientCreatorFactoryImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientService;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service.MsClientServiceImpl;
-import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.handler.WrongMSMessageHandler;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.CommonSIH;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler.WrongSIH;
-import ru.otus.kasymbekovPN.zuiNotesMS.socket.sendingHandler.MSSocketSendingHandler;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static org.assertj.core.api.Assertions.*;
-
 public class MessageSystemImplTest {
 
 //    private static final Logger logger = LoggerFactory.getLogger(MessageSystemImplTest.class);

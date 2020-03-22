@@ -21,7 +21,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     private final AtomicBoolean runFlag = new AtomicBoolean(true);
     private final MsClientService msClientService;
-    private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
+    private final BlockingQueue<MSMessage> MSMessageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
     private final ExecutorService messageProcessor = Executors.newSingleThreadExecutor(
             runnable -> {
                 Thread thread = new Thread(runnable);
@@ -52,14 +52,14 @@ public class MessageSystemImpl implements MessageSystem {
         while (runFlag.get())
         {
             try{
-                Message message = messageQueue.take();
-                if (message == Message.getVoidMessage()){
+                MSMessage MSMessage = MSMessageQueue.take();
+                if (MSMessage == MSMessage.getVoidMsMessage()){
                     logger.info("Received the stop message");
                 } else {
-                    Optional<MSClient> optClientTo = msClientService.get(message.getToUrl());
+                    Optional<MSClient> optClientTo = msClientService.get(MSMessage.getToUrl());
                     if (optClientTo.isPresent()){
                         messageHandler.submit(
-                                () -> handlerMessage(optClientTo.get(), message)
+                                () -> handlerMessage(optClientTo.get(), MSMessage)
                         );
                     } else {
                         logger.warn("Client not found");
@@ -82,29 +82,29 @@ public class MessageSystemImpl implements MessageSystem {
         logger.info("messageHandler has been shut down");
     }
 
-    private void handlerMessage(MSClient msClient, Message message){
+    private void handlerMessage(MSClient msClient, MSMessage MSMessage){
         try{
-            msClient.handle(message);
+            msClient.handle(MSMessage);
         } catch(Exception ex){
             logger.error(ex.getMessage(), ex);
-            logger.error("message : {}", message);
+            logger.error("message : {}", MSMessage);
         }
     }
 
     private void insertStopMessage() throws InterruptedException {
-        boolean result = messageQueue.offer(Message.getVoidMessage());
+        boolean result = MSMessageQueue.offer(MSMessage.getVoidMsMessage());
         while (!result){
             Thread.sleep(100);
-            result = messageQueue.offer(Message.getVoidMessage());
+            result = MSMessageQueue.offer(MSMessage.getVoidMsMessage());
         }
     }
 
     @Override
-    public synchronized boolean newMessage(Message message) {
+    public synchronized boolean newMessage(MSMessage MSMessage) {
         if (runFlag.get()){
-            return messageQueue.offer(message);
+            return MSMessageQueue.offer(MSMessage);
         } else {
-            logger.warn("MS is being shutting down... rejected : {}", message);
+            logger.warn("MS is being shutting down... rejected : {}", MSMessage);
             return false;
         }
     }

@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Message {
-    static final Message VOID_MESSAGE = new Message();
+public class MSMessage {
+    static final MSMessage VOID_MS_MESSAGE = new MSMessage();
 
     private final UUID id = UUID.randomUUID();
     private final MsClientUrl fromUrl;
@@ -16,8 +16,8 @@ public class Message {
     private final int payloadLength;
     private final byte[] payload;
 
-    public static Message getVoidMessage() {
-        return VOID_MESSAGE;
+    public static MSMessage getVoidMsMessage() {
+        return VOID_MS_MESSAGE;
     }
 
     public UUID getId() {
@@ -44,7 +44,7 @@ public class Message {
         return payload;
     }
 
-    public Message() {
+    public MSMessage() {
         this.fromUrl = null;
         this.toUrl = null;
         this.type = "voidTechnicalMessage";
@@ -52,7 +52,7 @@ public class Message {
         this.payloadLength = this.payload.length;
     }
 
-    public Message(MsClientUrl fromUrl, MsClientUrl toUrl, String type, byte[] payload)
+    public MSMessage(MsClientUrl fromUrl, MsClientUrl toUrl, String type, byte[] payload)
     {
         this.fromUrl = fromUrl;
         this.toUrl = toUrl;
@@ -65,8 +65,8 @@ public class Message {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
-        return Objects.equals(id, message.id);
+        MSMessage MSMessage = (MSMessage) o;
+        return Objects.equals(id, MSMessage.id);
     }
 
     @Override
