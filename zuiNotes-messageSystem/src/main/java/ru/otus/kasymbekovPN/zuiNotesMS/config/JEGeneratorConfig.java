@@ -37,7 +37,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.INVALID_MESSAGE_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.INVALID_MESSAGE_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{add("type");}}
+                        new HashSet<String>(){{add("type");}}
                 )
         );
 
@@ -46,7 +46,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.INVALID_FIELD_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.INVALID_FIELD_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{
+                        new HashSet<String>(){{
                             add("type");
                             add("field");
                         }}
@@ -58,7 +58,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.UNKNOWN_FIELD_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.UNKNOWN_FIELD_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{add("field");}}
+                        new HashSet<String>(){{add("field");}}
                 )
         );
 
@@ -67,7 +67,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.FROM_MS_CLIENT_DOESNT_EXIST.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.FROM_MS_CLIENT_DOESNT_EXIST.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("client");}}
+                        new HashSet<String>(){{add("client");}}
                 )
         );
 
@@ -76,7 +76,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.TO_MS_CLIENT_DOESNT_EXIST.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.TO_MS_CLIENT_DOESNT_EXIST.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("client");}}
+                        new HashSet<String>(){{add("client");}}
                 )
         );
 
@@ -85,7 +85,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("url");}}
+                        new HashSet<String>(){{add("url");}}
                 )
         );
 
@@ -94,7 +94,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.MS_CLIENT_HAS_WRONG_ENTITY.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.MS_CLIENT_HAS_WRONG_ENTITY.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("entity");}}
+                        new HashSet<String>(){{add("entity");}}
                 )
         );
 
@@ -103,7 +103,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.SOLUS_REG.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.SOLUS_REG.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("entity");}}
+                        new HashSet<String>(){{add("entity");}}
                 )
         );
 
@@ -120,7 +120,7 @@ public class JEGeneratorConfig {
                 MSErrorCode.MS_CLIENT_ALREADY_DEL.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(MSErrorCode.MS_CLIENT_ALREADY_DEL.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("url");}}
+                        new HashSet<String>(){{add("url");}}
                 )
         );
 

@@ -1,9 +1,14 @@
 package ru.otus.kasymbekovPN.zuiNotesDB.socket.sendingHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddressImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.IOException;
@@ -12,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Optional;
 
 @Slf4j
 public class NioSocketSendingHandler implements SocketSendingHandler {
@@ -67,4 +73,30 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
             log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
         }
     }
+
+    @Override
+    public void send(Message message) {
+        //<
+        log.info("NioSocketSendingHandler::send : {}", message);
+
+        message.setFrom(new MessageAddressImpl(client.getEntity(), selfHost, selfPort));
+        message.setTo(new MessageAddressImpl("FRONTEND", targetHost, targetPort));
+
+        try{
+            String json = new ObjectMapper().writeValueAsString(message);
+            log.info("{}", json);
+
+            try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(msHost, msPort))){
+                ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
+                channel.write(buffer);
+
+                log.info("NioSocketSendingHandler send : {}", json);
+            } catch (IOException ex){
+                log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
+            }
+        } catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+    }
+
 }

@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddressImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Optional;
 
 @Slf4j
 public class NioSocketSendingHandler implements SocketSendingHandler {
@@ -52,6 +55,30 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
             log.info("NioSocketSendingHandler send : {}", jsonObject);
         } catch (IOException ex){
             log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", toHost, toPort);
+        }
+    }
+
+    @Override
+    public void send(Message message) {
+
+        if (message.getFrom() == null) {
+            message.setFrom(new MessageAddressImpl(client.getEntity(), selfHost, selfPort));
+        }
+
+        Optional<String> maybeJson = message.getAsJson();
+        if (maybeJson.isPresent())
+        {
+            String json = maybeJson.get();
+            String toHost = message.getTo().getHost();
+            Integer toPort = message.getTo().getPort();
+            try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(toHost, toPort))){
+                ByteBuffer buffer = ByteBuffer.wrap(json.toString().getBytes());
+                channel.write(buffer);
+
+                log.info("NioSocketSendingHandler send : {}", json);
+            } catch (IOException ex){
+                log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", toHost, toPort);
+            }
         }
     }
 }

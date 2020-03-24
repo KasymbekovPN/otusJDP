@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
 import java.io.PrintWriter;
@@ -58,5 +59,9 @@ public class MSSocketSendingHandler implements SocketSendingHandler {
         } catch (Exception ex){
             logger.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", toHost, toPort);
         }
+    }
+
+    @Override
+    public void send(Message message) {
     }
 }

@@ -2,6 +2,7 @@ package ru.otus.kasymbekovPN.zuiNotesDB.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
@@ -49,6 +50,9 @@ public class SocketHandlerConfig {
                 new NioSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),
                 selfPort
         );
+
+        //<
+        System.out.println("NIOSH : " + socketHandler);
 
         socketHandler.addHandler(MessageType.WRONG.getValue(), new WrongSIH());
         socketHandler.addHandler(MessageType.LOGIN.getValue(), new LoginSIH(dbService, socketHandler, jeGenerator));

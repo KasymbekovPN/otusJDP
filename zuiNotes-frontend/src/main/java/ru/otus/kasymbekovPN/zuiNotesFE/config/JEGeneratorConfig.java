@@ -37,7 +37,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.INVALID_MESSAGE_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.INVALID_MESSAGE_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{add("type");}}
+                        new HashSet<String>(){{add("type");}}
                 )
         );
 
@@ -46,7 +46,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.INVALID_FIELD_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.INVALID_FIELD_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{
+                        new HashSet<String>(){{
                             add("type");
                             add("field");
                         }}
@@ -58,7 +58,7 @@ public class JEGeneratorConfig {
                 CommonErrorCode.UNKNOWN_FIELD_TYPE.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(CommonErrorCode.UNKNOWN_FIELD_TYPE.getCode(), true, client.getEntity()),
-                        new HashSet<>(){{add("field");}}
+                        new HashSet<String>(){{add("field");}}
                 )
         );
 
@@ -67,7 +67,7 @@ public class JEGeneratorConfig {
                 FEErrorCode.INVALID_LOGIN.getCode(),
                 new JsonErrorHandlerImpl(
                         new JsonErrorBase(FEErrorCode.INVALID_LOGIN.getCode(), false, client.getEntity()),
-                        new HashSet<>(){{add("login");}}
+                        new HashSet<String>(){{add("login");}}
                 )
         );
 

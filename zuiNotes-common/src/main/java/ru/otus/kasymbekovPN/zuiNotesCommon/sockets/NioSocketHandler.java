@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
@@ -151,6 +152,17 @@ public class NioSocketHandler implements SocketHandler {
     @Override
     public void send(JsonObject jsonObject) {
         socketSendingHandler.send(jsonObject);
+    }
+
+    @Override
+    public void send(Message message) {
+
+        //<
+        log.info("NioSocketHandler::send : {}", message);
+        log.info("NioSocketHandler::send : {}", socketSendingHandler.getClass());
+        //<
+
+        socketSendingHandler.send(message);
     }
 
     @Override

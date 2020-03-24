@@ -1,14 +1,19 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.message;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddress;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeader;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @JsonTypeName("MessageImpl")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageImpl implements Message {
@@ -18,6 +23,33 @@ public class MessageImpl implements Message {
     private MessageAddress to;
     private MessageData data;
     private Set<MessageError> errors;
+
+    //<
+//    private static Optional<String> getAsJson(MessageImpl message){
+//
+//        //<
+//        System.out.println(11.5);
+//
+//        try{
+//
+//            //<
+//            System.out.println(12);
+//
+//            String line = new ObjectMapper().writeValueAsString(message);
+//
+//            //<
+//            log.info("{}", line);
+//
+//            return Optional.of(line);
+//        } catch (JsonProcessingException ex){
+//
+////            log.error("{}", ex.getMessage());
+//            //<
+//            ex.printStackTrace();
+//
+//            return Optional.empty();
+//        }
+//    }
 
     @JsonGetter("header")
     @Override
@@ -48,6 +80,46 @@ public class MessageImpl implements Message {
     public Set<MessageError> getErrors() {
         return errors;
     }
+
+    @Override
+    public void setFrom(MessageAddress from) {
+        this.from = from;
+    }
+
+    @Override
+    public void setTo(MessageAddress to) {
+        this.to = to;
+    }
+
+    //<
+//    @Override
+//    public Optional<String> getAsJson() {
+//
+//        //<
+//        System.out.println(11);
+//
+//        return getAsJson(this);
+//
+////        try{
+////
+////            //<
+////            System.out.println(12);
+////
+////            String line = new ObjectMapper().writeValueAsString((MessageImpl)this);
+////
+////            //<
+////            log.info("{}", line);
+////
+////            return Optional.of(line);
+////        } catch (JsonProcessingException ex){
+////
+//////            log.error("{}", ex.getMessage());
+////            //<
+////            ex.printStackTrace();
+////
+////            return Optional.empty();
+////        }
+//    }
 
     @JsonCreator
     public MessageImpl(

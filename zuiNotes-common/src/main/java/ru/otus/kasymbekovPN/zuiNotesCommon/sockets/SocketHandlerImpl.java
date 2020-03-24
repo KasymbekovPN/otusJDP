@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
@@ -132,6 +133,10 @@ public class SocketHandlerImpl implements SocketHandler {
     @Override
     public void send(JsonObject jsonObject) {
         socketSendingHandler.send(jsonObject);
+    }
+
+    @Override
+    public void send(Message message) {
     }
 
     @Override
