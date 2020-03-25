@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageService;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistration;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.*;
@@ -130,5 +133,97 @@ public class RegistrationSIH implements SocketInputHandler {
 
             socketHandler.send(respJsonObject);
         }
+    }
+
+    @Override
+    public void handle(Message message) {
+        logger.info("RegistrationSIH.handler : {}", message);
+
+        //<
+//        JsonObject header = jsonObject.get("header").getAsJsonObject();
+//        String type = header.get("type").getAsString();
+//        String uuid = header.get("uuid").getAsString();
+//        boolean request = header.get("request").getAsBoolean();
+//
+//        boolean registration = jsonObject.get("data").getAsJsonObject().get("registration").getAsBoolean();
+//        JsonObject from = jsonObject.get("from").getAsJsonObject();
+//        MsClientUrl url = new MsClientUrl(
+//                from.get("host").getAsString(),
+//                from.get("port").getAsInt(),
+//                from.get("entity").getAsString(),
+//                type
+//        );
+//
+//        JsonObject error = new JsonObject();
+//        if (request){
+//            Optional<MSClient> optMsClient = msClientService.get(url);
+//            if (registration){
+//                boolean notReg = solus.register(url.getEntity());
+//                if (notReg){
+//                    final Optional<MSClient> maybeMsClient = msClientCreatorFactory.get(url.getEntity()).create(url, socketHandler, messageSystem);
+//                    if (maybeMsClient.isPresent()){
+//                        error = msClientService.addClient(url, maybeMsClient.get());
+//                    } else {
+//                        error = jeGenerator.handle(false, MSErrorCode.MS_CLIENT_HAS_WRONG_ENTITY.getCode())
+//                                .set("entity", url.getEntity())
+//                                .get();
+//                    }
+//                } else {
+//                    error = jeGenerator.handle(false, MSErrorCode.SOLUS_REG.getCode())
+//                            .set("entity", url.getEntity())
+//                            .get();
+//                }
+//            } else {
+//                solus.unregister(url.getEntity());
+//                error = optMsClient.isPresent()
+//                        ? msClientService.deleteClient(url)
+//                        : jeGenerator.handle(false, MSErrorCode.MS_CLIENT_ALREADY_DEL.getCode()).set("url", url.getUrl()).get();
+//            }
+//        } else {
+//            error = jeGenerator.handle(false, MSErrorCode.FIELD_REQUEST_IS_WRONG.getCode()).get();
+//        }
+//
+//        if (registration){
+//            JsonObject respJsonObject;
+//            if (error.size() == 0){
+//                respJsonObject = new JsonBuilderImpl()
+//                        .add(
+//                                "header",
+//                                new JsonBuilderImpl()
+//                                        .add("type", type)
+//                                        .add("request", false)
+//                                        .add("uuid", uuid)
+//                                        .get()
+//                        )
+//                        .add("to", from)
+//                        .add(
+//                                "data",
+//                                new JsonBuilderImpl()
+//                                        .add("url", url.getUrl())
+//                                        .add("registration", true)
+//                                        .get()
+//                        )
+//                        .get();
+//            } else {
+//                JsonArray errors = new JsonArray();
+//                errors.add(error);
+//
+//                respJsonObject = new JsonBuilderImpl()
+//                        .add(
+//                                "header",
+//                                new JsonBuilderImpl()
+//                                        .add("type", "WRONG")
+//                                        .add("request", false)
+//                                        .add("uuid", UUID.randomUUID().toString())
+//                                        .get()
+//                        )
+//                        .add("original", jsonObject)
+//                        .add("errors", errors)
+//                        .add("to", from)
+//                        .get();
+//            }
+//
+//            socketHandler.send(respJsonObject);
+//        }
     }
 }

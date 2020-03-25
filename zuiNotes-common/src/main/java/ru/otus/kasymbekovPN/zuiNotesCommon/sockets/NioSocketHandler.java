@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonChecker;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageService;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
@@ -93,15 +95,33 @@ public class NioSocketHandler implements SocketHandler {
         }
         buffer.clear();
 
+        //< !!!
         JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
+        //<
+        Optional<MessageImpl> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
+        if (maybeMassage.isPresent()){
+            Message message = maybeMassage.get();
 
         echoSend(jsonObject);
         try{
+            //< !!!
             jsonChecker.setJsonObject(jsonObject, handlers.keySet());
-            handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
+            //<
+            handlers.get(jsonChecker.getType()).handle(message);
         } catch (Exception ex){
             ex.printStackTrace();
         }
+        }
+
+        //<
+//        JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
+//        echoSend(jsonObject);
+//        try{
+//            jsonChecker.setJsonObject(jsonObject, handlers.keySet());
+//            handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
+//        } catch (Exception ex){
+//            ex.printStackTrace();
+//        }
     }
 
     private void register(Selector selector, ServerSocketChannel channel) throws IOException {

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageService;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddressImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
@@ -82,10 +83,10 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
         message.setFrom(new MessageAddressImpl(client.getEntity(), selfHost, selfPort));
         message.setTo(new MessageAddressImpl("FRONTEND", targetHost, targetPort));
 
-        try{
-            String json = new ObjectMapper().writeValueAsString(message);
-            log.info("{}", json);
+        Optional<String> maybeJson = MessageService.getAsString(message);
 
+        if (maybeJson.isPresent()){
+            String json = maybeJson.get();
             try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(msHost, msPort))){
                 ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
                 channel.write(buffer);
@@ -94,8 +95,6 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
             } catch (IOException ex){
                 log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
             }
-        } catch (JsonProcessingException ex){
-            ex.printStackTrace();
         }
     }
 

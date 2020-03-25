@@ -27,5 +27,5 @@ public interface Message {
     void setFrom(MessageAddress from);
     void setTo(MessageAddress to);
     //<
-//    Optional<String> getAsJson();
+ //   Optional<String> getAsJson();
 }

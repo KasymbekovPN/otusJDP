@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
@@ -38,5 +39,10 @@ public class TreeDataSIH implements SocketInputHandler {
                 .get();
 
         socketHandler.send(message);
+    }
+
+    @Override
+    public void handle(Message message) {
+
     }
 }

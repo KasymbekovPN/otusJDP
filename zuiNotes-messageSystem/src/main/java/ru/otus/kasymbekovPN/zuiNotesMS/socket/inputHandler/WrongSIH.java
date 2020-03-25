@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
@@ -24,6 +25,11 @@ public class WrongSIH implements SocketInputHandler {
         jsonObject.remove("from");
 
         socketHandler.send(jsonObject);
+
+    }
+
+    @Override
+    public void handle(Message message) {
 
     }
 }

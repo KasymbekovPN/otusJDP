@@ -91,6 +91,18 @@ public class MessageImpl implements Message {
         this.to = to;
     }
 
+//    @Override
+//    public Optional<String> getAsJson() {
+//        MessageImpl instance = new MessageImpl(header, from, to, data, errors);
+//        try{
+//            String json = new ObjectMapper().writeValueAsString(instance);
+//            return Optional.of(json);
+//        } catch (JsonProcessingException ex) {
+//            ex.printStackTrace();
+//            return Optional.empty();
+//        }
+//    }
+
     //<
 //    @Override
 //    public Optional<String> getAsJson() {

@@ -1,10 +1,13 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.socket.sendingHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.kasymbekovPN.zuiNotesCommon.client.Client;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageService;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddressImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.sending.SocketSendingHandler;
 
@@ -75,7 +78,7 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
         message.setFrom(new MessageAddressImpl(client.getEntity(), selfHost, selfPort));
         message.setTo(new MessageAddressImpl("DATABASE", targetHost, targetPort));
 
-        Optional<String> maybeJson = message.getAsJson();
+        Optional<String> maybeJson = MessageService.getAsString(message);
         if (maybeJson.isPresent())
         {
             String json = maybeJson.get();
@@ -88,5 +91,35 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
                 log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
             }
         }
+        //<
+//        try{
+//            String json = new ObjectMapper().writeValueAsString(message);
+//            log.info("{}", json);
+//
+//            try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(msHost, msPort))){
+//                ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
+//                channel.write(buffer);
+//
+//                log.info("NioSocketSendingHandler send : {}", json);
+//            } catch (IOException ex){
+//                log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
+//            }
+//        } catch (JsonProcessingException ex){
+//            ex.printStackTrace();
+//        }
+        //<
+//        Optional<String> maybeJson = message.getAsJson();
+//        if (maybeJson.isPresent())
+//        {
+//            String json = maybeJson.get();
+//            try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(msHost, msPort))){
+//                ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
+//                channel.write(buffer);
+//
+//                log.info("NioSocketSendingHandler send : {}", json);
+//            } catch (IOException ex){
+//                log.error("MSSocketSendingHandler Error : '{}:{}' is unreachable", msHost, msPort);
+//            }
+//        }
     }
 }

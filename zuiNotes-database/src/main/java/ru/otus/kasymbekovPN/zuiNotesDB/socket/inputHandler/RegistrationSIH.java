@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.introduce.Notifier;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 
 /**
@@ -31,5 +32,10 @@ public class RegistrationSIH implements SocketInputHandler {
         } else {
             notifier.start();
         }
+    }
+
+    @Override
+    public void handle(Message message) {
+
     }
 }

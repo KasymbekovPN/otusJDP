@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClient;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.echo.EchoClientImpl;
@@ -39,5 +40,10 @@ public class EchoSIH implements SocketInputHandler {
         } else {
             socketHandler.unsubscribeEcho(observedMessageType, request, echoClient);
         }
+    }
+
+    @Override
+    public void handle(Message message) {
+
     }
 }
