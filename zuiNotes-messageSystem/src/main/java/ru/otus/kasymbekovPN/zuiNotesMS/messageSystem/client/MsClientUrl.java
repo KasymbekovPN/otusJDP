@@ -1,5 +1,8 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client;
 
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddress;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeader;
+
 import java.util.Objects;
 
 public class MsClientUrl {
@@ -34,6 +37,13 @@ public class MsClientUrl {
         this.port = port;
         this.entity = entity;
         this.registrationMessageType = registrationMessageType;
+    }
+
+    public MsClientUrl(MessageAddress messageAddress, String registrationMessageType){
+        this.registrationMessageType = registrationMessageType;
+        this.entity = messageAddress.getEntity();
+        this.host = messageAddress.getHost();
+        this.port = messageAddress.getPort();
     }
 
     @Override

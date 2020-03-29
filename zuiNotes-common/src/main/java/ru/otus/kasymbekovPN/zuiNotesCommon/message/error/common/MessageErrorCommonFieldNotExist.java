@@ -1,9 +1,10 @@
-package ru.otus.kasymbekovPN.zuiNotesCommon.message.error;
+package ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 
 import java.util.Objects;
 

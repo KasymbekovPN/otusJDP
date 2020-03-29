@@ -1,10 +1,8 @@
 package ru.otus.kasymbekovPN.zuiNotesCommon.introduce;
 
-import com.google.gson.JsonObject;
-import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageImpl;
-import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistrationReq;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeaderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 
@@ -42,7 +40,7 @@ public class RegistrationMessageNR implements NotifierRunner {
                 new MessageHeaderImpl(type, true, UUID.randomUUID()),
                 null,
                 null,
-                new MessageDataCommonRegistration(true),
+                new MessageDataCommonRegistrationReq(true),
                 null
         );
     }

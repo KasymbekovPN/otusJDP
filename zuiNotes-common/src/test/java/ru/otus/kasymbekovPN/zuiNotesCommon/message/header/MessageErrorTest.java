@@ -6,6 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.*;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonFieldNotExist;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonInvalidFieldType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonInvalidMessageType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonUnknownFieldType;
 
 import java.io.IOException;
 

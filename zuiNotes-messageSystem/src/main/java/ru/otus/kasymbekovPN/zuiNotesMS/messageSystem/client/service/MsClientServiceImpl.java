@@ -1,12 +1,12 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.service;
 
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
-import ru.otus.kasymbekovPN.zuiNotesMS.json.error.data.MSErrorCode;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MS.MessageErrorMSClientAlreadyExist;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MSClient;
 import ru.otus.kasymbekovPN.zuiNotesMS.messageSystem.client.MsClientUrl;
 
@@ -22,22 +22,45 @@ public class MsClientServiceImpl implements MsClientService {
 
     private final Map<MsClientUrl, MSClient> clients = new HashMap<>();
 
-    @Override
-    public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
-        if (clients.containsKey(url)){
-            return jeGenerator.handle(false, MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode())
-                    .set("url", url.getUrl())
-                    .get();
-        } else {
-            clients.put(url, msClient);
-            return new JsonObject();
-        }
-    }
+//    @Override
+//    public JsonObject addClient(MsClientUrl url, MSClient msClient) throws Exception {
+//        if (clients.containsKey(url)){
+//            return jeGenerator.handle(false, MSErrorCode.MS_CLIENT_ALREADY_EXIST.getCode())
+//                    .set("url", url.getUrl())
+//                    .get();
+//        } else {
+//            clients.put(url, msClient);
+//            return new JsonObject();
+//        }
+//    }
+    //<
+
 
     @Override
-    public synchronized JsonObject deleteClient(MsClientUrl url) throws Exception {
+    public synchronized Optional<MessageError> addClient(MsClientUrl url, MSClient msClient) {
+        Optional<MessageError> maybeError;
+        if (clients.containsKey(url)){
+            maybeError = Optional.of(new MessageErrorMSClientAlreadyExist(url.getUrl()));
+        } else {
+            clients.put(url, msClient);
+            maybeError = Optional.empty();
+        }
+
+        return maybeError;
+    }
+
+//    @Override
+//    public synchronized JsonObject deleteClient(MsClientUrl url) throws Exception {
+//        clients.remove(url);
+//        return new JsonObject();
+//    }
+    //<
+
+
+    @Override
+    public synchronized Optional<MessageError> deleteClient(MsClientUrl url) {
         clients.remove(url);
-        return new JsonObject();
+        return Optional.empty();
     }
 
     @Override

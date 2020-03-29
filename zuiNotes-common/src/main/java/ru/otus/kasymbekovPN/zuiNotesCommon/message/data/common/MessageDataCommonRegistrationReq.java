@@ -5,9 +5,9 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 
 import java.util.Objects;
 
-@JsonTypeName("MessageDataCommonRegistration")
+@JsonTypeName("MessageDataCommonRegistrationReq")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MessageDataCommonRegistration implements MessageData {
+public class MessageDataCommonRegistrationReq implements MessageData {
     private Boolean registration;
 
     @JsonGetter("registration")
@@ -16,7 +16,7 @@ public class MessageDataCommonRegistration implements MessageData {
     }
 
     @JsonCreator
-    public MessageDataCommonRegistration(
+    public MessageDataCommonRegistrationReq(
             @JsonProperty("registration") Boolean registration) {
         this.registration = registration;
     }
@@ -25,7 +25,7 @@ public class MessageDataCommonRegistration implements MessageData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessageDataCommonRegistration that = (MessageDataCommonRegistration) o;
+        MessageDataCommonRegistrationReq that = (MessageDataCommonRegistrationReq) o;
         return Objects.equals(registration, that.registration);
     }
 

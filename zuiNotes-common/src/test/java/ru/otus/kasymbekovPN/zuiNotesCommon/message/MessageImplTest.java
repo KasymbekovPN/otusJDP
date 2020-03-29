@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddress;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.address.MessageAddressImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
-import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistration;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistrationReq;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
-import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageErrorCommonFieldNotExist;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonFieldNotExist;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeader;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeaderImpl;
 
@@ -45,7 +45,7 @@ public class MessageImplTest {
         MessageAddress to = new MessageAddressImpl(toEntity, toHost, toPort);
 
         Boolean registration = false;
-        MessageData data = new MessageDataCommonRegistration(registration);
+        MessageData data = new MessageDataCommonRegistrationReq(registration);
 
         String field = "any field";
         MessageError error0 = new MessageErrorCommonFieldNotExist(field);
@@ -81,7 +81,7 @@ public class MessageImplTest {
         MessageAddress to = new MessageAddressImpl(toEntity, toHost, toPort);
 
         Boolean registration = false;
-        MessageData data = new MessageDataCommonRegistration(registration);
+        MessageData data = new MessageDataCommonRegistrationReq(registration);
 
         String field = "any field";
         MessageError error0 = new MessageErrorCommonFieldNotExist(field);
