@@ -89,10 +89,16 @@ public class SocketHandlerConfig {
         }
 
         for (JsonElement registrationMessage : registrationMessages) {
+//            socketHandler.addHandler(
+//                    registrationMessage.getAsString(),
+//                    new RegistrationSIH(socketHandler, messageSystem, msClientService,
+//                            jeGenerator, createMsClientCreatorFactory(socketHandler), createSolus())
+//            );
+            //<
             socketHandler.addHandler(
                     registrationMessage.getAsString(),
                     new RegistrationSIH(socketHandler, messageSystem, msClientService,
-                            jeGenerator, createMsClientCreatorFactory(socketHandler), createSolus())
+                            createMsClientCreatorFactory(socketHandler), createSolus())
             );
         }
 

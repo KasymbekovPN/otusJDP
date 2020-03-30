@@ -85,11 +85,33 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
 
         Optional<String> maybeJson = MessageService.getAsString(message);
 
+        //<
+        log.info("NioSocketSendingHandler maybe : {}", maybeJson);
+
         if (maybeJson.isPresent()){
+
+            //<
+            log.info("{}", 1);
+
             String json = maybeJson.get();
+
+            //<
+            log.info("{}:{}", msHost, msPort);
+
             try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(msHost, msPort))){
+
+                //<
+                log.info("{}", 1.1);
+
                 ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
+
+                //<
+                log.info("{}", 1.2);
+
                 channel.write(buffer);
+
+                //<
+                log.info("{}", 2);
 
                 log.info("NioSocketSendingHandler send : {}", json);
             } catch (IOException ex){

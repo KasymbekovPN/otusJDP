@@ -95,22 +95,35 @@ public class NioSocketHandler implements SocketHandler {
         }
         buffer.clear();
 
+        //<
+        log.info("NioSocketHandler.handle line : {}", line);
+        //<
+
         //< !!!
         JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
         //<
+
+        //<
+        log.info("{}", 1234);
+
         Optional<MessageImpl> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
+
+        //<
+        log.info("NioSocketHandler.handle maybeMassage : {}", maybeMassage);
+        //<
+
         if (maybeMassage.isPresent()){
             Message message = maybeMassage.get();
 
-        echoSend(jsonObject);
-        try{
-            //< !!!
-            jsonChecker.setJsonObject(jsonObject, handlers.keySet());
-            //<
-            handlers.get(jsonChecker.getType()).handle(message);
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
+            echoSend(jsonObject);
+            try{
+                //< !!!
+                jsonChecker.setJsonObject(jsonObject, handlers.keySet());
+                //<
+                handlers.get(jsonChecker.getType()).handle(message);
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
 
         //<

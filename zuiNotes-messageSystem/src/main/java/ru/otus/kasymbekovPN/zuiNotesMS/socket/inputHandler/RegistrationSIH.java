@@ -1,6 +1,7 @@
 package ru.otus.kasymbekovPN.zuiNotesMS.socket.inputHandler;
 
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
@@ -29,31 +30,37 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 public class RegistrationSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
+    //<
+//    private static final Logger logger = LoggerFactory.getLogger(RegistrationSIH.class);
 
     private final SocketHandler socketHandler;
     private final MessageSystem messageSystem;
     private final MsClientService msClientService;
-    private final JsonErrorGenerator jeGenerator;
+    //<
+//    private final JsonErrorGenerator jeGenerator;
+    //<
     private final MsClientCreatorFactory msClientCreatorFactory;
     private final Solus solus;
 
     public RegistrationSIH(SocketHandler socketHandler, MessageSystem messageSystem, MsClientService msClientService,
-                           JsonErrorGenerator jeGenerator, MsClientCreatorFactory msClientCreatorFactory,
+                           /*JsonErrorGenerator jeGenerator,*/ MsClientCreatorFactory msClientCreatorFactory,
                            Solus solus) {
         this.socketHandler = socketHandler;
         this.messageSystem = messageSystem;
         this.msClientService = msClientService;
-        this.jeGenerator = jeGenerator;
+        //<
+//        this.jeGenerator = jeGenerator;
+        //<
         this.msClientCreatorFactory = msClientCreatorFactory;
         this.solus = solus;
     }
 
     @Override
     public void handle(JsonObject jsonObject) throws Exception {
-        logger.info("RegistrationSIH : {}", jsonObject);
+//        logger.info("RegistrationSIH : {}", jsonObject);
 
 //        JsonObject header = jsonObject.get("header").getAsJsonObject();
 //        String type = header.get("type").getAsString();
@@ -147,7 +154,7 @@ public class RegistrationSIH implements SocketInputHandler {
 
     @Override
     public void handle(Message message) {
-        logger.info("RegistrationSIH.handler : {}", message);
+        log.info("RegistrationSIH.handler message : {}", message);
 
         MessageHeader header = message.getHeader();
         String type = header.getType();
@@ -188,7 +195,7 @@ public class RegistrationSIH implements SocketInputHandler {
 
         if (registration){
             Message responseMessage;
-            if (maybeError.isEmpty()){
+            if (!maybeError.isPresent()){
                 responseMessage = new MessageImpl(
                         new MessageHeaderImpl(type, false, uuid),
                         null,
@@ -207,6 +214,10 @@ public class RegistrationSIH implements SocketInputHandler {
                         errors
                 );
             }
+
+            //<
+            log.info("RegistrationSIH.handler responseMessage : {}", responseMessage);
+            //<
 
             socketHandler.send(responseMessage);
         }

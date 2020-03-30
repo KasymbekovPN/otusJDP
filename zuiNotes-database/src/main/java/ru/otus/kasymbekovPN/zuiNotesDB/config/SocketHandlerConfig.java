@@ -45,6 +45,9 @@ public class SocketHandlerConfig {
             throw new Exception(clArgsParser.getStatus());
         }
 
+        //<
+        System.out.println("selfPort : " + selfPort);
+
         SocketHandler socketHandler = new NioSocketHandler(
                 new JsonCheckerImpl(jeGenerator),
                 new NioSocketSendingHandler(msHost, targetHost, msPort, selfPort, targetPort, client),

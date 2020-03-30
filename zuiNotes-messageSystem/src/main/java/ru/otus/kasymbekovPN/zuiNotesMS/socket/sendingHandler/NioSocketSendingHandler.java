@@ -72,7 +72,14 @@ public class NioSocketSendingHandler implements SocketSendingHandler {
         if (maybeJson.isPresent()){
             String json = maybeJson.get();
             String toHost = message.getTo().getHost();
+            //<
+//            String toHost = "localhost";
             Integer toPort = message.getTo().getPort();
+
+            //<
+            log.info("MS send {}:{}", toHost, toPort);
+            //<
+
             try(SocketChannel channel = SocketChannel.open(new InetSocketAddress(toHost, toPort))){
                 ByteBuffer buffer = ByteBuffer.wrap(json.getBytes());
                 channel.write(buffer);
