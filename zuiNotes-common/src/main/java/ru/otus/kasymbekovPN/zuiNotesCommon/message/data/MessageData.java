@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistrationReq;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistrationResp;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.frontend.MessageDataFELoginReq;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -11,7 +12,8 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommon
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = MessageDataCommonRegistrationReq.class, name = "MessageDataCommonRegistrationReq"),
-        @JsonSubTypes.Type(value = MessageDataCommonRegistrationResp.class, name = "MessageDataCommonRegistrationResp")
+        @JsonSubTypes.Type(value = MessageDataCommonRegistrationResp.class, name = "MessageDataCommonRegistrationResp"),
+        @JsonSubTypes.Type(value = MessageDataFELoginReq.class, name = "MessageDataFELoginReq")
 })
 public interface MessageData {
 }

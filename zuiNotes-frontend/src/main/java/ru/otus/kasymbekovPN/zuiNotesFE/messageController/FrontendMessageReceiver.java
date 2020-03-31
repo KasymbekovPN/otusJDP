@@ -9,6 +9,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.JsonBuilderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.json.error.JsonErrorGenerator;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageImpl;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.frontend.MessageDataFELoginReq;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeaderImpl;
 import ru.otus.kasymbekovPN.zuiNotesCommon.model.OnlineUser;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.SocketHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.json.error.data.FEErrorCode;
@@ -33,28 +37,37 @@ public class FrontendMessageReceiver {
     public void handleLogin(OnlineUser user){
         logger.info("handleLogin : {}", user);
 
-        String uuid = UUID.randomUUID().toString();
-        registrar.setUIIdByRequestUUID(uuid, user.getUiId());
+        UUID uuid = UUID.randomUUID();
+        registrar.setUIIdByRequestUUID(uuid.toString(), user.getUiId());
 
-        JsonObject jsonObject = new JsonBuilderImpl()
-                .add(
-                        "header",
-                        new JsonBuilderImpl()
-                        .add("type", MessageType.LOGIN.getValue())
-                        .add("request", true)
-                        .add("uuid", uuid)
-                        .get()
-                )
-                .add(
-                        "data",
-                        new JsonBuilderImpl()
-                        .add("login", user.getLogin())
-                        .add("password", user.getPassword())
-                        .get()
-                )
-                .get();
-
-        socketHandler.send(jsonObject);
+//        JsonObject jsonObject = new JsonBuilderImpl()
+//                .add(
+//                        "header",
+//                        new JsonBuilderImpl()
+//                        .add("type", MessageType.LOGIN.getValue())
+//                        .add("request", true)
+//                        .add("uuid", uuid)
+//                        .get()
+//                )
+//                .add(
+//                        "data",
+//                        new JsonBuilderImpl()
+//                        .add("login", user.getLogin())
+//                        .add("password", user.getPassword())
+//                        .get()
+//                )
+//                .get();
+//
+//        socketHandler.send(jsonObject);
+        //<
+        Message message = new MessageImpl(
+                new MessageHeaderImpl(MessageType.LOGIN.getValue(), true, uuid),
+                null,
+                null,
+                new MessageDataFELoginReq(user.getLogin(), user.getPassword()),
+                null
+        );
+        socketHandler.send(message);
     }
 
     @MessageMapping("/LOGOUT")

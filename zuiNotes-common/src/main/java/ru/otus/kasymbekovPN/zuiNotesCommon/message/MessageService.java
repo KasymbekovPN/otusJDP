@@ -17,13 +17,23 @@ public class MessageService {
         }
     }
 
-    static public <T extends Message> Optional<T> getAsInstance(Class<T> clazz, String json){
+    static public Optional<Object> getAsInstance(Class clazz, String json){
         try {
-            T instance = new ObjectMapper().readerFor(clazz).readValue(json);
+            Object instance = new ObjectMapper().readerFor(clazz).readValue(json);
             return Optional.of(instance);
         } catch (IOException ex){
             ex.printStackTrace();
             return Optional.empty();
         }
     }
+    //<
+//    static public <T extends Message> Optional<T> getAsInstance(Class<T> clazz, String json){
+//        try {
+//            T instance = new ObjectMapper().readerFor(clazz).readValue(json);
+//            return Optional.of(instance);
+//        } catch (IOException ex){
+//            ex.printStackTrace();
+//            return Optional.empty();
+//        }
+//    }
 }

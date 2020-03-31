@@ -106,14 +106,16 @@ public class NioSocketHandler implements SocketHandler {
         //<
         log.info("{}", 1234);
 
-        Optional<MessageImpl> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
+//        Optional<MessageImpl> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
+        //<
+        Optional<Object> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
 
         //<
         log.info("NioSocketHandler.handle maybeMassage : {}", maybeMassage);
         //<
 
         if (maybeMassage.isPresent()){
-            Message message = maybeMassage.get();
+            Message message = (Message) maybeMassage.get();
 
             echoSend(jsonObject);
             try{
