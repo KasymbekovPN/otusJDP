@@ -2,6 +2,7 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.message.address;
 
 import com.fasterxml.jackson.annotation.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @JsonTypeName("MessageAddressImpl")

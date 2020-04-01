@@ -78,8 +78,7 @@
             },
             "data" : {
                 "login" : "String",
-                "group" : "String",
-                "errors" : []
+                "group" : "String"
             },
             "from" : {
                 "host" : "String",

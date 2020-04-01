@@ -7,6 +7,10 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorComm
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonInvalidFieldType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonInvalidMessageType;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorCommonUnknownFieldType;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.database.MessageErrorDBEmptyLoginPassword;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.database.MessageErrorDBWrongLoginPassword;
+
+import java.io.Serializable;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -21,7 +25,11 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.common.MessageErrorComm
         @JsonSubTypes.Type(value = MessageErrorMSClientAlreadyExist.class, name = "MessageErrorMSClientAlreadyExist"),
         @JsonSubTypes.Type(value = MessageErrorMsClientHasWrongEntity.class, name = "MessageErrorMsClientHasWrongEntity"),
         @JsonSubTypes.Type(value = MessageErrorMSFieldReqIsWrong.class, name = "MessageErrorMSFieldReqIsWrong"),
-        @JsonSubTypes.Type(value = MessageErrorMsSolusReg.class, name = "MessageErrorMsSolusReg")
+        @JsonSubTypes.Type(value = MessageErrorMsSolusReg.class, name = "MessageErrorMsSolusReg"),
+        @JsonSubTypes.Type(value = MessageErrorMSFromClientNotExist.class, name = "MessageErrorMSFromClientNotExist"),
+        @JsonSubTypes.Type(value = MessageErrorMSToClientNotExist.class, name = "MessageErrorMSToClientNotExist"),
+        @JsonSubTypes.Type(value = MessageErrorDBWrongLoginPassword.class, name = "MessageErrorDBWrongLoginPassword"),
+        @JsonSubTypes.Type(value = MessageErrorDBEmptyLoginPassword.class, name = "MessageErrorDBEmptyLoginPassword")
 })
-public interface MessageError {
+public interface MessageError extends Serializable {
 }

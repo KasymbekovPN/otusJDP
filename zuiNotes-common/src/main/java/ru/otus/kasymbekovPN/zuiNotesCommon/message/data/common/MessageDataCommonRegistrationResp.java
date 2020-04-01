@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 
+import java.io.Serializable;
+
 @JsonTypeName("MessageDataCommonRegistrationResp")
 public class MessageDataCommonRegistrationResp implements MessageData {
 

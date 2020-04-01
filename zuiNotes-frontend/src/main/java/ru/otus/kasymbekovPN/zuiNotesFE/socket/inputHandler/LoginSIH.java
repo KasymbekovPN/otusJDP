@@ -1,16 +1,27 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.MessageService;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.database.MessageDataDBLoginResp;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeader;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.Registrar;
 
+import java.util.Optional;
+import java.util.UUID;
+
+@Slf4j
 public class LoginSIH implements SocketInputHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginSIH.class);
+    //<
+//    private static final Logger logger = LoggerFactory.getLogger(LoginSIH.class);
 
     private final FrontendMessageTransmitter frontendMessageTransmitter;
     private final Registrar registrar;
@@ -22,22 +33,37 @@ public class LoginSIH implements SocketInputHandler {
 
     @Override
     public void handle(JsonObject jsonObject) {
-        logger.info("LoginSIH : {}", jsonObject);
-
-        JsonObject header = jsonObject.get("header").getAsJsonObject();
-        String type = header.get("type").getAsString();
-        String uuid = header.get("uuid").getAsString();
-        JsonObject data = jsonObject.get("data").getAsJsonObject();
-
-        String uiId = registrar.getUIIdByRequestUUID(uuid);
-        String login = data.get("login").getAsString();
-        registrar.setLoginByUIId(uiId, login);
-
-        frontendMessageTransmitter.handle(data.toString(), uuid, type, true);
+        //<
+//        logger.info("LoginSIH : {}", jsonObject);
+//
+//        JsonObject header = jsonObject.get("header").getAsJsonObject();
+//        String type = header.get("type").getAsString();
+//        String uuid = header.get("uuid").getAsString();
+//        JsonObject data = jsonObject.get("data").getAsJsonObject();
+//
+//        String uiId = registrar.getUIIdByRequestUUID(uuid);
+//        String login = data.get("login").getAsString();
+//        registrar.setLoginByUIId(uiId, login);
+//
+//        frontendMessageTransmitter.handle(data.toString(), uuid, type, true);
     }
 
     @Override
     public void handle(Message message) {
+        log.info("LoginSIH.handle message : {}", message);
 
+        MessageHeader header = message.getHeader();
+        String type = header.getType();
+        UUID uuid = header.getUUID();
+
+        MessageDataDBLoginResp data = (MessageDataDBLoginResp) message.getData();
+        Optional<String> maybeJson = MessageService.getAsString(data);
+        String login = data.getLogin();
+
+        //< !!! add errors to maybeJson
+
+        String uiId = registrar.getUIIdByRequestUUID(uuid.toString());
+        registrar.setLoginByUIId(uiId, login);
+        frontendMessageTransmitter.handle(maybeJson.toString(), uuid.toString(), type, true);
     }
 }

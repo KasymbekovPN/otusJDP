@@ -115,12 +115,23 @@ public class NioSocketHandler implements SocketHandler {
         //<
 
         if (maybeMassage.isPresent()){
+            //<
+            log.info("{}", 1);
+            //<
             Message message = (Message) maybeMassage.get();
-
+            //<
+            log.info("{}", 2);
+            //<
             echoSend(jsonObject);
             try{
+                //<
+                log.info("{}", 3);
+                //<
                 //< !!!
                 jsonChecker.setJsonObject(jsonObject, handlers.keySet());
+                //<
+                //<
+                log.info("{}", 4);
                 //<
                 handlers.get(jsonChecker.getType()).handle(message);
             } catch (Exception ex){

@@ -1,4 +1,4 @@
-package ru.otus.kasymbekovPN.zuiNotesCommon.message.data.frontend;
+package ru.otus.kasymbekovPN.zuiNotesCommon.message.data.database;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -6,52 +6,51 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-@JsonTypeName("MessageDataFELoginReq")
-public class MessageDataFELoginReq implements MessageData {
+@JsonTypeName("MessageDataDBLoginResp")
+public class MessageDataDBLoginResp implements MessageData {
 
     private String login;
-    private String password;
+    private String group;
 
     @JsonGetter("login")
     public String getLogin() {
         return login;
     }
 
-    @JsonGetter("password")
-    public String getPassword() {
-        return password;
+    @JsonGetter("group")
+    public String getGroup() {
+        return group;
     }
 
     @JsonCreator
-    public MessageDataFELoginReq(
+    public MessageDataDBLoginResp(
             @JsonProperty("login") String login,
-            @JsonProperty("password") String password) {
+            @JsonProperty("group") String group) {
         this.login = login;
-        this.password = password;
+        this.group = group;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessageDataFELoginReq that = (MessageDataFELoginReq) o;
+        MessageDataDBLoginResp that = (MessageDataDBLoginResp) o;
         return Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password);
+                Objects.equals(group, that.group);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, password);
+        return Objects.hash(login, group);
     }
 
     @Override
     public String toString() {
-        return "MessageDataFELoginReq{" +
+        return "MessageDataDBLoginResp{" +
                 "login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                ", group='" + group + '\'' +
                 '}';
     }
 }

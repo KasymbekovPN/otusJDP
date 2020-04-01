@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 public class MessageErrorCommonInvalidFieldType implements MessageError {

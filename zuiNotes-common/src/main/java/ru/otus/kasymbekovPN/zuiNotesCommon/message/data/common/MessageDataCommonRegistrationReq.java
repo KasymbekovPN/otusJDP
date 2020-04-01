@@ -3,6 +3,7 @@ package ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common;
 import com.fasterxml.jackson.annotation.*;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @JsonTypeName("MessageDataCommonRegistrationReq")

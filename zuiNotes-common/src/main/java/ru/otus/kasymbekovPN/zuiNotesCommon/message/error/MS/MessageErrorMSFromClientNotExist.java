@@ -9,39 +9,39 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 import java.io.Serializable;
 import java.util.Objects;
 
-@JsonTypeName("MessageErrorMsSolusReg")
-public class MessageErrorMsSolusReg implements MessageError {
+@JsonTypeName("MessageErrorMSFromClientNotExist")
+public class MessageErrorMSFromClientNotExist implements MessageError {
 
-    private String entity;
+    private String client;
 
-    @JsonGetter("entity")
-    public String getEntity() {
-        return entity;
+    @JsonGetter("client")
+    public String getClient() {
+        return client;
     }
 
     @JsonCreator
-    public MessageErrorMsSolusReg(
-            @JsonProperty("entity") String entity) {
-        this.entity = entity;
+    public MessageErrorMSFromClientNotExist(
+            @JsonProperty("client") String client) {
+        this.client = client;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessageErrorMsSolusReg that = (MessageErrorMsSolusReg) o;
-        return Objects.equals(entity, that.entity);
+        MessageErrorMSFromClientNotExist that = (MessageErrorMSFromClientNotExist) o;
+        return Objects.equals(client, that.client);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(entity);
+        return Objects.hash(client);
     }
 
     @Override
     public String toString() {
-        return "MessageErrorMsSolusReg{" +
-                "entity='" + entity + '\'' +
+        return "MessageErrorMSFromClientNotExist{" +
+                "client='" + client + '\'' +
                 '}';
     }
 }

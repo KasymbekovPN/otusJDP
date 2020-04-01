@@ -1,12 +1,14 @@
 package ru.otus.kasymbekovPN.zuiNotesFE.socket.inputHandler;
 
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.Message;
 import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 import ru.otus.kasymbekovPN.zuiNotesFE.messageController.FrontendMessageTransmitter;
 
+@Slf4j
 public class CommonSIH implements SocketInputHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonSIH.class);
@@ -31,6 +33,6 @@ public class CommonSIH implements SocketInputHandler {
 
     @Override
     public void handle(Message message) {
-
+        log.info("CommonSIH.handle message : {}", message);
     }
 }

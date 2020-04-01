@@ -8,6 +8,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.error.MessageError;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.header.MessageHeader;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = MessageImpl.class, name = "MessageImpl")
 })
-public interface Message {
+public interface Message extends Serializable {
     MessageHeader getHeader();
     MessageAddress getFrom();
     MessageAddress getTo();
