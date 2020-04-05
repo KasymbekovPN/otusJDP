@@ -6,6 +6,7 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommon
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.common.MessageDataCommonRegistrationResp;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.database.MessageDataDBLoginResp;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.frontend.MessageDataFELoginReq;
+import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.frontend.MessageDataFEUserDataReq;
 
 import java.io.Serializable;
 
@@ -17,7 +18,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = MessageDataCommonRegistrationReq.class, name = "MessageDataCommonRegistrationReq"),
         @JsonSubTypes.Type(value = MessageDataCommonRegistrationResp.class, name = "MessageDataCommonRegistrationResp"),
         @JsonSubTypes.Type(value = MessageDataFELoginReq.class, name = "MessageDataFELoginReq"),
-        @JsonSubTypes.Type(value = MessageDataDBLoginResp.class, name = "MessageDataDBLoginResp")
+        @JsonSubTypes.Type(value = MessageDataDBLoginResp.class, name = "MessageDataDBLoginResp"),
+        @JsonSubTypes.Type(value = MessageDataFEUserDataReq.class, name = "MessageDataFEUserDataReq")
 })
 public interface MessageData extends Serializable {
 }

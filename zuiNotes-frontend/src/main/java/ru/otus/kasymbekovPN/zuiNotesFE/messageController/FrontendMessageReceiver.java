@@ -40,26 +40,6 @@ public class FrontendMessageReceiver {
         UUID uuid = UUID.randomUUID();
         registrar.setUIIdByRequestUUID(uuid.toString(), user.getUiId());
 
-//        JsonObject jsonObject = new JsonBuilderImpl()
-//                .add(
-//                        "header",
-//                        new JsonBuilderImpl()
-//                        .add("type", MessageType.LOGIN.getValue())
-//                        .add("request", true)
-//                        .add("uuid", uuid)
-//                        .get()
-//                )
-//                .add(
-//                        "data",
-//                        new JsonBuilderImpl()
-//                        .add("login", user.getLogin())
-//                        .add("password", user.getPassword())
-//                        .get()
-//                )
-//                .get();
-//
-//        socketHandler.send(jsonObject);
-        //<
         Message message = new MessageImpl(
                 new MessageHeaderImpl(MessageType.LOGIN.getValue(), true, uuid),
                 null,
