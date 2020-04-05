@@ -10,14 +10,12 @@ import ru.otus.kasymbekovPN.zuiNotesCommon.sockets.input.SocketInputHandler;
 @Slf4j
 public class WrongSIH implements SocketInputHandler {
 
-    //<
-//    private static final Logger logger = LoggerFactory.getLogger(WrongSIH.class);
-
     public WrongSIH() {
     }
 
     @Override
     public void handle(JsonObject jsonObject) {
+        //<
 //        logger.warn("WrongSIH : {}", jsonObject);
     }
 

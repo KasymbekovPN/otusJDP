@@ -6,7 +6,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonTypeName("MessageAddressImpl")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//<
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageAddressImpl implements MessageAddress {
     private String entity;
     private String host;

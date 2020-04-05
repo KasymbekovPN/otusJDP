@@ -144,6 +144,9 @@ public class JsonCheckerImpl implements JsonChecker {
             }
         }
 
+        //<
+//        System.out.println("errors : " + errors);
+        //<
         if (errors.size() != 0) {
             this.jsonObject = new JsonBuilderImpl(this.jsonObject.deepCopy())
                     .add(

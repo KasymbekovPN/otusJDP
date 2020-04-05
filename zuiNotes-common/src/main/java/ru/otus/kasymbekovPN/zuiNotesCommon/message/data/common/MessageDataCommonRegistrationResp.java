@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import ru.otus.kasymbekovPN.zuiNotesCommon.message.data.MessageData;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonTypeName("MessageDataCommonRegistrationResp")
 public class MessageDataCommonRegistrationResp implements MessageData {
@@ -30,5 +31,27 @@ public class MessageDataCommonRegistrationResp implements MessageData {
             @JsonProperty("registration") Boolean registration) {
         this.url = url;
         this.registration = registration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageDataCommonRegistrationResp that = (MessageDataCommonRegistrationResp) o;
+        return Objects.equals(url, that.url) &&
+                Objects.equals(registration, that.registration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, registration);
+    }
+
+    @Override
+    public String toString() {
+        return "MessageDataCommonRegistrationResp{" +
+                "url='" + url + '\'' +
+                ", registration=" + registration +
+                '}';
     }
 }

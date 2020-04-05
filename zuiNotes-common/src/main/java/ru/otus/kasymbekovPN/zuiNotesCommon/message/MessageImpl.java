@@ -13,9 +13,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-@Slf4j
+//@Slf4j
+//<
 @JsonTypeName("MessageImpl")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//<
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+//<
 public class MessageImpl implements Message {
 
     private MessageHeader header;
@@ -23,33 +26,6 @@ public class MessageImpl implements Message {
     private MessageAddress to;
     private MessageData data;
     private Set<MessageError> errors;
-
-    //<
-//    private static Optional<String> getAsJson(MessageImpl message){
-//
-//        //<
-//        System.out.println(11.5);
-//
-//        try{
-//
-//            //<
-//            System.out.println(12);
-//
-//            String line = new ObjectMapper().writeValueAsString(message);
-//
-//            //<
-//            log.info("{}", line);
-//
-//            return Optional.of(line);
-//        } catch (JsonProcessingException ex){
-//
-////            log.error("{}", ex.getMessage());
-//            //<
-//            ex.printStackTrace();
-//
-//            return Optional.empty();
-//        }
-//    }
 
     @JsonGetter("header")
     @Override
@@ -90,48 +66,6 @@ public class MessageImpl implements Message {
     public void setTo(MessageAddress to) {
         this.to = to;
     }
-
-//    @Override
-//    public Optional<String> getAsJson() {
-//        MessageImpl instance = new MessageImpl(header, from, to, data, errors);
-//        try{
-//            String json = new ObjectMapper().writeValueAsString(instance);
-//            return Optional.of(json);
-//        } catch (JsonProcessingException ex) {
-//            ex.printStackTrace();
-//            return Optional.empty();
-//        }
-//    }
-
-    //<
-//    @Override
-//    public Optional<String> getAsJson() {
-//
-//        //<
-//        System.out.println(11);
-//
-//        return getAsJson(this);
-//
-////        try{
-////
-////            //<
-////            System.out.println(12);
-////
-////            String line = new ObjectMapper().writeValueAsString((MessageImpl)this);
-////
-////            //<
-////            log.info("{}", line);
-////
-////            return Optional.of(line);
-////        } catch (JsonProcessingException ex){
-////
-//////            log.error("{}", ex.getMessage());
-////            //<
-////            ex.printStackTrace();
-////
-////            return Optional.empty();
-////        }
-//    }
 
     @JsonCreator
     public MessageImpl(

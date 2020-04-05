@@ -95,59 +95,24 @@ public class NioSocketHandler implements SocketHandler {
         }
         buffer.clear();
 
-        //<
-        log.info("NioSocketHandler.handle line : {}", line);
-        //<
-
         //< !!!
         JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
         //<
 
-        //<
-        log.info("{}", 1234);
-
-//        Optional<MessageImpl> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
-        //<
         Optional<Object> maybeMassage = MessageService.getAsInstance(MessageImpl.class, line);
 
-        //<
-        log.info("NioSocketHandler.handle maybeMassage : {}", maybeMassage);
-        //<
-
         if (maybeMassage.isPresent()){
-            //<
-            log.info("{}", 1);
-            //<
             Message message = (Message) maybeMassage.get();
-            //<
-            log.info("{}", 2);
-            //<
             echoSend(jsonObject);
             try{
-                //<
-                log.info("{}", 3);
-                //<
                 //< !!!
                 jsonChecker.setJsonObject(jsonObject, handlers.keySet());
-                //<
-                //<
-                log.info("{}", 4);
                 //<
                 handlers.get(jsonChecker.getType()).handle(message);
             } catch (Exception ex){
                 ex.printStackTrace();
             }
         }
-
-        //<
-//        JsonObject jsonObject = (JsonObject) new JsonParser().parse(line);
-//        echoSend(jsonObject);
-//        try{
-//            jsonChecker.setJsonObject(jsonObject, handlers.keySet());
-//            handlers.get(jsonChecker.getType()).handle(jsonChecker.getJsonObject());
-//        } catch (Exception ex){
-//            ex.printStackTrace();
-//        }
     }
 
     private void register(Selector selector, ServerSocketChannel channel) throws IOException {

@@ -153,7 +153,7 @@ public class LoginSIH implements SocketInputHandler {
                 new MessageHeaderImpl(type, false, uuid),
                 null,
                 null,
-                errors.isEmpty() ? new MessageDataDBLoginResp(login, group) : null,
+                new MessageDataDBLoginResp(login, group),
                 errors.isEmpty() ? null : errors
         );
         socketHandler.send(responseMessage);

@@ -332,12 +332,15 @@ const loginRequest = () => stompClient.send(
 
 const loginResponse = message => {
     console.log('loginResponse : ' + message);
-    data = JSON.parse(message.body);
-    login = data.login;
-    group = data.group;
-    errors = data.errors;
 
-    if (Object.keys(errors).length == 0){
+    body = JSON.parse(message.body);
+    data = body.data;
+    errors = body.errors;
+
+    if (errors == null){
+        login = data.login;
+        group = data.group;
+
         if (group == 'admin'){
             var items = adminWorkAreaTopMenuItems;
             items[0].value = login;
@@ -532,7 +535,7 @@ const generateUserDataTableContent = (userData) => {
 const generateErrorContent = (errors) => {
     var content = '';
     for(var i in errors){
-        content += '<p>code : ' + errors[i].code + "; common : " + errors[i].common + "; entity : " + errors[i].entity + "; data : " + errors[i].data + "</p>"
+        content += '<p>' + JSON.stringify(errors[i]) + '</p>';
     }
     return content;
 };

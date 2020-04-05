@@ -7,7 +7,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonTypeName("MessageDataCommonRegistrationReq")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//<
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageDataCommonRegistrationReq implements MessageData {
     private Boolean registration;
 
